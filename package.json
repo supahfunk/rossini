@@ -1,0 +1,38 @@
+{
+    "name": "notes",
+    "version": "1.0.0",
+    "description": "notes",
+    "main": "notes.js",
+    "dependencies": {},
+    "devDependencies": {
+        "gulp": "^3.9.1",
+        "gulp-autoprefixer": "^3.1.1",
+        "gulp-coffee": "^2.3.3",
+        "gulp-concat": "^2.6.1",
+        "gulp-cssmin": "^0.1.7",
+        "gulp-html2js": "^0.4.2",
+        "gulp-if": "^2.0.2",
+        "gulp-livereload": "^3.8.1",
+        "gulp-rename": "^1.2.2",
+        "gulp-sass": "^3.1.0",
+        "gulp-sourcemaps": "^2.4.1",
+        "gulp-uglify": "^2.0.1",
+        "gulp-watch": "^4.3.11",
+        "gulp-webserver": "^0.9.1",
+        "merge-stream": "^1.0.1"
+    },
+    "browserslist": {
+        "production": [
+            "last 2 version",
+            "ie 10"
+        ],
+        "development": [
+            "last 1 version"
+        ]
+    },
+    "scripts": {
+        "start": "start"
+    },
+    "author": "Luca Zampetti",
+    "license": "ISC"
+}

@@ -1,0 +1,27 @@
+{
+  "name": "notes",
+  "authors": [
+    "actarian <lzampetti@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.6.6",
+    "angular-route": "^1.6.6",
+    "bootstrap": "v4.0.0-alpha.6",
+    "json-formatter": "^0.6.0",
+    "dat.gui": "dat-gui#^0.6.5",
+    "stats.js": "*",
+    "three.js": "threejs#*"
+  }
+}

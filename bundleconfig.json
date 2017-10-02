@@ -1,0 +1,56 @@
+[{
+        "inputFiles": [
+            "bower_components/three.js/build/three.js",
+            "bower_components/three.js/examples/js/controls/OrbitControls.js",
+            "bower_components/stats.js/build/stats.js",
+            "bower_components/dat.gui/build/dat.gui.js",
+            "bower_components/angular/angular.js",
+            "bower_components/angular-route/angular-route.js",
+            "bower_components/json-formatter/dist/json-formatter.js"
+        ],
+        "outputFileName": "docs/js/vendors.js",
+        "minify": {
+            "enabled": true
+        }
+    }, {
+        "inputFiles": [
+            "app/app.module.js",
+            "app/app.config.js",
+            "app/app.routes.js",
+            "app/app.run.js",
+            "app/controllers/root.controller.js"
+        ],
+        "outputFileName": "docs/js/app.js",
+        "minify": {
+            "enabled": true
+        }
+    },
+    {
+        "inputFiles": [
+            "bower_components/json-formatter/dist/json-formatter.css",
+            "bower_components/dat.gui/build/dat.gui.css"
+        ],
+        "outputFileName": "docs/css/vendors.css",
+        "minify": {
+            "enabled": true
+        }
+    },
+    {
+        "inputFiles": [
+            "docs/css/bootstrap.css"
+        ],
+        "outputFileName": "docs/css/bootstrap.css",
+        "minify": {
+            "enabled": true
+        }
+    },
+    {
+        "inputFiles": [
+            "docs/css/app.css"
+        ],
+        "outputFileName": "docs/css/app.css",
+        "minify": {
+            "enabled": true
+        }
+    }
+]
