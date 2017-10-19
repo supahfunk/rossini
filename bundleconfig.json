@@ -3,7 +3,14 @@
             "bower_components/three.js/build/three.js",
             "bower_components/three.js/examples/js/controls/OrbitControls.js",
             "bower_components/stats.js/build/stats.js",
-            "bower_components/dat.gui/build/dat.gui.js",
+            "bower_components/dat.gui/build/dat.gui.js"
+        ],
+        "outputFileName": "docs/js/three.js",
+        "minify": {
+            "enabled": false
+        }
+    }, {
+        "inputFiles": [
             "bower_components/angular/angular.js",
             "bower_components/angular-route/angular-route.js",
             "bower_components/json-formatter/dist/json-formatter.js"
