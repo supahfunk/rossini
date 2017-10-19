@@ -53,90 +53,47 @@
 
     var app = angular.module('app');
 
-    var GPoint = function() {
-        var unit = {
-            x: 0.09,
-            y: 0.09,
-            z: 0.3
-        };
-
-        function GPoint(x, y, z) {
-            this.x = x || 0;
-            this.y = y || 0;
-            this.z = z || 0;
-        }
-        GPoint.prototype = {
-            randomize: function() {
-                this.x = Math.random() * 1000;
-                this.y = Math.random() * 1000;
-                this.z = Math.random() * 1000;
-                return this;
-            },
-            toGrid: function() {
-                this.x = (Math.round(this.x / unit.x) * unit.x);
-                this.y = (Math.round(this.y / unit.y) * unit.y);
-                this.z = (Math.round(this.z / unit.z) * unit.z);
-                return this;
-            },
-            toFixed: function() {
-                this.x = +(this.x.toFixed(2));
-                this.y = +(this.y.toFixed(2));
-                this.z = +(this.z.toFixed(2));
-                return this;
-            },
-        };
-        GPoint.grid = function(points) {
-            for (var i = 0; i < points.length; i++) {
-                points[i].toGrid().toFixed();
-            }
-            GPoint.sort(points);
-        };
-        GPoint.sort = function(points) {
-            points.sort(function(a, b) {
-                if (a.z === b.z) {
-                    if (a.x === b.x) {
-                        if (a.y === b.y) {
-                            return 0;
-                        } else {
-                            return a.y > b.y ? 1 : -1;
-                        }
-                    } else {
-                        return a.x > b.x ? 1 : -1;
-                    }
-                } else {
-                    return a.z > b.z ? 1 : -1;
-                }
-            });
-        };
-        return GPoint;
-    }();
-
     app.controller('RootCtrl', ['$scope', function($scope) {
 
         var options = {
-            groundPoints: [],
-            totalBands: 256,
+            audioUrl: "audio/rossini-192.mp3",
+            colors: {
+                background: 0x111111, // 0xffffff,
+                lines: 0x999999, // 0x888888,
+                notes: 0x444444, // 0xaaaaaa,
+            },
+            bands: 256,
             rows: 256,
             space: 10,
             strength: 60,
-            groundStrength: 15,
-            heightMap: generateHeight(256, 256),
-            audioUrl: "audio/rossini-192.mp3",
+            noiseStrength: 25,
         };
 
-        options.points = new Array(options.totalBands * 2).fill(null).map(function() {
+        options.points = new Array(options.bands * 2).fill(null).map(function() {
             var r = 1000,
                 d = r * 2;
             return new THREE.Vector3(-r + Math.random() * d, -r + Math.random() * d, -r + Math.random() * d);
         });
-        options.heightMap = generateHeight(options.rows, options.rows);
+        options.noiseMap = getPerlinNoise(options.rows, options.rows);
 
         var analyser, analyserData, audio;
+
+        var objects = {};
 
         var stats, gui, scene, camera, controls, fov, ratio, near, far, shadow, back, light, renderer, container, width, height, w2, h2, mouse = { x: 0, y: 0 };
 
         // objects
         var ground, notes, lines;
+
+        function onChange(params) {
+            renderer.setClearColor(options.colors.background, 1);
+            if (objects.ground) {
+                objects.ground.material.color.setHex(options.colors.lines);
+            }
+            if (objects.groundLines) {
+                objects.groundLines.material.color.setHex(options.colors.lines);
+            }
+        }
 
         function createLights() {
             light = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.5);
@@ -173,6 +130,7 @@
                 antialias: true
             });
             renderer.setSize(width, height);
+            renderer.setClearColor(options.colors.background, 1);
             renderer.shadowMap.enabled = true;
             container = document.getElementById('scene');
             container.appendChild(renderer.domElement);
@@ -184,19 +142,17 @@
             controls = new THREE.OrbitControls(camera, renderer.domElement);
         }
 
-        function createObjects() {
-            var texture, geometry, material;
-            // ground
+        function getGround() {
+            var object, geometry, material;
             material = new THREE.PointsMaterial({
-                color: 0x888888,
+                color: options.colors.lines,
                 size: 1,
                 sizeAttenuation: false,
                 // vertexColors: THREE.VertexColors,
             });
             geometry = new THREE.Geometry();
-            ground = new THREE.Points(geometry, material);
-            scene.add(ground);
-
+            object = new THREE.Points(geometry, material);
+            scene.add(object);
             var rows = options.rows,
                 space = options.space;
             var points = new Array(rows * rows).fill(null).map(function(n, i) {
@@ -210,10 +166,8 @@
                     x: -(space * rows / 2) + space * c,
                     y: -(space * rows / 2) + space * r,
                     z: 0,
-                    color: new THREE.Color(idrc, idrc, idrc),
                 };
             });
-
             var i = 0,
                 t = points.length;
             while (i < t) {
@@ -223,28 +177,137 @@
                 vertex.y = point.y;
                 vertex.z = point.z;
                 geometry.vertices.push(vertex);
-                // geometry.colors.push(point.color);
+                // geometry.colors.push(new THREE.Color(0xffcc00));
                 i++;
             }
             geometry.mergeVertices();
             geometry.verticesNeedUpdate = true;
-            ground.geometry = geometry;
+            object.geometry = geometry;
 
-            // lines
-            geometry = new THREE.Geometry();
-            /*
-            material = new THREE.LineDashedMaterial({
-                color: 0x000000,
-                dashSize: 1,
-                gapSize: 0.5,
-            });
-            */
+            function add() {
+                scene.add(object);
+            }
+
+            function remove() {
+                scene.remove(object);
+            }
+
+            var d = 0;
+
+            function update() {
+                var rows = options.rows,
+                    strength = options.strength,
+                    noiseStrength = options.noiseStrength;
+                angular.forEach(geometry.vertices, function(v, i) {
+                    var r = Math.floor(i / rows);
+                    var c = i - r * rows;
+                    var b = Math.abs(c - rows / 2) * 2;
+                    var dr = 1 - (Math.abs(r - rows / 2) / (rows / 2));
+                    var dc = 1 - (Math.abs(c - rows / 2) / (rows / 2));
+                    var drc = (dr + dc) / 2;
+                    var index = b % options.bands;
+                    var pow = analyserData[index];
+                    var scale = (pow / options.bands) * dr * 2;
+                    // v.x = options.points[i].x + 10 * scale;
+                    // v.y = options.points[i].y + 10 * scale;
+                    var ni = r * rows + ((c + d) % rows);
+                    var vz = (options.noiseMap[ni] / 64 * noiseStrength) * drc + (strength * scale);
+                    v.z += (vz - v.z) / (3 + 3 * (1 - drc));
+                });
+                d++;
+                geometry.verticesNeedUpdate = true;
+            }
+            return {
+                add: add,
+                remove: remove,
+                update: update,
+                object: object,
+            };
+        }
+
+        function getGroundLines() {
+            var object, material, lines = [];
             material = new THREE.LineBasicMaterial({
-                color: 0xcccccc
+                color: options.colors.lines
             });
-            lines = new THREE.Line(geometry, material);
-            // scene.add(lines);
-            // notes
+            object = new THREE.Object3D();
+            scene.add(object);
+            var rows = options.rows,
+                space = options.space;
+            while (lines.length < options.rows) {
+                var geometry = new THREE.Geometry();
+                var line = new THREE.Line(geometry, material);
+                line.points = new Array(rows).fill(null);
+                // var spline = new THREE.CatmullRomCurve3(points);
+                // line.spline = spline;
+                lines.push(line);
+                object.add(line);
+            }
+            var points = new Array(rows * rows).fill(null).map(function(n, i) {
+                var r = Math.floor(i / rows);
+                var c = i - r * rows;
+                var dr = 1 - (Math.abs(r - rows / 2) / (rows / 2));
+                var dc = 1 - (Math.abs(c - rows / 2) / (rows / 2));
+                var drc = (dr + dc) / 2;
+                var idrc = 1 - drc;
+                var point = new THREE.Vector3(-(space * rows / 2) + space * c, -(space * rows / 2) + space * r,
+                    0
+                );
+                lines[c].points[r] = point;
+                lines[c].geometry.vertices.push(point);
+                return point;
+            });
+
+            function add() {
+                scene.add(object);
+            }
+
+            function remove() {
+                scene.remove(object);
+            }
+
+            var d = 0;
+
+            function update() {
+                var rows = options.rows,
+                    strength = options.strength,
+                    noiseStrength = options.noiseStrength;
+                angular.forEach(points, function(v, i) {
+                    var r = Math.floor(i / rows);
+                    var c = i - r * rows;
+                    var b = Math.abs(c - rows / 2) * 2;
+                    var dr = 1 - (Math.abs(r - rows / 2) / (rows / 2));
+                    var dc = 1 - (Math.abs(c - rows / 2) / (rows / 2));
+                    var drc = (dr + dc) / 2;
+                    var index = b % options.bands;
+                    var pow = analyserData[index];
+                    var scale = (pow / options.bands) * dr * 2;
+                    var ni = r * rows + ((c + d) % rows);
+                    var vz = (options.noiseMap[ni] / 64 * noiseStrength) * drc + (strength * scale);
+                    v.z += (vz - v.z) / (3 + 3 * (1 - drc));
+                });
+                angular.forEach(lines, function(line, l) {
+                    // var points = line.points;
+                    // var spline = line.spline;
+                    // spline.getPoints(rows * 2);
+                    // line.geometry.vertices = points;
+                    // geometry.computeLineDistances();
+                    // geometry.lineDistancesNeedUpdate = true;
+                    line.geometry.verticesNeedUpdate = true;
+                });
+                d++;
+            }
+            return {
+                add: add,
+                remove: remove,
+                update: update,
+                object: object,
+                material: material,
+            };
+        }
+
+        function getNotes() {
+            var object, geometry, material;
             geometry = new THREE.Geometry();
             /*
             texture = new THREE.CanvasTexture(sprite());
@@ -258,12 +321,99 @@
             });
             */
             material = new THREE.PointsMaterial({
-                color: 0xaaaaaa,
+                color: options.colors.notes,
                 size: 2,
                 sizeAttenuation: false,
             });
-            notes = new THREE.Points(geometry, material);
-            scene.add(notes);
+            object = new THREE.Points(geometry, material);
+
+            var points = options.points;
+            var i = 0,
+                t = points.length;
+            while (i < t) {
+                var p = points[i];
+                geometry.vertices.push(new THREE.Vector3(p.x, p.y, p.z));
+                // geometry.colors.push(new THREE.Color(0, 0, 0));
+                i++;
+            }
+            geometry.mergeVertices();
+            geometry.verticesNeedUpdate = true;
+
+            add();
+
+            function add() {
+                scene.add(object);
+            }
+
+            function remove() {
+                scene.remove(object);
+            }
+
+            function update() {
+                angular.forEach(geometry.vertices, function(v, i) {
+                    var index = i % options.bands;
+                    var pow = analyserData[index];
+                    var scale = (pow / options.bands) * 2;
+                    var p = options.points[i];
+                    var vx = p.x * (1 + scale);
+                    var vy = p.y * (1 + scale);
+                    var vz = p.z * (1 + scale);
+                    v.x += (vx - v.x) / 3;
+                    v.y += (vy - v.y) / 3;
+                    v.z += (vz - v.z) / 3;
+                });
+                geometry.verticesNeedUpdate = true;
+            }
+            return {
+                add: add,
+                remove: remove,
+                update: update,
+                object: object,
+            };
+
+        }
+
+        function getLines() {
+            var object, geometry, material;
+
+            geometry = new THREE.Geometry();
+            /*
+            material = new THREE.LineDashedMaterial({
+                color: options.colors.lines,
+                dashSize: 1,
+                gapSize: 0.5,
+            });
+            */
+            material = new THREE.LineBasicMaterial({
+                color: options.colors.lines
+            });
+            object = new THREE.Line(geometry, material);
+            scene.add(object);
+
+            function add() {
+                scene.add(object);
+            }
+
+            function remove() {
+                scene.remove(object);
+            }
+
+            function update() {
+
+            }
+            return {
+                add: add,
+                remove: remove,
+                update: update,
+                object: object,
+            };
+
+        }
+
+        function createObjects() {
+            objects.groundLines = getGroundLines();
+            // objects.ground = getGround();
+            // objects.notes = getNotes();
         }
 
         function createAnalyser() {
@@ -280,7 +430,7 @@
                 source = ctx.createMediaElementSource(audio);
                 source.connect(analyser);
                 source.connect(ctx.destination);
-                analyser.fftSize = options.totalBands * 2;
+                analyser.fftSize = options.bands * 2;
                 bufferLength = analyser.frequencyBinCount;
                 console.log('bufferLength', bufferLength);
                 analyserData = new Uint8Array(bufferLength);
@@ -289,47 +439,14 @@
             return audio.play();
         }
 
-        var d = 0;
-
         function updateAnalyser() {
             // notes.rotation.z -= 0.0025;
             // lines.rotation.z -= 0.0025;            
             if (analyserData) {
                 analyser.getByteFrequencyData(analyserData);
-                angular.forEach(notes.geometry.vertices, function(v, i) {
-                    var bandIndex = i % options.totalBands;
-                    var pow = analyserData[bandIndex];
-                    var scale = (pow / options.totalBands) * 2;
-                    var p = options.points[i];
-                    var vx = p.x * (1 + scale);
-                    var vy = p.y * (1 + scale);
-                    var vz = p.z * (1 + scale);
-                    v.x += (vx - v.x) / 3;
-                    v.y += (vy - v.y) / 3;
-                    v.z += (vz - v.z) / 3;
-                });
-                notes.geometry.verticesNeedUpdate = true;
-                var rows = options.rows,
-                    strength = options.strength,
-                    groundStrength = options.groundStrength;
-                angular.forEach(ground.geometry.vertices, function(v, i) {
-                    var r = Math.floor(i / rows);
-                    var c = i - r * rows;
-                    var b = Math.abs(c - rows / 2) * 2;
-                    var dr = 1 - (Math.abs(r - rows / 2) / (rows / 2));
-                    var dc = 1 - (Math.abs(c - rows / 2) / (rows / 2));
-                    var drc = (dr + dc) / 2;
-                    var bandIndex = b % options.totalBands;
-                    var pow = analyserData[bandIndex];
-                    var scale = (pow / options.totalBands) * dr * 2;
-                    // v.x = options.points[i].x + 10 * scale;
-                    // v.y = options.points[i].y + 10 * scale;
-                    var ni = r * rows + ((c + d) % rows);
-                    var vz = (options.heightMap[ni] / 64 * groundStrength) * drc + (strength * scale);
-                    v.z += (vz - v.z) / (3 + 3 * (1 - drc));
-                });
-                d++;
-                ground.geometry.verticesNeedUpdate = true;
+                objects.groundLines.update();
+                // objects.ground.update();
+                // objects.notes.update();
             }
         }
 
@@ -389,7 +506,7 @@
 
         createScene();
         createObjects();
-        addNotes();
+        // addNotes();
         createAnalyser();
         // createLights();
         // addGui();        
@@ -420,8 +537,6 @@
         }
 
         function addSplines(points) {
-            var subdivisions = 6;
-            var recursion = 1;
             points = points.map(function(point) {
                 return new THREE.Vector3(point.x, point.y, point.z);
             });
@@ -475,10 +590,6 @@
             return (value * multiplier + increment) % modulus;
         }
 
-        function onChange(params) {
-
-        }
-
         function __onChange(params) {
             // alert('onChange', data);
             var dx = 10 - 10 * params.dispersion * (1 - params.bulge);
@@ -520,10 +631,9 @@
         function addGui() {
             gui = new dat.GUI();
             gui.closed = true;
+            gui.addColor(options.colors, 'background').onChange(onChange);
+            gui.addColor(options.colors, 'lines').onChange(onChange);
             /*
-            gui.add(params, 'arms', 1, 10).onChange(function(newValue) {
-                onChange(params);
-            });
             gui.add(params, 'stops', 1000, 10000).onChange(function(newValue) {
                 onChange(params);
             });
@@ -546,7 +656,8 @@
             */
             onChange(params);
             return gui;
-        };
+        }
+        addGui();
 
         function spiral(params) {
             return {
@@ -708,7 +819,7 @@
             document.addEventListener('touchmove', handleTouchMove, false);
         }
 
-        function generateHeight(width, height) {
+        function getPerlinNoise(width, height) {
             var size = width * height,
                 data = new Uint8Array(size),
                 perlin = new ImprovedNoise(),
@@ -792,5 +903,63 @@
             };
         }
     }]);
+
+    var GPoint = function() {
+        var unit = {
+            x: 0.09,
+            y: 0.09,
+            z: 0.3
+        };
+
+        function GPoint(x, y, z) {
+            this.x = x || 0;
+            this.y = y || 0;
+            this.z = z || 0;
+        }
+        GPoint.prototype = {
+            randomize: function() {
+                this.x = Math.random() * 1000;
+                this.y = Math.random() * 1000;
+                this.z = Math.random() * 1000;
+                return this;
+            },
+            toGrid: function() {
+                this.x = (Math.round(this.x / unit.x) * unit.x);
+                this.y = (Math.round(this.y / unit.y) * unit.y);
+                this.z = (Math.round(this.z / unit.z) * unit.z);
+                return this;
+            },
+            toFixed: function() {
+                this.x = +(this.x.toFixed(2));
+                this.y = +(this.y.toFixed(2));
+                this.z = +(this.z.toFixed(2));
+                return this;
+            },
+        };
+        GPoint.grid = function(points) {
+            for (var i = 0; i < points.length; i++) {
+                points[i].toGrid().toFixed();
+            }
+            GPoint.sort(points);
+        };
+        GPoint.sort = function(points) {
+            points.sort(function(a, b) {
+                if (a.z === b.z) {
+                    if (a.x === b.x) {
+                        if (a.y === b.y) {
+                            return 0;
+                        } else {
+                            return a.y > b.y ? 1 : -1;
+                        }
+                    } else {
+                        return a.x > b.x ? 1 : -1;
+                    }
+                } else {
+                    return a.z > b.z ? 1 : -1;
+                }
+            });
+        };
+        return GPoint;
+    }();
 
 }());
