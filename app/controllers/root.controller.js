@@ -66,7 +66,6 @@
     app.controller('RootCtrl', ['$scope', function($scope) {
 
         var options = {
-            points: [],
             groundPoints: [],
             totalBands: 256,
             rows: 256,
@@ -77,6 +76,11 @@
             audioUrl: "audio/rossini-192.mp3",
         };
 
+        options.points = new Array(options.totalBands * 2).fill(null).map(function() {
+            var r = 1000,
+                d = r * 2;
+            return new THREE.Vector3(-r + Math.random() * d, -r + Math.random() * d, -r + Math.random() * d);
+        });
         options.heightMap = generateHeight(options.rows, options.rows);
 
         var analyser, analyserData, audio;
@@ -206,7 +210,7 @@
             });
             */
             material = new THREE.PointsMaterial({
-                color: 0x000000,
+                color: 0xaaaaaa,
                 size: 2,
                 sizeAttenuation: false,
             });
@@ -248,9 +252,13 @@
                     var bandIndex = i % options.totalBands;
                     var pow = analyserData[bandIndex];
                     var scale = (pow / options.totalBands) * 2;
-                    v.x = options.points[i].x + 10 * scale;
-                    v.y = options.points[i].y + 10 * scale;
-                    v.z = options.points[i].z + 10 * scale;
+                    var p = options.points[i];
+                    var vx = p.x * (1 + scale);
+                    var vy = p.y * (1 + scale);
+                    var vz = p.z * (1 + scale);
+                    v.x += (vx - v.x) / 3;
+                    v.y += (vy - v.y) / 3;
+                    v.z += (vz - v.z) / 3;
                 });
                 notes.geometry.verticesNeedUpdate = true;
                 var rows = options.rows,
@@ -348,29 +356,18 @@
             */
             var geometry = new THREE.Geometry();
             // geometry.vertices.splice(0, geometry.vertices.length);
-            var points = new Array(250).fill(null).map(function() {
-                return {
-                    x: -500 + Math.random() * 1000,
-                    y: -500 + Math.random() * 1000,
-                    z: -500 + Math.random() * 1000,
-                };
-            });
+            var points = options.points;
             var i = 0,
                 t = points.length;
             while (i < t) {
-                var point = points[i];
-                var vertex = new THREE.Vector3();
-                vertex.x = point.x;
-                vertex.y = point.y;
-                vertex.z = point.z;
-                geometry.vertices.push(vertex);
-                geometry.colors.push(new THREE.Color(0, 0, 0));
+                var p = points[i];
+                geometry.vertices.push(new THREE.Vector3(p.x, p.y, p.z));
+                // geometry.colors.push(new THREE.Color(0, 0, 0));
                 i++;
             }
             geometry.mergeVertices();
             geometry.verticesNeedUpdate = true;
             notes.geometry = geometry;
-            options.points = points;
             addSplines(points);
         }
 
