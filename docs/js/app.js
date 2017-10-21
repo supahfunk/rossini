@@ -54,10 +54,10 @@
     var app = angular.module('app');
 
     app.controller('RootCtrl', ['$scope', function($scope) {
-        var OBJECTS = {};
         var analyser, analyserData, audio;
         var stats, gui, scene, camera, controls, fov, ratio, near, far, shadow, back, light, renderer, container, width, height, w2, h2, mouse = { x: 0, y: 0 };
-        var ground, notes, lines;
+
+        var OBJECTS = {};
 
         var options = {
             audioUrl: "audio/rossini-192.mp3",
@@ -67,11 +67,12 @@
                 notes: 0x444444, // 0xaaaaaa,
             },
             bands: 256,
-            rows: 256,
+            rows: 128,
             space: 10,
             strength: 60,
             noiseStrength: 25,
             displayLines: true,
+            display: '0',
             randomize: function() {
                 for (var i = 0; i < gui.__controllers.length; i++) {
                     var c = gui.__controllers[i];
@@ -79,6 +80,13 @@
                         var value = c.__min + (c.__max - c.__min) * Math.random();
                         this[c.property] = value;
                         c.updateDisplay();
+                    }
+                    if (c.__color) {
+                        c.__color.r = Math.floor(Math.random() * 255);
+                        c.__color.g = Math.floor(Math.random() * 255);
+                        c.__color.b = Math.floor(Math.random() * 255);
+                        c.updateDisplay();
+                        c.setValue(c.__color.hex);
                     }
                 }
             }
@@ -93,20 +101,28 @@
 
         function onChange(params) {
             renderer.setClearColor(options.colors.background, 1);
-            if (OBJECTS.ground) {
-                OBJECTS.ground.material.color.setHex(options.colors.lines);
-                if (options.displayLines) {
-                    OBJECTS.ground.remove();
+            if (OBJECTS.circles) {
+                OBJECTS.circles.material.color.setHex(options.colors.lines);
+                if (options.display === '0') {
+                    OBJECTS.circles.add();
                 } else {
-                    OBJECTS.ground.add();
+                    OBJECTS.circles.remove();
                 }
             }
-            if (OBJECTS.groundLines) {
-                OBJECTS.groundLines.material.color.setHex(options.colors.lines);
-                if (options.displayLines) {
-                    OBJECTS.groundLines.add();
+            if (OBJECTS.lines) {
+                OBJECTS.lines.material.color.setHex(options.colors.lines);
+                if (options.display === '1') {
+                    OBJECTS.lines.add();
                 } else {
-                    OBJECTS.groundLines.remove();
+                    OBJECTS.lines.remove();
+                }
+            }
+            if (OBJECTS.dots) {
+                OBJECTS.dots.material.color.setHex(options.colors.lines);
+                if (options.display === '2') {
+                    OBJECTS.dots.add();
+                } else {
+                    OBJECTS.dots.remove();
                 }
             }
         }
@@ -176,7 +192,7 @@
             v.z += (level - v.z) / (3 + 3 * Math.max(0.000001, 1 - drc));
         }
 
-        function getGround() {
+        function getObjectDots() {
             var material = new THREE.PointsMaterial({
                 color: options.colors.lines,
                 size: 1,
@@ -217,12 +233,12 @@
             object.geometry = geometry;
 
             function add() {
-                console.log('OBJECTS.ground.add');
+                console.log('OBJECTS.dots.add');
                 scene.add(object);
             }
 
             function remove() {
-                console.log('OBJECTS.ground.remove');
+                console.log('OBJECTS.dots.remove');
                 scene.remove(object);
             }
 
@@ -245,7 +261,7 @@
             };
         }
 
-        function getGroundLines() {
+        function getObjectLines() {
             var object, material, lines = [];
             material = new THREE.LineBasicMaterial({
                 color: options.colors.lines
@@ -278,12 +294,12 @@
             });
 
             function add() {
-                console.log('OBJECTS.groundLines.add');
+                console.log('OBJECTS.lines.add');
                 scene.add(object);
             }
 
             function remove() {
-                console.log('OBJECTS.groundLines.remove');
+                console.log('OBJECTS.lines.remove');
                 scene.remove(object);
             }
 
@@ -316,10 +332,94 @@
             };
         }
 
+        function getObjectCircles() {
+            var object, material, circles = [];
+            material = new THREE.LineBasicMaterial({
+                color: options.colors.lines
+            });
+            object = new THREE.Object3D();
+            var rows = options.rows,
+                space = options.space;
+            while (circles.length < options.rows) {
+                var geometry = new THREE.Geometry();
+                var circle = new THREE.LineLoop(geometry, material);
+                circle.points = new Array(rows).fill(null);
+                // var spline = new THREE.CatmullRomCurve3(points);
+                // circle.spline = spline;
+                circles.push(circle);
+                object.add(circle);
+            }
+            var points = new Array(rows * rows).fill(null).map(function(n, i) {
+                var point = new THREE.Vector3();
+                var r = Math.floor(i / rows);
+                var c = i - r * rows;
+                circles[c].points[r] = point;
+                circles[c].geometry.vertices.push(point);
+                return point;
+            });
+
+            function add() {
+                console.log('OBJECTS.circles.add');
+                scene.add(object);
+            }
+
+            function remove() {
+                console.log('OBJECTS.circles.remove');
+                scene.remove(object);
+            }
+
+            var d = 0;
+
+            function update() {
+                var rows = options.rows,
+                    strength = options.strength,
+                    noiseStrength = options.noiseStrength;
+                angular.forEach(points, function(v, i) {
+                    // animateVertexAtIndex(v, i, d);
+                    var r = Math.floor(i / rows);
+                    var c = i - r * rows;
+                    var b = Math.abs(c - rows / 2) * 2;
+                    var dr = 1 - (Math.abs(r - rows / 2) / (rows / 2));
+                    var dc = 1 - (Math.abs(c - rows / 2) / (rows / 2));
+                    var drc = (dr + dc) / 2;
+                    var ai = r % options.bands;
+                    var pow = (analyserData[ai] + analyserData[rows - 1 - ai]) / 2;
+                    var scale = pow / options.bands;
+                    var na = c * rows + ((r + d) % rows);
+                    var noise = options.noiseMap[na];
+                    var level = 96 + c + (noise / 64 * noiseStrength) + (strength * scale);
+                    var angle = 2 * Math.PI / rows * r;
+                    var radius = v.radius || level;
+                    radius += (level - radius) / 2;
+                    v.x = Math.cos(angle) * radius;
+                    v.y = 0;
+                    v.z = Math.sin(angle) * radius;
+                    v.radius = radius;
+                });
+                angular.forEach(circles, function(circle, l) {
+                    // var points = circle.points;
+                    // var spline = circle.spline;
+                    // spline.getPoints(rows * 2);
+                    // circle.geometry.vertices = points;
+                    // geometry.computeLineDistances();
+                    // geometry.lineDistancesNeedUpdate = true;
+                    circle.geometry.verticesNeedUpdate = true;
+                });
+                d++;
+            }
+            return {
+                add: add,
+                remove: remove,
+                update: update,
+                object: object,
+                material: material,
+            };
+        }
+
+        /*
         function getNotes() {
             var object, geometry, material;
             geometry = new THREE.Geometry();
-            /*
             texture = new THREE.CanvasTexture(getSprite());
             material = new THREE.PointsMaterial({
                 size: 12,
@@ -329,7 +429,6 @@
                 depthTest: false,
                 transparent: true
             });
-            */
             material = new THREE.PointsMaterial({
                 color: options.colors.notes,
                 size: 2,
@@ -387,13 +486,11 @@
             var object, geometry, material;
 
             geometry = new THREE.Geometry();
-            /*
             material = new THREE.LineDashedMaterial({
                 color: options.colors.lines,
                 dashSize: 1,
                 gapSize: 0.5,
             });
-            */
             material = new THREE.LineBasicMaterial({
                 color: options.colors.lines
             });
@@ -418,10 +515,11 @@
             };
 
         }
-
+        */
         function createObjects() {
-            OBJECTS.ground = getGround();
-            OBJECTS.groundLines = getGroundLines();
+            OBJECTS.dots = getObjectDots();
+            OBJECTS.lines = getObjectLines();
+            OBJECTS.circles = getObjectCircles();
             // OBJECTS.notes = getNotes();
         }
 
@@ -453,10 +551,12 @@
             // lines.rotation.z -= 0.0025;            
             if (analyserData) {
                 analyser.getByteFrequencyData(analyserData);
-                if (options.displayLines) {
-                    OBJECTS.groundLines.update();
-                } else {
-                    OBJECTS.ground.update();
+                if (options.display === '0') {
+                    OBJECTS.circles.update();
+                } else if (options.display === '1') {
+                    OBJECTS.lines.update();
+                } else if (options.display === '2') {
+                    OBJECTS.dots.update();
                 }
                 // OBJECTS.notes.update();
             }
@@ -531,7 +631,8 @@
             gui.add(options, 'noiseStrength', 10, 100).onChange(onChange);
             gui.addColor(options.colors, 'background').onChange(onChange);
             gui.addColor(options.colors, 'lines').onChange(onChange);
-            gui.add(options, 'displayLines').onChange(onChange);
+            // gui.add(options, 'displayLines').onChange(onChange);
+            gui.add(options, 'display', { Circles: 0, Lines: 1, Dots: 2 }).onChange(onChange);
             gui.add(options, 'randomize');
             return gui;
         }
