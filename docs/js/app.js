@@ -69,9 +69,9 @@
             bands: 256,
             rows: 128,
             space: 10,
-            strength: 60,
+            audioStrength: 60,
             noiseStrength: 25,
-            displayLines: true,
+            circularStrength: 0.90,
             display: '0',
             randomize: function() {
                 for (var i = 0; i < gui.__controllers.length; i++) {
@@ -176,7 +176,7 @@
 
         function animateVertexAtIndex(v, i, d) {
             var rows = options.rows,
-                strength = options.strength,
+                audioStrength = options.audioStrength,
                 noiseStrength = options.noiseStrength;
             var r = Math.floor(i / rows);
             var c = i - r * rows;
@@ -188,7 +188,7 @@
             var pow = analyserData[index];
             var scale = (pow / options.bands) * dr * 2;
             var ni = r * rows + ((c + d) % rows);
-            var level = (options.noiseMap[ni] / 64 * noiseStrength) * drc + (strength * scale);
+            var level = (options.noiseMap[ni] / 64 * noiseStrength) * drc + (audioStrength * scale);
             v.z += (level - v.z) / (3 + 3 * Math.max(0.000001, 1 - drc));
         }
 
@@ -307,7 +307,7 @@
 
             function update() {
                 var rows = options.rows,
-                    strength = options.strength,
+                    audioStrength = options.audioStrength,
                     noiseStrength = options.noiseStrength;
                 angular.forEach(points, function(v, i) {
                     animateVertexAtIndex(v, i, d);
@@ -350,9 +350,16 @@
                 object.add(circle);
             }
             var points = new Array(rows * rows).fill(null).map(function(n, i) {
-                var point = new THREE.Vector3();
                 var r = Math.floor(i / rows);
                 var c = i - r * rows;
+                var angle = 2 * Math.PI / rows;
+                var rad = angle * r + angle * c * 0.1;
+                var point = new THREE.Vector3();
+                point.r = {
+                    x: Math.cos(rad),
+                    y: Math.sin(rad),
+                    z: 96 + (c * c * c * 0.0001),
+                };
                 circles[c].points[r] = point;
                 circles[c].geometry.vertices.push(point);
                 return point;
@@ -372,8 +379,9 @@
 
             function update() {
                 var rows = options.rows,
-                    strength = options.strength,
-                    noiseStrength = options.noiseStrength;
+                    audioStrength = options.audioStrength,
+                    noiseStrength = options.noiseStrength,
+                    circularStrength = options.circularStrength;
                 angular.forEach(points, function(v, i) {
                     // animateVertexAtIndex(v, i, d);
                     var r = Math.floor(i / rows);
@@ -387,13 +395,13 @@
                     var scale = pow / options.bands;
                     var na = c * rows + ((r + d) % rows);
                     var noise = options.noiseMap[na];
-                    var level = 96 + c + (noise / 64 * noiseStrength) + (strength * scale);
-                    var angle = 2 * Math.PI / rows * r;
+                    var cpow = 1 - ((rows - c) / rows * circularStrength);
+                    var level = v.r.z + (noise / 64 * noiseStrength) * cpow + (audioStrength * 2 * scale * scale) * cpow;
                     var radius = v.radius || level;
                     radius += (level - radius) / 2;
-                    v.x = Math.cos(angle) * radius;
-                    v.y = 0;
-                    v.z = Math.sin(angle) * radius;
+                    v.x = v.r.x * radius;
+                    v.y = -c;
+                    v.z = v.r.y * radius;
                     v.radius = radius;
                 });
                 angular.forEach(circles, function(circle, l) {
@@ -627,12 +635,12 @@
         function addGui() {
             gui = new dat.GUI();
             gui.closed = true;
-            gui.add(options, 'strength', 10, 100).onChange(onChange);
-            gui.add(options, 'noiseStrength', 10, 100).onChange(onChange);
+            gui.add(options, 'display', { Circles: 0, Lines: 1, Dots: 2 }).onChange(onChange);
             gui.addColor(options.colors, 'background').onChange(onChange);
             gui.addColor(options.colors, 'lines').onChange(onChange);
-            // gui.add(options, 'displayLines').onChange(onChange);
-            gui.add(options, 'display', { Circles: 0, Lines: 1, Dots: 2 }).onChange(onChange);
+            gui.add(options, 'audioStrength', 10, 100).onChange(onChange);
+            gui.add(options, 'noiseStrength', 10, 100).onChange(onChange);
+            gui.add(options, 'circularStrength', 0.01, 0.90).onChange(onChange);
             gui.add(options, 'randomize');
             return gui;
         }
