@@ -1,0 +1,55 @@
+//--------------------------------------------------
+// Colors
+//--------------------------------------------------
+$black-tit: #2b2e34;
+$violet: #3353a4;
+$gold: #b2954d;
+$red: #be261c;
+$light: #95a19e;
+
+
+//--------------------------------------------------
+// Extra
+//--------------------------------------------------
+$bezier: cubic-bezier(0.190, 1.000, 0.220, 1.000);
+$font-path: '../fonts/';
+
+
+//--------------------------------------------------
+// Media Queries
+//--------------------------------------------------
+$lg-width: 1440px;
+$md-width: 1280px;
+$sm-width: 1024px;
+$xs-width: 768px;
+$xxs-width: 575px;
+
+@mixin lg {
+    @media (max-width: #{$lg-width}) {
+        @content;
+    }
+}
+
+@mixin md {
+    @media (max-width: #{$md-width}) {
+        @content;
+    }
+}
+
+@mixin sm {
+    @media (max-width: #{$sm-width}) {
+        @content;
+    }
+}
+
+@mixin xs {
+    @media (max-width: #{$xs-width}) {
+        @content;
+    }
+}
+
+@mixin xxs {
+    @media (max-width: #{$xxs-width}) {
+        @content;
+    }
+}

@@ -1,0 +1,29 @@
+@import "variables";
+
+/*--------------------------------------------------
+Footer
+--------------------------------------------------*/
+.footer {
+    position: fixed;
+    z-index: 100;
+    height: auto;
+    color: $light;
+    font-size: 16px;
+    margin: 0 50px 25px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &__copy {
+    }
+
+    .logo-fondazione-rossini {
+        img {
+            width: 220px;
+            height: auto;
+        }
+    }
+}

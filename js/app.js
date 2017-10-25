@@ -1,4 +1,52 @@
-﻿/* global angular */
+/* global angular */
+
+(function() {
+    "use strict";
+
+    var app = angular.module('app', ['ngRoute', 'jsonFormatter']);
+
+}());
+/* global angular */
+
+(function() {
+    "use strict";
+
+    var app = angular.module('app');
+
+    app.config(['$httpProvider', function($httpProvider) {
+        // $httpProvider.defaults.withCredentials = true;
+    }]);
+
+}());
+/* global angular */
+
+(function() {
+    "use strict";
+
+    var app = angular.module('app');
+
+    app.config(['$locationProvider', function($locationProvider) {
+
+        // HTML5 MODE url writing method (false: #/anchor/use, true: /html5/url/use)
+        $locationProvider.html5Mode(true);
+        $locationProvider.hashPrefix('');
+
+    }]);
+
+}());
+/* global angular */
+
+(function() {
+    "use strict";
+
+    var app = angular.module('app');
+
+    app.run(['$rootScope', function($rootScope) {
+
+    }]);
+
+}());
+/* global angular */
 
 (function() {
     "use strict";
@@ -15,7 +63,7 @@
 
         var options = {
             cameraHeight: 33,
-            targetHeight: 39,
+            targetHeight: 51,
             camera: {
                 position: new THREE.Vector3(),
                 target: new THREE.Vector3(),
@@ -61,7 +109,7 @@
         function getStepper() {
             var stepper = {
                 pow: 0,
-                duration: 1.500, // sec
+                duration: 2.000, // sec
             };
 
             var steps = new Array(24).fill().map(function(v, i) {
@@ -72,7 +120,7 @@
                     },
                     circle: {
                         position: new THREE.Vector3(60, 60, 0),
-                        texture: 'img/rossini-01.jpg',
+                        texture: 'img/rossini-01.png',
                     }
                 };
             });
@@ -410,6 +458,7 @@
             var material = new THREE.MeshBasicMaterial({
                 color: options.colors.lines,
                 map: texture,
+                transparent: true
             });
 
             /*

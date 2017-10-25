@@ -15,13 +15,17 @@
     "test",
     "tests"
   ],
-  "dependencies": {
-    "angular": "^1.6.6",
-    "angular-route": "^1.6.6",
-    "bootstrap": "v4.0.0-alpha.6",
-    "json-formatter": "^0.6.0",
-    "dat.gui": "dat-gui#^0.6.5",
-    "stats.js": "*",
-    "three.js": "threejs#*"
-  }
+    "dependencies": {
+        "angular": "^1.6.6",
+        "angular-route": "^1.6.6",
+        "bootstrap": "v4.0.0-alpha.6",
+        "json-formatter": "^0.6.0",
+        "dat.gui": "dat-gui#^0.6.5",
+        "stats.js": "*",
+        "three.js": "threejs#*",
+        "slick-carousel": "^1.8.1",
+        "jquery-mousewheel": "^3.1.13",
+        "THREE.MeshLine": "^1.0.3",
+        "gsap": "^1.20.3"
+    }
 }

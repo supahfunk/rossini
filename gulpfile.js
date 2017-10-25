@@ -93,8 +93,8 @@ gulp.task('webserver', function() {
             livereload: true,
             directoryListing: true,
             port: 5555,
-            open: 'http://localhost:5555/docs/index.html',
-            fallback: 'docs/index.html'
+            open: 'http://localhost:5555/home.html',
+            fallback: ''
         }));
 });
 
@@ -118,7 +118,7 @@ gulp.task('watch', function(done) {
     done();
 });
 
-gulp.task('default', ['compile', 'bundle', 'webserver', 'watch']);
+gulp.task('default', ['compile', 'bundle', 'watch']);
 
 // UTILS
 function getCompilers(ext) {

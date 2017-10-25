@@ -1,0 +1,161 @@
+﻿<!doctype html>
+<html lang="en" ng-app="app">
+<head>
+    <base href="." />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>notes</title>
+    <meta name="apple-mobile-web-app-title" content="notes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link href="favicon.png" rel="shortcut icon" type="image/x-icon" />
+    <style>
+        [ng\:cloak],
+        [ng-cloak],
+        [data-ng-cloak],
+        [x-ng-cloak],
+        .ng-cloak,
+        .x-ng-cloak {
+            display: none !important;
+        }
+    </style>
+    <link href="css/vendors.min.css" rel="stylesheet" />
+    <link href="css/app.min.css" rel="stylesheet" />
+</head>
+
+<body ng-controller="RootCtrl" >
+    
+    <div class="wrapper">
+
+        <!-- Tunnel Background -->
+        <div class="tunnel-bg">
+            <div class="item">
+                <img data-lazy="img/tunnel-1.jpg" />
+            </div>
+            <div class="item">
+                <img data-lazy="img/tunnel-2.jpg" />
+            </div>
+            <div class="item">
+                <img data-lazy="img/tunnel-3.jpg" />
+            </div>
+        </div>
+        <!-- /Tunnel Background -->
+
+        <!-- Nav Toggle -->
+        <button class="nav-toggle"><span></span> Menu</button>
+        <!-- /Nav Toggle -->
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <div class="breadcrumb__chapter">Passione, Genio e Silenzio</div>
+            <div class="breadcrumb__paragraph">Sulle strade di Parigi</div>
+        </div>
+        <!-- /Breadcrumb -->
+
+        <!-- Sound Info -->
+        <div class="sound-info">
+            <button class="sound-toggle active">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <div class="sound-name">
+                <div class="sound-title">Barbiere di Siviglia</div>
+                <div class="sound-author">Orchestra del conservatorio</div>
+            </div>
+        </div>
+        <!-- /Sound Info -->
+
+        <!-- Tunnel Year -->
+        <div class="tunnel-year one-year">
+            <div class="tunnel-year__from">1817</div>
+            <div class="tunnel-year__to">1817</div>
+        </div>
+        <!-- /Tunnel Year -->
+
+        <!-- Three JS -->
+        <section id="scene "> </section>
+        <!-- /Three JS -->
+
+        <!-- Tunnel Nav -->
+        <div class="tunnel-nav">
+            <button type="button" id="tunnel-prev" ng-click="stepper.previous()">prev</button>
+            <button type="button" id="tunnel-next" ng-click="stepper.next()">next</button>
+            <span ng-bind="stepper.current" class="ng-binding">0</span>
+        </div>
+        <!-- /Tunnel Nav -->
+
+        <!-- Tunnel -->
+        <div class="tunnel">
+            <div class="tunnel-slick">
+                <div id="tunnel-1" class="tunnel-slick__item" data-from="1832" data-to="false">
+                    <div class="tunnel-slick__header">
+                        <div class="big-title h1 splitted-text">
+                            Il periodo francese:<br>
+                            la nascita della <em>Grand Opéra</em>
+                        </div>
+                        <div class="cta">
+                            <a href="#" class="inline-btn">View more</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="tunnel-2" class="tunnel-slick__item" data-from="1838" data-to="1847">
+                    <div class="tunnel-slick__header">
+                        <div class="big-title h1 splitted-text">
+                            Il Barbiere di Siviglia<br>
+                            al teatro Argentina<br>
+                            di Roma
+                        </div>
+                        <div class="cta">
+                            <a href="#" class="inline-btn">View more</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="tunnel-3" class="tunnel-slick__item" data-from="1848" data-to="1860">
+                    <div class="tunnel-slick__header">
+                        <div class="big-title h1 splitted-text">
+                            Il Silenzio
+                        </div>
+                        <div class="cta cta-white">
+                            <a href="#" class="inline-btn inline-btn--white">View more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tunnel-nav">
+
+            </div>
+        </div>
+        <!-- /Tunnel -->
+
+        <!-- View -->
+        <div class="view">
+            Il periodo francese di Rossini si apre nel 1825 con la cantata Il viaggio a Reims, ossia L’albergo del giglio d’oro scritta per l’incoronazione di Carlo X. Seguono Le siège de Corinthe, radicale rifacimento del Maometto II, Moïse et Pharaon, ou Le passage de la Mer Rouge (1827), Le Comte Ory, dove riutilizza gran parte della musica del Viaggio a Reims.
+
+            Nel 1827 muore la madre e Rossini ne è profondamente colpito. Lavora a quella che sarà l’ultima sua fatica nel teatro musicale, Guillaume Tell (1829), che ottiene solo un “succès d’estime” da parte del pubblico, mentre è esaltata dalla critica e dai musicisti.  Carlo X gli conferisce la Légion d’honneur. 
+        </div>
+        <!-- /View -->
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer__copy">© Comitato Nazionale Celebrazioni Centenari Rossiniani 2017</div>
+            <div class="logo-fondazione-rossini">
+                <img src="img/200Rossini150.svg" alt="Fondazione Rossini" />
+            </div>
+        </footer>
+        <!-- /Footer -->
+    </div>
+
+    
+    <script src="js/three.js" type="text/javascript"></script>
+    <script src="js/vendors.min.js" type="text/javascript"></script>
+    <script src="js/tunnel.js" type="text/javascript"></script>
+    <script src="js/main.js" type="text/javascript"></script>
+    <script src="js/app.js" type="text/javascript"></script>
+</body>
+
+</html>
