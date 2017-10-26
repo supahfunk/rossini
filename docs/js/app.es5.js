@@ -67,7 +67,9 @@
             pow: 0,
             background: new THREE.Color(options.colors.background),
             lines: new THREE.Color(options.colors.lines),
-            overLines: new THREE.Color(options.colors.overLines)
+            overLines: new THREE.Color(options.colors.overLines),
+            cameraHeight: options.camera.cameraHeight,
+            targetHeight: options.camera.targetHeight
         };
 
         function getItems() {
@@ -115,13 +117,15 @@
             }
         }
 
-        function tweenTo(pow, colors, duration, callback) {
+        function tweenTo(pow, step, duration, callback) {
             clearTweens();
-            var background = new THREE.Color(colors.background);
-            var lines = new THREE.Color(colors.lines);
-            var overLines = new THREE.Color(colors.overLines);
+            var background = new THREE.Color(step.colors.background);
+            var lines = new THREE.Color(step.colors.lines);
+            var overLines = new THREE.Color(step.colors.overLines);
             tweens.push(TweenLite.to(stepper.values, duration, {
                 pow: pow,
+                cameraHeight: step.camera.cameraHeight,
+                targetHeight: step.camera.targetHeight,
                 delay: 0,
                 ease: Power2.easeInOut,
                 onComplete: function onComplete() {
@@ -160,14 +164,21 @@
         function setTweens(duration) {
             var index = stepper.current;
             var step = steps[index];
-            tweenTo(index / steps.length, step.colors, duration, function () {
+            tweenTo(index / steps.length, step, duration, function () {
                 clearTweens();
                 console.log(step, stepper.values);
             });
         }
 
         $rootScope.$on('onOptionsChanged', function () {
-            setTweens(0.250);
+            var index = stepper.current;
+            var step = steps[index];
+            stepper.values.cameraHeight = step.camera.cameraHeight;
+            stepper.values.targetHeight = step.camera.targetHeight;
+            stepper.values.background.copy(new THREE.Color(step.colors.background));
+            stepper.values.lines.copy(new THREE.Color(step.colors.lines));
+            stepper.values.overLines.copy(new THREE.Color(step.colors.overLines));
+            // setTweens(0.250);
         });
 
         function setStep(index) {
@@ -278,16 +289,16 @@
             }
 
             gui.closed = true;
-            gui.add(options.camera, 'cameraHeight', 20.0, 100.0).onChange(onOptionsChanged);
-            gui.add(options.camera, 'targetHeight', 20.0, 100.0).onChange(onOptionsChanged);
+            gui.add(options.camera, 'cameraHeight', -20.0, 20.0).listen().onChange(onOptionsChanged);
+            gui.add(options.camera, 'targetHeight', -20.0, 20.0).listen().onChange(onOptionsChanged);
             var circlePosition = gui.addFolder('circlePosition');
-            circlePosition.add(options.circle.position, 'x', -300, 300).onChange(onOptionsChanged);
-            circlePosition.add(options.circle.position, 'y', -300, 300).onChange(onOptionsChanged);
-            circlePosition.add(options.circle.position, 'z', -300, 300).onChange(onOptionsChanged);
+            circlePosition.add(options.circle.position, 'x', -300, 300).listen().onChange(onOptionsChanged);
+            circlePosition.add(options.circle.position, 'y', -300, 300).listen().onChange(onOptionsChanged);
+            circlePosition.add(options.circle.position, 'z', -300, 300).listen().onChange(onOptionsChanged);
             var colors = gui.addFolder('colors');
-            colors.addColor(options.colors, 'background').onChange(onOptionsChanged);
-            colors.addColor(options.colors, 'lines').onChange(onOptionsChanged);
-            colors.addColor(options.colors, 'overLines').onChange(onOptionsChanged);
+            colors.addColor(options.colors, 'background').listen().onChange(onOptionsChanged);
+            colors.addColor(options.colors, 'lines').listen().onChange(onOptionsChanged);
+            colors.addColor(options.colors, 'overLines').listen().onChange(onOptionsChanged);
             gui.add(options, 'audioVolume', 0.01, 1.0).onChange(onOptionsChanged);
             gui.add(options, 'audioStrength', 10, 100).onChange(onOptionsChanged);
             gui.add(options, 'noiseStrength', 10, 100).onChange(onOptionsChanged);
@@ -301,6 +312,32 @@
         }
 
         return DatGui;
+    }]);
+
+    app.directive('scrollbar', [function () {
+        return {
+            restrict: 'A',
+            link: function link(scope, element, attributes, model) {
+                var native = element[0];
+                var options = {
+                    speed: 1,
+                    damping: 0.1,
+                    overscrollDamping: 1.0,
+                    thumbMinSize: 20,
+                    continuousScrolling: true,
+                    alwaysShowTracks: false
+                };
+                var scrollbar;
+
+                function Init() {
+                    scrollbar = Scrollbar.init(native, options);
+                    scope.$watch(scrollbar.targets.content.offsetHeight, function (height) {
+                        scrollbar.update();
+                    });
+                }
+                setTimeout(Init, 100);
+            }
+        };
     }]);
 })();
 

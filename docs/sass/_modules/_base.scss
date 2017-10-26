@@ -37,10 +37,18 @@ Canvas
     width: 100%;
     height: 100vh;
     transition: background .6s ease-in-out;
+
+}
+
+[scene] {
+    div {
+        display: none !important;
+    }
 }
 
 .dg {
-    z-index: 10000!important;
+    z-index: 10000 !important;
+    display: none!important;
 }
 
 
