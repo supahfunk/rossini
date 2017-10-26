@@ -5,13 +5,25 @@ Nav
 --------------------------------------------------*/
 .nav {
     position: fixed;
-    z-index: 150;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
     background: #fff;
     text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 0;
+    transform: scale(0.8);
+    transition: opacity .8s $bezier, z-index 1s linear .9s, transform .8s $bezier;
+
+    .open-nav & {
+        z-index: 150;
+        opacity: 1;
+        pointer-events: all;
+        transform: scale(1);
+        transition: opacity .8s $bezier, z-index 0s linear 0s, transform .8s $bezier;
+    }
 
     .main-nav {
         position: absolute;
@@ -27,7 +39,16 @@ Nav
         align-items: center;
         transition: left .8s $bezier;
         padding: 60px 0 0;
-        width: 475px;
+        width: 30%;
+        line-height: 1.2;
+
+        @include lg {
+            width: 40%;
+        }
+
+        @include sm {
+            width: 100%;
+        }
 
         &__scroll {
             max-height: calc(100vh - 70px);
@@ -43,27 +64,36 @@ Nav
                 height: auto;
                 margin-bottom: 15px;
                 transform: translateZ(0);
+
+                @include lg {
+                    width: 180px;
+                }
             }
 
             ul {
                 transform: translateZ(0);
 
                 > li {
-                    padding-bottom: 12px;
+                    padding-bottom: 20px;
 
                     > a {
                         font-family: Didot, serif;
                         color: $gold;
                         font-size: 27px;
+
+                        @include lg {
+                            font-size: 20px;
+                        }
                     }
 
                     > ul {
                         position: relative;
                         z-index: 1;
                         padding-top: 38px;
-                        padding-bottom: 38px;
+                        padding-bottom: 25px;
                         display: none;
                         transform: translateZ(0);
+                        margin-bottom: -10px;
 
                         &:before,
                         &:after {
@@ -84,20 +114,65 @@ Nav
                         }
 
                         > li {
-                            padding-bottom: 8px;
+                            padding-bottom: 15px;
                             transform: translateZ(0);
 
                             > a {
+                                font-family: Avenir, sans-serif;
                                 color: $black-tit;
                                 opacity: .7;
                                 font-size: 20px;
                                 transition: opacity .2s ease-in-out;
+
+                                @include lg {
+                                    font-size: 18px;
+                                }
 
                                 &:hover {
                                     opacity: 1;
                                 }
                             }
                         }
+                    }
+                }
+            }
+
+            .main-nav__sub-nav {
+                display: none;
+                position: relative;
+                z-index: 1;
+                padding: 36px 0 25px;
+
+                @media (min-width: 1025px) {
+                    display: none !important;
+                }
+
+                &:before,
+                &:after {
+                    content: '';
+                    position: absolute;
+                    z-index: 1;
+                    left: 50%;
+                    top: 15px;
+                    width: 20px;
+                    height: 1px;
+                    transform: translateX(-50%);
+                    background: $gold;
+                }
+
+                &:after {
+                    top: auto;
+                    bottom: 15px;
+                }
+
+                a {
+                    color: $black-tit;
+                    display: block;
+                    padding: 0 0 10px;
+                    font-size: 15px;
+
+                    img {
+                        display: none;
                     }
                 }
             }
@@ -125,6 +200,7 @@ Nav
             }
         }
     }
+
 
     .sub-nav {
         position: absolute;
@@ -207,24 +283,36 @@ Nav
     }
 
     &.sub-nav-active {
-        .main-nav {
-            left: 12.5%;
-        }
 
-        .sub-nav {
-            width: calc(100% - 475px);
+        @media (min-width: 1025px) {
 
-            a {
-                .paragraph-name {
-                    opacity: 1;
-                    transition-duration: 0.5s;
-                    transform: translateY(0);
+            .main-nav {
+                left: 12.5%;
+
+                @include lg {
+                    left: 20%;
+                }
+            }
+
+            .sub-nav {
+                width: 70%;
+
+                @include lg {
+                    width: 60%;
                 }
 
-                @for $i from 0 to 5 {
-                    &:nth-child(#{$i}) {
-                        .paragraph-name {
-                            transition-delay: .1s + 0.1s * $i;
+                a {
+                    .paragraph-name {
+                        opacity: 1;
+                        transition-duration: 0.5s;
+                        transform: translateY(0);
+                    }
+
+                    @for $i from 0 to 5 {
+                        &:nth-child(#{$i}) {
+                            .paragraph-name {
+                                transition-delay: .1s + 0.1s * $i;
+                            }
                         }
                     }
                 }

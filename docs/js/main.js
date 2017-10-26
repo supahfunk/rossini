@@ -10,13 +10,24 @@ Nav
 function nav() {
     $('.nav-toggle').on('click', function () {
         $('body').toggleClass('open-nav');
-        $('.nav').toggleClass('sub-nav-active');
     });
 
-    $('.main-nav__scroll > ul > li:has("ul") > a').on('click', function () {
+    $('.main-nav__scroll').on('click', 'ul > li:has("ul") > a',function () {
         $(this).next().slideToggle(800, 'easeInOutQuart');
         return false;
     });
+
+    if ($(window).width() <= 1024) {
+        $('.main-nav__scroll').on('click', 'ul ul > li:has(".main-nav__sub-nav") > a', function () {
+            $(this).next().slideToggle(800, 'easeInOutQuart');
+            return false;
+        });
+    } else {
+        $('.main-nav__scroll').on('click', 'ul ul > li:has(".main-nav__sub-nav") > a', function () {
+            $('.nav').toggleClass('sub-nav-active');
+            return false;
+        });
+    }
 }
 
 

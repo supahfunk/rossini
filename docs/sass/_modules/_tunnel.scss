@@ -272,6 +272,14 @@ Tunnel Slick
             }
         }
     }
+
+    .tunnel-slick__header {
+        position: absolute;
+        left: 45%;
+        top: 45%;
+        max-width: 50%;
+        color: $black-tit;
+    }
 }
 
 
@@ -279,10 +287,9 @@ Tunnel Slick
 #tunnel-1 {
 
     .tunnel-slick__header {
-        position: absolute;
         left: 45%;
         top: 45%;
-        max-width: 45%;
+        max-width: 55%;
         color: $black-tit;
     }
 }
@@ -291,11 +298,10 @@ Tunnel Slick
 #tunnel-2 {
 
     .tunnel-slick__header {
-        position: absolute;
         left: 5%;
         top: 45%;
+        max-width: 95%;
         max-width: 50%;
-        color: $black-tit;
     }
 }
 
@@ -303,10 +309,9 @@ Tunnel Slick
 #tunnel-3 {
 
     .tunnel-slick__header {
-        position: absolute;
         left: 60%;
         top: 40%;
-        max-width: 50%;
+        max-width: 40%;
         color: #fff;
     }
 }
