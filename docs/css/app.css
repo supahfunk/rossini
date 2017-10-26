@@ -185,8 +185,7 @@ Nav
   width: 100%;
   height: 100vh;
   background: #fff;
-  text-align: center;
-  display: none; }
+  text-align: center; }
   .nav .main-nav {
     position: absolute;
     z-index: 1;
@@ -274,8 +273,8 @@ Nav
     width: 0;
     transition: width 0.8s cubic-bezier(0.19, 1, 0.22, 1); }
     .nav .sub-nav a {
+      flex: 1 1 auto;
       display: flex;
-      flex: 0 0 25%;
       position: relative;
       z-index: 1;
       overflow: hidden;

@@ -12,7 +12,6 @@ Nav
     height: 100vh;
     background: #fff;
     text-align: center;
-    display: none;
 
     .main-nav {
         position: absolute;
@@ -139,8 +138,8 @@ Nav
         transition: width .8s $bezier;
 
         a {
+            flex: 1 1 auto;
             display: flex;
-            flex: 0 0 25%;
             position: relative;
             z-index: 1;
             overflow: hidden;
