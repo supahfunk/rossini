@@ -92,9 +92,9 @@ gulp.task('webserver', function() {
         .pipe(webserver({
             livereload: true,
             directoryListing: true,
-            port: 5555,
-            open: 'http://localhost:5555/home.html',
-            fallback: ''
+            port: 5556,
+            open: 'http://localhost:5556/docs/index.html',
+            fallback: 'docs/index.html'
         }));
 });
 
@@ -118,7 +118,7 @@ gulp.task('watch', function(done) {
     done();
 });
 
-gulp.task('default', ['compile', 'bundle', 'watch']);
+gulp.task('default', ['compile', 'bundle', 'webserver', 'watch']);
 
 // UTILS
 function getCompilers(ext) {
