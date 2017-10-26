@@ -8,6 +8,10 @@ Typography
     font-weight: bold;
     font-size: 60px;
     line-height: 1.2;
+
+    @include md {
+        font-size: 40px;
+    }
 }
 
 em {
@@ -30,6 +34,10 @@ Buttons
     padding: 6px 0;
     outline: none;
 
+    @include md {
+        font-size: 14px;
+    }
+
     &--white {
         color: #fff;
     }
@@ -44,6 +52,11 @@ Buttons
         background: $violet;
         transition: all .2s ease-in-out;
         transform-origin: 0 0;
+
+        @include md {
+            height: 3px;
+            bottom: 2px;
+        }
     }
 
     &:hover {

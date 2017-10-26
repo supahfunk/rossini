@@ -1,9 +1,6 @@
-﻿[{
-        "inputFile": "sass/bootstrap.scss",
-        "outputFile": "css/bootstrap.css"
-    },
+﻿[
     {
         "inputFile": "sass/app.scss",
-        "outputFile": "css/app.css"
+        "outputFile": "docs/css/app.css"
     }
 ]

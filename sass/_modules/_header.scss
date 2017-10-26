@@ -250,6 +250,11 @@ Sound Info
     .sound-name {
         .sound-title {
             color: #3353A4;
+            transition: all .5s ease-in-out;
+
+            .dark-bg & {
+                color: #fff;
+            }
         }
 
         .sound-author {

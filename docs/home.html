@@ -1,0 +1,269 @@
+﻿<!doctype html>
+<html lang="en" ng-app="app">
+<head>
+    <base href="." />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>notes</title>
+    <meta name="apple-mobile-web-app-title" content="notes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link href="favicon.png" rel="shortcut icon" type="image/x-icon" />
+    <style>
+        [ng\:cloak],
+        [ng-cloak],
+        [data-ng-cloak],
+        [x-ng-cloak],
+        .ng-cloak,
+        .x-ng-cloak {
+            display: none !important;
+        }
+    </style>
+    <link href="css/vendors.min.css" rel="stylesheet" />
+    <link href="css/app.min.css" rel="stylesheet" />
+</head>
+
+<body ng-controller="RootCtrl" class="light-bg">
+    
+    <div class="wrapper">
+
+        <!-- Nav -->
+        <nav class="nav">
+            <div class="main-nav">
+                <img src="img/200Rossini150.svg" class="logo" />
+                <ul>
+                    <li>
+                        <a href="#">Passione, Genio e Silenzio</a>
+                        <ul>
+                            <li>
+                                <a href="#">Il giovane Gioacchino</a>
+                            </li>
+                            <li>
+                                <a href="#">Il folgorante debutto</a>
+                            </li>
+                            <li>
+                                <a href="#">La frenesia della produzione</a>
+                            </li>
+                            <li>
+                                <a href="#">Sulle strade di Parigi</a>
+                            </li>
+                            <li>
+                                <a href="#">Il Silenzio</a>
+                            </li>
+                            <li>
+                                <a href="#">Il tramonto</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Celebrazioni</a>
+                    </li>
+                    <li>
+                        <a href="#">Progetti Speciali</a>
+                        <ul>
+                            <li>
+                                <a href="#">Progetto 1</a>
+                            </li>
+                            <li>
+                                <a href="#">Progetto 2</a>
+                            </li>
+                            <li>
+                                <a href="#">Progetto 3</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Comitato e Partner</a>
+                    </li>
+                    <li>
+                        <a href="#">Cultura ed Istruzione</a>
+                    </li>
+                    <li>
+                        <a href="#">Contatti</a>
+                    </li>
+                </ul>
+                <div class="socials">
+                    <a href="#">
+                        <svg class="ico-facebook">
+                            <use xlink:href="#ico-facebook"></use>
+                        </svg>
+                    </a>
+                    <a href="#">
+                        <svg class="ico-instagram">
+                            <use xlink:href="#ico-instagram"></use>
+                        </svg>
+                    </a>
+                    <a href="#">
+                        <svg class="ico-twitter">
+                            <use xlink:href="#ico-twitter"></use>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="sub-nav">
+                <a href="#">
+                    <img src="img/rossini-1.jpg" />
+                    <div class="paragraph-name"><span>L'inganno felice</span></div>
+                </a>
+                <a href="#">
+                    <img src="img/rossini-2.jpg" />
+                    <div class="paragraph-name"><span>Venezia</span></div>
+                </a>
+                <a href="#">
+                    <img src="img/rossini-3.jpg" />
+                    <div class="paragraph-name"><span>Licenze romane</span></div>
+                </a>
+                <a href="#">
+                    <img src="img/rossini-4.jpg" />
+                    <div class="paragraph-name"><span>Il Barbiere a Roma</span></div>
+                </a>
+            </div>
+        </nav>
+        <!-- /Nav -->
+
+        <!-- Tunnel Background -->
+        <div class="tunnel-bg">
+            <div class="item">
+                <img data-lazy="img/tunnel-1.jpg" />
+            </div>
+            <div class="item">
+                <img data-lazy="img/tunnel-2.jpg" />
+            </div>
+            <div class="item">
+                <img data-lazy="img/tunnel-3.jpg" />
+            </div>
+        </div>
+        <!-- /Tunnel Background -->
+
+        <!-- Nav Toggle -->
+        <button class="nav-toggle"><span></span> Menu</button>
+        <!-- /Nav Toggle -->
+
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <div class="breadcrumb__chapter">Passione, Genio e Silenzio</div>
+            <div class="breadcrumb__paragraph">Sulle strade di Parigi</div>
+        </div>
+        <!-- /Breadcrumb -->
+
+        <!-- Sound Info -->
+        <div class="sound-info">
+            <button class="sound-toggle active">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <div class="sound-name">
+                <div class="sound-title">Barbiere di Siviglia</div>
+                <div class="sound-author">Orchestra del conservatorio</div>
+            </div>
+        </div>
+        <!-- /Sound Info -->
+
+        <!-- Tunnel Year -->
+        <div class="tunnel-year one-year">
+            <div class="tunnel-year__from">1817</div>
+            <div class="tunnel-year__to">1817</div>
+        </div>
+        <!-- /Tunnel Year -->
+
+        <!-- Three JS -->
+        <section id="scene "> </section>
+        <!-- /Three JS -->
+
+        <!-- Tunnel Nav -->
+        <div class="tunnel-nav">
+            <button type="button" id="tunnel-prev" ng-click="stepper.previous()">prev</button>
+            <button type="button" id="tunnel-next" ng-click="stepper.next()">next</button>
+            <span ng-bind="stepper.current" class="ng-binding">0</span>
+        </div>
+        <!-- /Tunnel Nav -->
+
+        <!-- Tunnel -->
+        <div class="tunnel">
+            <div class="tunnel-slick">
+                <div id="tunnel-1" class="tunnel-slick__item" data-from="1832" data-to="false" data-bg="light">
+                    <div class="tunnel-slick__header">
+                        <div class="big-title h1 splitted-text">
+                            Il periodo francese:<br>
+                            la nascita della <em>Grand Opéra</em>
+                        </div>
+                        <div class="cta">
+                            <a href="#" class="inline-btn">View more</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="tunnel-2" class="tunnel-slick__item" data-from="1838" data-to="1847" data-bg="light">
+                    <div class="tunnel-slick__header">
+                        <div class="big-title h1 splitted-text">
+                            Il Barbiere di Siviglia<br>
+                            al teatro Argentina<br>
+                            di Roma
+                        </div>
+                        <div class="cta">
+                            <a href="#" class="inline-btn">View more</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="tunnel-3" class="tunnel-slick__item" data-from="1848" data-to="1860" data-bg="dark">
+                    <div class="tunnel-slick__header">
+                        <div class="big-title h1 splitted-text">
+                            Il Silenzio
+                        </div>
+                        <div class="cta cta-white">
+                            <a href="#" class="inline-btn inline-btn--white">View more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tunnel-nav">
+
+            </div>
+        </div>
+        <!-- /Tunnel -->
+
+        <!-- View -->
+        <div class="view">
+            Il periodo francese di Rossini si apre nel 1825 con la cantata Il viaggio a Reims, ossia L’albergo del giglio d’oro scritta per l’incoronazione di Carlo X. Seguono Le siège de Corinthe, radicale rifacimento del Maometto II, Moïse et Pharaon, ou Le passage de la Mer Rouge (1827), Le Comte Ory, dove riutilizza gran parte della musica del Viaggio a Reims.
+
+            Nel 1827 muore la madre e Rossini ne è profondamente colpito. Lavora a quella che sarà l’ultima sua fatica nel teatro musicale, Guillaume Tell (1829), che ottiene solo un “succès d’estime” da parte del pubblico, mentre è esaltata dalla critica e dai musicisti.  Carlo X gli conferisce la Légion d’honneur. 
+        </div>
+        <!-- /View -->
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer__copy">© Comitato Nazionale Celebrazioni Centenari Rossiniani 2017</div>
+            <div class="logo-fondazione-rossini">
+                <img src="img/200Rossini150.svg" class="dark-logo" alt="Fondazione Rossini" />
+                <img src="img/200Rossini150-light.svg" class="light-logo" alt="Fondazione Rossini" />
+            </div>
+        </footer>
+        <!-- /Footer -->
+    </div>
+
+    <!-- SVG Sprite -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" display="none" id="svg-sprite">
+        <symbol id="ico-facebook" viewBox="0 0 16 28">
+            <path d="M14.984 0.187v4.125h-2.453c-1.922 0-2.281 0.922-2.281 2.25v2.953h4.578l-0.609 4.625h-3.969v11.859h-4.781v-11.859h-3.984v-4.625h3.984v-3.406c0-3.953 2.422-6.109 5.953-6.109 1.687 0 3.141 0.125 3.563 0.187z" />
+        </symbol>
+        <symbol id="ico-twitter" viewBox="0 0 26 28">
+            <path d="M25.312 6.375c-0.688 1-1.547 1.891-2.531 2.609 0.016 0.219 0.016 0.438 0.016 0.656 0 6.672-5.078 14.359-14.359 14.359-2.859 0-5.516-0.828-7.75-2.266 0.406 0.047 0.797 0.063 1.219 0.063 2.359 0 4.531-0.797 6.266-2.156-2.219-0.047-4.078-1.5-4.719-3.5 0.313 0.047 0.625 0.078 0.953 0.078 0.453 0 0.906-0.063 1.328-0.172-2.312-0.469-4.047-2.5-4.047-4.953v-0.063c0.672 0.375 1.453 0.609 2.281 0.641-1.359-0.906-2.25-2.453-2.25-4.203 0-0.938 0.25-1.797 0.688-2.547 2.484 3.062 6.219 5.063 10.406 5.281-0.078-0.375-0.125-0.766-0.125-1.156 0-2.781 2.25-5.047 5.047-5.047 1.453 0 2.766 0.609 3.687 1.594 1.141-0.219 2.234-0.641 3.203-1.219-0.375 1.172-1.172 2.156-2.219 2.781 1.016-0.109 2-0.391 2.906-0.781z" />
+        </symbol>
+        <symbol id="ico-instagram" viewBox="0 0 24 28">
+            <path d="M16 14c0-2.203-1.797-4-4-4s-4 1.797-4 4 1.797 4 4 4 4-1.797 4-4zM18.156 14c0 3.406-2.75 6.156-6.156 6.156s-6.156-2.75-6.156-6.156 2.75-6.156 6.156-6.156 6.156 2.75 6.156 6.156zM19.844 7.594c0 0.797-0.641 1.437-1.437 1.437s-1.437-0.641-1.437-1.437 0.641-1.437 1.437-1.437 1.437 0.641 1.437 1.437zM12 4.156c-1.75 0-5.5-0.141-7.078 0.484-0.547 0.219-0.953 0.484-1.375 0.906s-0.688 0.828-0.906 1.375c-0.625 1.578-0.484 5.328-0.484 7.078s-0.141 5.5 0.484 7.078c0.219 0.547 0.484 0.953 0.906 1.375s0.828 0.688 1.375 0.906c1.578 0.625 5.328 0.484 7.078 0.484s5.5 0.141 7.078-0.484c0.547-0.219 0.953-0.484 1.375-0.906s0.688-0.828 0.906-1.375c0.625-1.578 0.484-5.328 0.484-7.078s0.141-5.5-0.484-7.078c-0.219-0.547-0.484-0.953-0.906-1.375s-0.828-0.688-1.375-0.906c-1.578-0.625-5.328-0.484-7.078-0.484zM24 14c0 1.656 0.016 3.297-0.078 4.953-0.094 1.922-0.531 3.625-1.937 5.031s-3.109 1.844-5.031 1.937c-1.656 0.094-3.297 0.078-4.953 0.078s-3.297 0.016-4.953-0.078c-1.922-0.094-3.625-0.531-5.031-1.937s-1.844-3.109-1.937-5.031c-0.094-1.656-0.078-3.297-0.078-4.953s-0.016-3.297 0.078-4.953c0.094-1.922 0.531-3.625 1.937-5.031s3.109-1.844 5.031-1.937c1.656-0.094 3.297-0.078 4.953-0.078s3.297-0.016 4.953 0.078c1.922 0.094 3.625 0.531 5.031 1.937s1.844 3.109 1.937 5.031c0.094 1.656 0.078 3.297 0.078 4.953z" />
+        </symbol>
+    </svg>
+    <!-- /SVG Sprite -->
+    
+    <script src="js/three.js" type="text/javascript"></script>
+    <script src="js/vendors.min.js" type="text/javascript"></script>
+    <script src="js/tunnel.js" type="text/javascript"></script>
+    <script src="js/main.js" type="text/javascript"></script>
+    <script src="js/app.js" type="text/javascript"></script>
+</body>
+
+</html>

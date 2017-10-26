@@ -22,7 +22,6 @@ Slick
     }
 
     /* Arrows */
-
     .slick-prev,
     .slick-next {
         position: absolute;
@@ -185,7 +184,7 @@ Tunnel Year
 .tunnel-year {
     position: fixed;
     z-index: 10;
-    color: $gold;
+    color: rgba($gold, 0.45);
     font-family: Didot, serif;
     font-weight: bold;
     font-size: 280px;
@@ -193,7 +192,7 @@ Tunnel Year
     white-space: nowrap;
     width: 100%;
     left: 0;
-    top: 0;
+    top: 2%;
     pointer-events: none;
 
     & > div {
@@ -208,13 +207,13 @@ Tunnel Year
             width: 60px;
             height: 20px;
             background: $gold;
+            opacity: .45;
             margin: 0 20px 0 -40px;
             transform: translateY(-40px) scaleX(1);
             transition: all .5s $bezier .2s;
         }
     }
 }
-
 
 .one-year {
     .tunnel-year__from {
@@ -295,7 +294,7 @@ Tunnel Slick
 
     .tunnel-slick__header {
         position: absolute;
-        left: 10%;
+        left: 5%;
         top: 45%;
         max-width: 50%;
         color: $black-tit;
@@ -307,7 +306,7 @@ Tunnel Slick
 
     .tunnel-slick__header {
         position: absolute;
-        left: 50%;
+        left: 60%;
         top: 40%;
         max-width: 50%;
         color: #fff;

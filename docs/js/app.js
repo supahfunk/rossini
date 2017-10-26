@@ -63,7 +63,7 @@
 
         var options = {
             cameraHeight: 33,
-            targetHeight: 51,
+            targetHeight: 39,
             camera: {
                 position: new THREE.Vector3(),
                 target: new THREE.Vector3(),
@@ -109,7 +109,7 @@
         function getStepper() {
             var stepper = {
                 pow: 0,
-                duration: 2.000, // sec
+                duration: 1.500, // sec
             };
 
             var steps = new Array(24).fill().map(function(v, i) {
@@ -120,7 +120,7 @@
                     },
                     circle: {
                         position: new THREE.Vector3(60, 60, 0),
-                        texture: 'img/rossini-01.png',
+                        texture: 'img/rossini-01.jpg',
                     }
                 };
             });
@@ -458,7 +458,6 @@
             var material = new THREE.MeshBasicMaterial({
                 color: options.colors.lines,
                 map: texture,
-                transparent: true
             });
 
             /*

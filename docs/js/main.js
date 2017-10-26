@@ -10,6 +10,12 @@ Nav
 function nav() {
     $('.nav-toggle').on('click', function () {
         $('body').toggleClass('open-nav');
+        $('.nav').toggleClass('sub-nav-active');
+    });
+
+    $('.main-nav > ul > li:has("ul") > a').on('click', function () {
+        $(this).next().slideToggle(800, 'easeInOutQuart');
+        return false;
     });
 }
 
@@ -101,54 +107,33 @@ function switchScene(scene) {
 }
 
 
-
-
 /*--------------------------------------------------
 ChangeYear
 --------------------------------------------------*/
 function changeYear(from, to) {
-    $year = $('.tunnel-year');
-    $from = $('.tunnel-year__from');
-    $to = $('.tunnel-year__to');
-    time = 2000;
-
-    
-    $({ starter: parseInt($from.text()) }).animate({ starter: parseInt(from) }, {
-        duration: time,
-        easing: Power3.easeInOut,
-        step: function () {
-            $from.text(Math.round(this.starter));
-        },
-        complete: function () {
-            $from.text(Math.round(this.starter));
+    var $year = $('.tunnel-year'),
+        $from = $('.tunnel-year__from'),
+        $to = $('.tunnel-year__to'),
+        time = 2,
+        easing = Power3.easeOut,
+        year = {
+            from: $from.html(),
+            to: $to.html()
         }
-    })
 
     if (to === 'false') {
         $year.addClass('one-year');
-        $({ starter: parseInt($to.text()) }).animate({ starter: parseInt(from) }, {
-            duration: time,
-            easing: Power3.easeInOut,
-            step: function () {
-                $to.text(Math.round(this.starter));
-            },
-            complete: function () {
-                $to.text(Math.round(this.starter));
-            }
-        })
+        TweenLite.to(year, time, { to: from, roundProps: 'year', onUpdate: updateYear, ease: easing });
     } else {
         $year.removeClass('one-year');
-        
-        $({ starter: parseInt($to.text()) }).animate({ starter: parseInt(to) }, {
-            duration: time,
-            easing: Power3.easeInOut,
-            step: function () {
-                $to.text(Math.round(this.starter));
-            },
-            complete: function () {
-                $to.text(Math.round(this.starter));
-            }
-        })
+        TweenLite.to(year, time, { to: to, roundProps: 'year', onUpdate: updateYear, ease: easing });
+    }
+
+    TweenLite.to(year, time, { from: from, roundProps: 'year', onUpdate: updateYear, ease: easing });
+
+    function updateYear() {
+        $from.html(parseInt(year.from));
+        $to.html(parseInt(year.to));
     }
 }
 
@@ -190,13 +175,16 @@ function tunnel() {
         TweenMax.staggerTo(letters, 1, { delay: 0, y: 100, x: 50, ease: Power3.easeInOut, className: '-=viewed' }, 0.009);
         $('.slick-active .cta').removeClass('active');
 
-
         var $next = $(slick.$slides.get(nextSlide)).find('.tunnel-slick__item');
 
         var from = $next.attr('data-from');
         var to = $next.attr('data-to');
-
         changeYear(from, to);
+
+        var bg = $next.attr('data-bg');
+        $('body').removeClass('light-bg dark-bg');
+        $('body').addClass(bg + '-bg')
+
         switchScene(nextSlide);
 
     }).on('afterChange', function () {
