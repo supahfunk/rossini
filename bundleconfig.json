@@ -24,7 +24,8 @@
             "bower_components/gsap/src/minified/easing/EasePack.min.js",
             "bower_components/jquery-easing/jquery.easing.js",
             "bower_components/jquery-mousewheel/jquery.mousewheel.js",
-            "bower_components/slick-carousel/slick/slick.js"
+            "bower_components/slick-carousel/slick/slick.js",
+            "bower_components/smooth-scrollbar/dist/smooth-scrollbar.js"
         ],
         "outputFileName": "docs/js/vendors.js",
         "minify": {
@@ -36,6 +37,7 @@
             "app/app.config.js",
             "app/app.routes.js",
             "app/app.run.js",
+            "app/controllers/scene.directive.js",
             "app/controllers/root.controller.js"
         ],
         "outputFileName": "docs/js/app.js",

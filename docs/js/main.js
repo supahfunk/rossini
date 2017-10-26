@@ -13,7 +13,7 @@ function nav() {
         $('.nav').toggleClass('sub-nav-active');
     });
 
-    $('.main-nav > ul > li:has("ul") > a').on('click', function () {
+    $('.main-nav__scroll > ul > li:has("ul") > a').on('click', function () {
         $(this).next().slideToggle(800, 'easeInOutQuart');
         return false;
     });

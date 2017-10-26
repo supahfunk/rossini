@@ -1,6 +1,10 @@
 ﻿[
-    {
-        "inputFile": "sass/app.scss",
-        "outputFile": "docs/css/app.css"
-    }
+  {
+    "outputFile": "docs/css/app.css",
+    "inputFile": "docs/sass/app.scss"
+  },
+  {
+    "outputFile": "docs/js/app.es5.js",
+    "inputFile": "app/controllers/root.controller.js"
+  }
 ]

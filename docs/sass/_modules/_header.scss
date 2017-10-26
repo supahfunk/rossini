@@ -1,0 +1,307 @@
+@import "variables";
+
+/*--------------------------------------------------
+Nav Toggle
+--------------------------------------------------*/
+.nav-toggle {
+    position: fixed;
+    z-index: 200;
+    top: 30px;
+    left: 50px;
+    color: $gold;
+    background: none;
+    border: none;
+    outline: none;
+    font-family: Didot, serif;
+    font-size: 16px;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding-left: 40px;
+    height: 30px;
+
+    &:before,
+    &:after,
+    span {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        top: 9px;
+        left: 0;
+        width: 30px;
+        height: 1px;
+        background: $gold;
+        transition: all .1s ease-in-out;
+    }
+
+    &:after {
+        top: 19px;
+    }
+
+    span {
+        transform: rotate(315deg) scale(0);
+        width: 35px;
+        top: 14px;
+        left: -2px;
+        opacity: 0;
+    }
+
+    &:hover {
+        &:before {
+            transform: translateY(1px);
+        }
+
+        &:after {
+            transform: translateY(-1px);
+        }
+    }
+
+    .open-nav & {
+        &:before {
+            transform: translateY(2px);
+        }
+
+        &:after {
+            transform: translateY(-2px);
+        }
+
+        span {
+            opacity: 1;
+            transform: rotate(315deg) scale(1);
+            transition-duration: .2s;
+        }
+    }
+}
+
+
+/*--------------------------------------------------
+Breadcrumb
+--------------------------------------------------*/
+.breadcrumb {
+    position: fixed;
+    z-index: 100;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    line-height: 1.3;
+
+    &__chapter {
+        color: $gold;
+        font-size: 21px;
+        font-family: Didot, serif;
+    }
+
+    &__paragraph {
+        color: $light;
+        font-size: 14px;
+        position: relative;
+        z-index: 1;
+        display: inline-block;
+
+        &:before,
+        &:after {
+            content: '';
+            width: 40px;
+            height: 1px;
+            background: $light;
+            position: absolute;
+            top: 50%;
+            left: -45px;
+        }
+
+        &:after {
+            left: auto;
+            right: -45px;
+        }
+    }
+}
+
+
+/*--------------------------------------------------
+Sound Info
+--------------------------------------------------*/
+.sound-info {
+    position: fixed;
+    z-index: 100;
+    top: 25px;
+    right: 50px;
+    text-align: right;
+    white-space: nowrap;
+    padding-top: 6px;
+    padding-right: 53px;
+    font-size: 12px;
+    line-height: 1.3;
+
+    .sound-toggle {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 30px;
+        height: 40px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        outline: none;
+
+        .bar {
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+
+            &:before,
+            &:after {
+                content: '';
+                position: absolute;
+                z-index: 1;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 1px;
+                background: $gold;
+                transition: all 1.2s ease-in-out;
+                transform: scaleY(0.1);
+                animation: none;
+            }
+
+            &:nth-child(1) {
+                &:before {
+                }
+
+                &:after {
+                    left: 6px;
+                }
+            }
+
+            &:nth-child(2) {
+                &:before {
+                    left: 12px;
+                }
+
+                &:after {
+                    left: 18px;
+                }
+            }
+
+            &:nth-child(3) {
+                &:before {
+                    left: 24px;
+                }
+
+                &:after {
+                    left: 30px;
+                }
+            }
+        }
+
+        &.active {
+
+            .bar {
+                &:before,
+                &:after {
+                    animation: beat1 1s infinite;
+                }
+
+                &:nth-child(1) {
+                    &:before {
+                        animation-delay: 0.4s;
+                        animation-duration: 1.2s;
+                    }
+
+                    &:after {
+                        animation-delay: 0.3s;
+                        animation-duration: 0.9s;
+                        animation-name: beat2;
+                    }
+                }
+
+                &:nth-child(2) {
+                    &:before {
+                        animation-delay: 0.5s;
+                        animation-duration: 1s;
+                        animation-name: beat3;
+                    }
+
+                    &:after {
+                        animation-delay: 0.4s;
+                        animation-duration: 0.9s;
+                        animation-name: beat3;
+                    }
+                }
+
+                &:nth-child(3) {
+                    &:before {
+                        animation-delay: 0.3s;
+                        animation-duration: 0.9s;
+                        animation-name: beat2;
+                    }
+
+                    &:after {
+                        animation-delay: 0.2s;
+                        animation-duration: 0.8s;
+                    }
+                }
+            }
+        }
+    }
+
+    .sound-name {
+        .sound-title {
+            color: #3353A4;
+            transition: all .5s ease-in-out;
+
+            .dark-bg & {
+                color: #fff;
+            }
+        }
+
+        .sound-author {
+            color: #646464;
+        }
+    }
+}
+
+@keyframes beat1 {
+    0% {
+        transform: scaleY(0.1);
+    }
+
+    50% {
+        transform: scaleY(0.3);
+    }
+
+    100% {
+        transform: scaleY(0.1);
+    }
+}
+
+@keyframes beat2 {
+    0% {
+        transform: scaleY(0.2);
+    }
+
+    50% {
+        transform: scaleY(0.5);
+    }
+
+    100% {
+        transform: scaleY(0.2);
+    }
+}
+
+
+@keyframes beat3 {
+    0% {
+        transform: scaleY(0.3);
+    }
+
+    50% {
+        transform: scaleY(0.8);
+    }
+
+    100% {
+        transform: scaleY(0.3);
+    }
+}

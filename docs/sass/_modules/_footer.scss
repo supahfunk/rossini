@@ -1,0 +1,60 @@
+@import "variables";
+
+/*--------------------------------------------------
+Footer
+--------------------------------------------------*/
+.footer {
+    position: fixed;
+    z-index: 100;
+    height: auto;
+    font-size: 16px;
+    margin: 0 50px 25px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &__copy {
+        color: $black-tit;
+        transition: color .5s ease-in-out;
+
+        .dark-bg & {
+            color: #fff;
+        }
+    }
+
+    .logo-fondazione-rossini {
+        position: relative;
+        z-index: 1;
+
+        img {
+            position: absolute;
+            z-index: 1;
+            right: 0;
+            bottom: -15px;
+            width: 220px;
+            height: auto;
+            transition: opacity .5s ease-in-out;
+
+            &.dark-logo {
+                opacity: 1;
+            }
+
+            &.light-logo {
+                opacity: 0;
+            }
+
+            .dark-bg & {
+                &.dark-logo {
+                    opacity: 0;
+                }
+
+                &.light-logo {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,64 @@
+@import "variables";
+
+/*--------------------------------------------------
+Typography
+--------------------------------------------------*/
+.h1 {
+    font-family: Didot, serif;
+    font-weight: bold;
+    font-size: 3vw;
+    line-height: 1.2;
+
+}
+
+em {
+    font-style: italic;
+    font-weight: normal;
+}
+
+
+/*--------------------------------------------------
+Buttons
+--------------------------------------------------*/
+.inline-btn {
+    position: relative;
+    z-index: 1;
+    text-transform: uppercase;
+    display: inline-block;
+    color: $black-tit;
+    font-size: 16px;
+    text-decoration: none;
+    padding: 6px 0;
+    outline: none;
+
+    @include md {
+        font-size: 14px;
+    }
+
+    &--white {
+        color: #fff;
+    }
+
+    &:before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: $violet;
+        transition: all .2s ease-in-out;
+        transform-origin: 0 0;
+
+        @include md {
+            height: 3px;
+            bottom: 2px;
+        }
+    }
+
+    &:hover {
+        &:before {
+            transform: scaleY(0.5) translateY(-2px);
+        }
+    }
+}
