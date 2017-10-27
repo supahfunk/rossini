@@ -119,7 +119,7 @@ Canvas
   left: 0;
   width: 100%;
   height: 100vh;
-  transition: background .6s ease-in-out; }
+  transition: opacity 0.8s cubic-bezier(0.19, 1, 0.22, 1); }
 
 [scene] div {
   display: none !important; }
@@ -751,7 +751,8 @@ Tunnel
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh; }
+  height: 100vh;
+  transition: opacity 0.8s cubic-bezier(0.19, 1, 0.22, 1); }
 
 /*--------------------------------------------------
 Slick
@@ -893,7 +894,7 @@ Tunnel Year
   white-space: nowrap;
   width: 100%;
   left: 0;
-  top: 5%;
+  top: 6%;
   pointer-events: none;
   line-height: 1;
   transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1); }
@@ -946,7 +947,8 @@ Tunnel Nav
   z-index: 100;
   right: 30px;
   top: 50%;
-  transform: translateY(-50%); }
+  transform: translateY(-50%);
+  transition: opacity 0.8s cubic-bezier(0.19, 1, 0.22, 1); }
 
 /*--------------------------------------------------
 Tunnel Slick
@@ -1042,7 +1044,8 @@ Detail
     position: relative;
     z-index: 1;
     height: calc(100vh - 15vw);
-    padding-right: 30px; }
+    padding: 0 100px;
+    border-top: 1px solid #fff; }
     .detail__scroll .scrollbar-track {
       background: rgba(0, 0, 0, 0.5); }
       .detail__scroll .scrollbar-track.show {
@@ -1068,35 +1071,84 @@ Detail
     color: #fff;
     font-size: 18px;
     line-height: 1.7; }
+  .detail__subtitle {
+    font-size: 14px;
+    margin-bottom: 4px; }
+  .detail__title {
+    font-size: 29px;
+    margin-bottom: 15px; }
+  .detail__box {
+    display: flex; }
+  .detail__text {
+    flex: 0 0 75%;
+    padding-right: 100px; }
+    .detail__text p {
+      margin-bottom: 18px; }
+  .detail__images {
+    flex: 0 0 25%; }
+    .detail__images figure {
+      display: block;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 40px 40px -30px rgba(0, 0, 0, 0.5);
+      margin-bottom: 60px; }
+      .detail__images figure img {
+        max-width: 100%;
+        height: auto;
+        vertical-align: middle; }
+      .detail__images figure figcaption {
+        position: absolute;
+        z-index: 1;
+        right: 10px;
+        bottom: 22px;
+        font-size: 12px;
+        transform: rotate(270deg) translateX(100%);
+        transform-origin: 100% 100%; }
   .detail__close {
     position: fixed;
+    z-index: 100;
     bottom: 20px;
     left: 50%;
+    background: none;
+    border: none;
+    padding: 0;
+    outline: none;
+    cursor: pointer;
     transform: translate(-50%);
     color: #fff;
     display: flex;
     align-items: center;
-    font-size: 15px; }
+    font-size: 15px;
+    opacity: .8;
+    transition: opacity .3s ease-in-out; }
     .detail__close .ico {
       width: 26px;
       height: 26px;
-      margin-right: 15px; }
+      margin-right: 15px;
+      transition: transform .3s ease-in-out; }
+    .detail__close:hover {
+      opacity: 1; }
+      .detail__close:hover .ico {
+        transform: scale(0.8); }
 
-.detail-active #scene,
-.detail-active .footer,
-.detail-active .tunnel,
-.detail-active .tunnel-nav {
-  opacity: 0;
-  pointer-events: none; }
-
-.detail-active .tunnel-year {
-  color: rgba(255, 255, 255, 0.05);
-  transform: translateY(-50%); }
-  .detail-active .tunnel-year__to:before {
-    color: rgba(255, 255, 255, 0.05); }
-
-.detail-active .detail {
-  background: #1E3160; }
+.detail-active {
+  /*.detail {
+        opacity: 1;
+        pointer-events: all;
+    }*/ }
+  .detail-active #scene,
+  .detail-active .footer,
+  .detail-active .tunnel,
+  .detail-active .tunnel-nav {
+    opacity: 0;
+    pointer-events: none; }
+  .detail-active .tunnel-year {
+    color: rgba(255, 255, 255, 0.05);
+    transform: translateY(-50%); }
+    .detail-active .tunnel-year__to:before {
+      color: rgba(255, 255, 255, 0.05); }
+  .detail-active .detail {
+    background: #1E3160; }
 
 /*--------------------------------------------------
 Footer
