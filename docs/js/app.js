@@ -945,7 +945,7 @@
 
                 scope.$watchCollection(attributes.slickBackgrounds, function(items) {
                     if (items && items.length) {
-                        onSlick();
+                        setTimeout(onSlick, 1)
                     }
                 });
 
