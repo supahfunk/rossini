@@ -1,4 +1,4 @@
-/*--------------------------------------------------
+﻿/*--------------------------------------------------
 Reset
 --------------------------------------------------*/
 html {
@@ -725,6 +725,8 @@ Slick
     background: transparent;
     color: transparent;
     top: 50%;
+    -webkit-transform: translate(0, -50%);
+    -ms-transform: translate(0, -50%);
     transform: translate(0, -50%);
     padding: 0;
     border: none;
@@ -905,10 +907,13 @@ Tunnel Slick
         transform: translateY(0); }
   .tunnel-slick .tunnel-slick__header {
     position: absolute;
-    left: 45%;
+    left: 5%;
     top: 45%;
     max-width: 50%;
-    color: #2b2e34; }
+    color: #2b2e34;
+    transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1) 0.8s; }
+    .dark-bg .tunnel-slick .tunnel-slick__header {
+      color: #fff; }
 
 /* Tunnel 0 */
 #tunnel-0 .intro {
@@ -933,7 +938,6 @@ Tunnel Slick
 #tunnel-2 .tunnel-slick__header {
   left: 5%;
   top: 45%;
-  max-width: 95%;
   max-width: 50%; }
 
 /* Tunnel 3 */
@@ -982,3 +986,4 @@ Footer
         opacity: 0; }
       .dark-bg .footer .logo-fondazione-rossini img.light-logo {
         opacity: 1; }
+
