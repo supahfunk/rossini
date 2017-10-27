@@ -30,7 +30,7 @@
 
 <body ng-controller="RootCtrl" ng-class="stepper.step.contrast">
 
-    <div class="wrapper">
+    <div class="wrapper" ng-cloak>
 
         <!-- Nav -->
         <nav class="nav">
@@ -209,7 +209,7 @@
         <!-- /Sound Info -->
 
         <!-- Tunnel Year -->
-        <div class="tunnel-year one-year" years-from="stepper.step.years.from" years-to="stepper.step.years.to">
+        <div class="tunnel-year one-year" years-from="stepper.step.years.from" years-to="stepper.step.years.to" ng-if="stepper.step">
             <div class="tunnel-year__from">1817</div>
             <div class="tunnel-year__to">1817</div>
         </div>
@@ -222,7 +222,7 @@
         <!-- /Three JS -->
 
         <!-- Tunnel Nav -->
-        <div class="tunnel-nav">
+        <div class="tunnel-nav" ng-if="scene">
             <button type="button" id="tunnel-prev" ng-click="stepper.previous()">prev</button>
             <button type="button" id="tunnel-next" ng-click="stepper.next()">next</button>
             <span ng-bind="stepper.current">-</span>

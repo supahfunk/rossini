@@ -108,26 +108,27 @@
 
         var analyser, audio, audioUrl;
 
-        function init() {
-            var source, ctx, actx = (window.AudioContext || window.webkitAudioContext);
-            source = null;
-            ctx = new actx();
-            analyser = ctx.createAnalyser();
-            audio = new Audio();
-            // audio.controls = true;
-            audio.addEventListener('canplay', function() {
+        var aContext = (window.AudioContext || window.webkitAudioContext);
+        var analyserContext = new aContext();
+        analyser = analyserContext.createAnalyser();
+
+        audio = new Audio();
+        audio.addEventListener('canplay', attachAnalyser);
+
+        var source = null;
+
+        function attachAnalyser() {
+            if (!source) {
                 var bufferLength;
-                console.log('audio canplay');
-                source = ctx.createMediaElementSource(audio);
+                source = analyserContext.createMediaElementSource(audio);
                 source.connect(analyser);
-                source.connect(ctx.destination);
+                source.connect(analyserContext.destination);
                 analyser.fftSize = options.bands * 2;
                 bufferLength = analyser.frequencyBinCount;
                 service.data = new Uint8Array(bufferLength);
-                // console.log('bufferLength', bufferLength);
-                return service.data;
-            });
-            setStep();
+                console.log('AnalyserService.attachAnalyser');
+            }
+            return service.data;
         }
 
         function setAudioUrl($audioUrl) {
@@ -135,6 +136,7 @@
                 audioUrl = $audioUrl;
                 audio.src = $audioUrl;
                 audio.volume = options.audioVolume;
+                console.log('AnalyserService.setAudioUrl', $audioUrl);
                 audio.play();
             }
         }
@@ -186,7 +188,6 @@
         this.active = true;
         this.audio = audio;
         this.data = null;
-        this.init = init;
         this.update = update;
         this.play = play;
         this.pause = pause;
@@ -255,7 +256,6 @@
                 createObjects();
                 addListeners();
                 loop();
-                analyser.init();
 
                 function createScene() {
                     width = window.innerWidth;

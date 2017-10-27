@@ -79,6 +79,12 @@
                 'Il Barbiere di Siviglia<br> al teatro Argentina<br> di Roma',
                 'Il Silenzio',
             ];
+            var paragraphs = [
+                'Il giovane Gioacchino',
+                'Il folgorante debutto',
+                'La frenesia della produzione',
+                'Sulle strade di Parigi',
+            ];
             var audioTitles = [
                 'Il Barbiere di Siviglia',
                 'L\'italiana in Algeri',
@@ -100,10 +106,9 @@
             var items = new Array(options.ribbon.steps).fill().map(function(v, i) {
                 return {
                     id: i + 1,
-                    name: 'Step ' + (i + 1),
                     title: titles[i % titles.length],
                     chapter: 'Passione, Genio e Silenzio',
-                    paragraph: 'Sulle strade di Parigi',
+                    paragraph: paragraphs[Math.floor(i / 3) % paragraphs.length],
                     years: {
                         from: 1812 + Math.round(Math.random() * 50),
                         to: 1812 + Math.round(Math.random() * 50),
