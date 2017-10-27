@@ -34,6 +34,7 @@
                 service.data = new Uint8Array(bufferLength);
                 // console.log('AnalyserService.attachAnalyser');
             }
+            console.log('pippo');
             return service.data;
         }
 
