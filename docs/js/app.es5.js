@@ -53,6 +53,22 @@
             $scope.audio = AnalyserService;
             var gui = new DatGui();
         });
+
+        var detail = {};
+
+        $scope.openDetail = function () {
+            $.ajax({
+                href: stepper.step.url,
+                success: function success(data) {
+                    $timeout(function () {
+                        detail.active = true;
+                        detail.html = data;
+                    });
+                }
+            });
+        };
+
+        $scope.detail = detail;
     }]);
 
     app.service('StepperService', ['$rootScope', '$timeout', '$q', '$http', '$sce', 'SceneOptions', function($rootScope, $timeout, $q, $http, $sce, SceneOptions) {
@@ -76,6 +92,7 @@
 
         function getItems() {
             var titles = ['Il periodo francese:<br> la nascita della <em>Grand Opéra</em>', 'Il Barbiere di Siviglia<br> al teatro Argentina<br> di Roma', 'Il Silenzio'];
+            var paragraphs = ['Il giovane Gioacchino', 'Il folgorante debutto', 'La frenesia della produzione', 'Sulle strade di Parigi'];
             var audioTitles = ['Il Barbiere di Siviglia', 'L\'italiana in Algeri'];
             var audios = ['audio/07-rossini-192.mp3', 'audio/08-rossini-192.mp3'];
             var backgrounds = ['img/tunnel-1.jpg', 'img/tunnel-2.jpg', 'img/tunnel-3.jpg'];
@@ -83,10 +100,10 @@
             var items = new Array(options.ribbon.steps).fill().map(function(v, i) {
                 return {
                     id: i + 1,
-                    name: 'Step ' + (i + 1),
+                    url: 'view.html',
                     title: titles[i % titles.length],
                     chapter: 'Passione, Genio e Silenzio',
-                    paragraph: 'Sulle strade di Parigi',
+                    paragraph: paragraphs[Math.floor(i / 3) % paragraphs.length],
                     years: {
                         from: 1812 + Math.round(Math.random() * 50),
                         to: 1812 + Math.round(Math.random() * 50)

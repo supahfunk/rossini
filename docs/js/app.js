@@ -189,8 +189,20 @@
 }());
 /* global angular */
 
+<<<<<<< HEAD
 (function() {
     "use strict";
+=======
+        function setAudioUrl($audioUrl) {
+            if (audioUrl !== $audioUrl) {
+                audioUrl = $audioUrl;
+                audio.src = $audioUrl;
+                audio.volume = options.audioVolume;
+                console.log('AnalyserService.setAudioUrl', $audioUrl);
+                // audio.play();
+            }
+        }
+>>>>>>> c80f63423fcf9794e39932cdc0b9d9b9baf054ab
 
     var app = angular.module('app');
 
@@ -1444,6 +1456,7 @@
                     };
                 }
 
+<<<<<<< HEAD
                 function render() {
                     analyser.update();
                     if (controls) {
@@ -1459,6 +1472,9 @@
                     });
                     renderer.render(scene, camera);
                 }
+=======
+    app.controller('RootCtrl', ['$scope', 'SceneOptions', 'StepperService', 'AnalyserService', 'DatGui', '$timeout', function($scope, SceneOptions, StepperService, AnalyserService, DatGui, $timeout) {
+>>>>>>> c80f63423fcf9794e39932cdc0b9d9b9baf054ab
 
                 function loop() {
                     stats.begin();
@@ -1472,6 +1488,7 @@
 
                 function addListeners() {
 
+<<<<<<< HEAD
                     function onWindowResize() {
                         width = window.innerWidth;
                         height = window.innerHeight;
@@ -1481,6 +1498,25 @@
                         camera.aspect = width / height;
                         camera.updateProjectionMatrix();
                     }
+=======
+        var detail = {};
+
+        $scope.openDetail = function () {
+
+            $.get(stepper.step.url, function (data) {
+                $timeout(function () {
+                        detail.active = true;
+                        detail.html = data;                
+                    });
+            });
+
+            return false;
+        };
+
+        $scope.detail = detail;
+
+    }]);
+>>>>>>> c80f63423fcf9794e39932cdc0b9d9b9baf054ab
 
                     window.addEventListener('resize', onWindowResize, false);
                     /*
@@ -1503,9 +1539,73 @@
                         }
                     }
 
+<<<<<<< HEAD
                     function handleTouchEnd(event) {
                         mousePos = { x: windowHalfX, y: windowHalfY };
                     }
+=======
+        function getItems() {
+            var titles = [
+                'Il periodo francese:<br> la nascita della <em>Grand Opéra</em>',
+                'Il Barbiere di Siviglia<br> al teatro Argentina<br> di Roma',
+                'Il Silenzio',
+            ];
+            var paragraphs = [
+                'Il giovane Gioacchino',
+                'Il folgorante debutto',
+                'La frenesia della produzione',
+                'Sulle strade di Parigi',
+            ];
+            var audioTitles = [
+                'Il Barbiere di Siviglia',
+                'L\'italiana in Algeri',
+            ];
+            var audios = [
+                'audio/07-rossini-192.mp3',
+                'audio/08-rossini-192.mp3',
+            ];
+            var backgrounds = [
+                'img/tunnel-1.jpg',
+                'img/tunnel-2.jpg',
+                'img/tunnel-3.jpg',
+            ];
+            var contrasts = [
+                'light-bg',
+                'light-bg',
+                'dark-bg',
+            ];
+            var items = new Array(options.ribbon.steps).fill().map(function(v, i) {
+                return {
+                    id: i + 1,
+                    url: 'view.html',
+                    title: titles[i % titles.length],
+                    chapter: 'Passione, Genio e Silenzio',
+                    paragraph: paragraphs[Math.floor(i / 3) % paragraphs.length],
+                    years: {
+                        from: 1812 + Math.round(Math.random() * 50),
+                        to: 1812 + Math.round(Math.random() * 50),
+                    },
+                    background: backgrounds[i % backgrounds.length],
+                    contrast: contrasts[i % contrasts.length],
+                    colors: angular.copy(SceneOptions.colors),
+                    camera: {
+                        cameraHeight: 0,
+                        targetHeight: 0,
+                    },
+                    circle: {
+                        position: new THREE.Vector3(0, 0, 0),
+                        texture: 'img/rossini-01.png',
+                    },
+                    audio: {
+                        url: audios[i % audios.length],
+                        title: audioTitles[i % audioTitles.length],
+                        orchestra: 'Academy of St Martin in the Fields Orchestra',
+                    },
+                };
+            });
+            return items;
+        }
+>>>>>>> c80f63423fcf9794e39932cdc0b9d9b9baf054ab
 
                     function handleTouchMove(event) {
                         if (event.touches.length == 1) {

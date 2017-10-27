@@ -10,11 +10,7 @@ Nav
 function nav() {
     $('.nav-toggle').on('click', function() {
         if ($('body').is('.open-nav')) {
-            $('body').removeClass('open-nav');
-            $('.nav').removeClass('sub-nav-active');
-            $('.nav ul.active').slideToggle(800, 'easeInOutQuart').removeClass('active');
-            $('.sub-nav').removeClass('switch switched');
-            $('li:has(".main-nav__sub-nav") > a.active').removeClass('active');
+            closeNav();
         } else {
             $('body').addClass('open-nav');
         }
@@ -34,7 +30,7 @@ function nav() {
 
     if ($(window).width() <= 1024) {
         $('.main-nav__scroll').on('click', 'ul ul > li:has(".main-nav__sub-nav") > a', function() {
-            $(this).next().slideToggle(800, 'easeInOutQuart');
+            $(this).next().slideToggle(800, 'easeInOutQuart').toggleClass('active');
             return false;
         });
     } else {
@@ -67,6 +63,18 @@ function nav() {
             return false;
         });
     }
+}
+
+
+/*--------------------------------------------------
+Close Nav
+--------------------------------------------------*/
+function closeNav() {
+    $('body').removeClass('open-nav');
+    $('.nav').removeClass('sub-nav-active');
+    $('.nav ul.active').slideUp(800, 'easeInOutQuart').removeClass('active');
+    $('.sub-nav').removeClass('switch switched');
+    $('.main-nav__sub-nav.active').slideUp(800, 'easeInOutQuart').removeClass('active');
 }
 
 
@@ -344,4 +352,18 @@ $(function() {
 /*--------------------------------------------------
 Win Load
 --------------------------------------------------*/
-$(window).on('load', function() {});
+$(window).on('load', function () { });
+
+
+
+/*--------------------------------------------------
+Win Resize
+--------------------------------------------------*/
+var resizingTimeout;
+$(window).on('resize', function () {
+    clearTimeout(resizingTimeout);
+    $('body').addClass('resizing');
+    resizingTimeout = setTimeout(function () {
+        $('body').removeClass('resizing');
+    }, 100);
+})

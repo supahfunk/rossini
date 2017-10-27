@@ -28,7 +28,7 @@
     <link href="css/app.min.css" rel="stylesheet" />
 </head>
 
-<body ng-controller="RootCtrl" ng-class="stepper.step.contrast">
+<body ng-controller="RootCtrl" ng-class="{ 'light-bg' : stepper.step.contrast == 'light-bg', 'dark-bg': stepper.step.contrast == 'dark-bg', 'detail-active dark-bg': detail.active }">
 
     <div class="wrapper" ng-cloak>
 
@@ -237,7 +237,7 @@
                     <div class="tunnel-slick__header">
                         <div class="big-title h1 splitted-text" split-text ng-bind-html="item.titleTrusted">-</div>
                         <div class="cta" ng-if="item.title">
-                            <a href="#" class="inline-btn">View more</a>
+                            <a href="#" ng-href="{{stepper.step.url}}" ng-click="openDetail()" class="inline-btn">View more</a>
                         </div>
                     </div>
                 </div>
@@ -248,13 +248,53 @@
         </div>
         <!-- /Tunnel -->
 
-        <!-- View -->
-        <div class="view">
-            Il periodo francese di Rossini si apre nel 1825 con la cantata Il viaggio a Reims, ossia L’albergo del giglio d’oro scritta per l’incoronazione di Carlo X. Seguono Le siège de Corinthe, radicale rifacimento del Maometto II, Moïse et Pharaon, ou Le passage
-            de la Mer Rouge (1827), Le Comte Ory, dove riutilizza gran parte della musica del Viaggio a Reims. Nel 1827 muore la madre e Rossini ne è profondamente colpito. Lavora a quella che sarà l’ultima sua fatica nel teatro musicale, Guillaume Tell
-            (1829), che ottiene solo un “succès d’estime” da parte del pubblico, mentre è esaltata dalla critica e dai musicisti. Carlo X gli conferisce la Légion d’honneur.
+        <!-- Detail -->
+        <div class="detail" ng-class="{ active: detail.active }">
+            <!--<div ng-bind-html="detail.html"></div>-->
+            <div class="detail__container">
+                <div class="detail__wrap">
+                    <div class="detail__scroll" scrollbar>
+                        <div class="detail__content">
+
+                            <div class="detail__subtitle">
+                                Sulle strade di Parigi — la Grand Opéra
+                            </div>
+                            <div class="detail__title h1">
+                                Il periodo francesce:<br>
+                                la nascita della <em>Grand Opéra</em>
+                            </div>
+                            <div class="detail__box">
+                                <div class="detail__text">
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit fusce vel sapien elit in malesuada semper mi, id sollicitudin urna fermentum ut fusce varius nisl ac ipsum gravida vel pretium tellus tincidunt integer eu augue augue nunc elit dolor, luctus placerat scelerisque euismod, iaculis eu lacus nunc mi elit.</p>
+                                    <p>Vehicula ut laoreet ac, aliquam sit amet justo nunc tempor, metus vel placerat suscipit, orci nisl iaculis eros, a tincidunt nisi odio eget lorem nulla condimentum tempor mattis ut vitae feugiat augue cras ut metus a risus iaculis scelerisque eu ac.</p>
+                                    <p>Ante fusce non varius purus aenean nec magna felis fusce vestibulum velit mollis odio sollicitudin lacinia aliquam posuere, sapien elementum lobortis tincidunt, turpis dui ornare nisl</p>
+                                    <p>Sollicitudin interdum turpis nunc eget sem nulla eu ultricies orci praesent id augue nec lorem pretium congue sit amet ac nunc fusce iaculis lorem eu diam hendrerit at mattis purus dignissim vivamus mauris tellus, fringilla vel dapibus a, blandit quis erat vivamus elementum aliquam luctus etiam fringilla pretium sem vitae sodales mauris id nulla est praesent laoreet, metus vel auctor aliquam, eros purus vulputate leo, eget consequat neque quam id tellus duis.</p>
+                                    <p>ultricies tempor tortor, vitae dignissim ligula mattis nec in hac habitasse platea dictumst ut arcu enim, dictum quis ultrices id, sagittis eget nulla sed nunc mi, congue ut ultricies ac, varius a eros donec porttitor, libero fermentum fringilla laoreet, eros arcu sodales ante, ut dictum risus lectus vel quam integer ultricies, nunc eget elementum euismod</p>
+                                    <p>Orci enim vestibulum orci, nec suscipit urna odio et tellus suspendisse suscipit orci sit amet sem venenatis nec lobortis sem suscipit nullam nec imperdiet velit mauris eu nisi a felis imperdiet porta at ac nulla vivamus faucibus felis nec dolor pretium eget pellentesque dolor suscipit maecenas vitae enim arcu, at tincidunt nunc pellentesque eleifend vulputate lacus</p>
+                                </div>
+                                <div class="detail__images">
+                                    <figure>
+                                        <img src="img/detail-1.jpg" />
+                                        <figcaption>Gioachino Rossini, c. 1829 (Sguaci)</figcaption>
+                                    </figure>
+                                    <figure>
+                                        <img src="img/detail-2.jpg" />
+                                        <figcaption>Gioachino Rossini, c. 1829 (Sguaci)</figcaption>
+                                    </figure>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button ng-click="detail.active = false" class="detail__close">
+                <svg class="ico">
+                    <use xlink:href="#close"></use>
+                </svg>
+                <span>Ritorno</span>
+            </button>
         </div>
-        <!-- /View -->
+        <!-- /Detail -->
 
         <!-- Footer -->
         <footer class="footer">
@@ -277,6 +317,10 @@
         </symbol>
         <symbol id="ico-instagram" viewBox="0 0 24 28">
             <path d="M16 14c0-2.203-1.797-4-4-4s-4 1.797-4 4 1.797 4 4 4 4-1.797 4-4zM18.156 14c0 3.406-2.75 6.156-6.156 6.156s-6.156-2.75-6.156-6.156 2.75-6.156 6.156-6.156 6.156 2.75 6.156 6.156zM19.844 7.594c0 0.797-0.641 1.437-1.437 1.437s-1.437-0.641-1.437-1.437 0.641-1.437 1.437-1.437 1.437 0.641 1.437 1.437zM12 4.156c-1.75 0-5.5-0.141-7.078 0.484-0.547 0.219-0.953 0.484-1.375 0.906s-0.688 0.828-0.906 1.375c-0.625 1.578-0.484 5.328-0.484 7.078s-0.141 5.5 0.484 7.078c0.219 0.547 0.484 0.953 0.906 1.375s0.828 0.688 1.375 0.906c1.578 0.625 5.328 0.484 7.078 0.484s5.5 0.141 7.078-0.484c0.547-0.219 0.953-0.484 1.375-0.906s0.688-0.828 0.906-1.375c0.625-1.578 0.484-5.328 0.484-7.078s0.141-5.5-0.484-7.078c-0.219-0.547-0.484-0.953-0.906-1.375s-0.828-0.688-1.375-0.906c-1.578-0.625-5.328-0.484-7.078-0.484zM24 14c0 1.656 0.016 3.297-0.078 4.953-0.094 1.922-0.531 3.625-1.937 5.031s-3.109 1.844-5.031 1.937c-1.656 0.094-3.297 0.078-4.953 0.078s-3.297 0.016-4.953-0.078c-1.922-0.094-3.625-0.531-5.031-1.937s-1.844-3.109-1.937-5.031c-0.094-1.656-0.078-3.297-0.078-4.953s-0.016-3.297 0.078-4.953c0.094-1.922 0.531-3.625 1.937-5.031s3.109-1.844 5.031-1.937c1.656-0.094 3.297-0.078 4.953-0.078s3.297-0.016 4.953 0.078c1.922 0.094 3.625 0.531 5.031 1.937s1.844 3.109 1.937 5.031c0.094 1.656 0.078 3.297 0.078 4.953z" />
+        </symbol>
+        <symbol id="close" viewBox="0 0 26 26">
+            <polygon style="fill: #fff" points="24.9,1 24.2,0.4 12.9,11.7 1.6,0.4 0.9,1 12.2,12.4 0.9,23.7 1.6,24.4 12.9,13 24.2,24.4 24.9,23.7
+	13.6,12.4 " />
         </symbol>
     </svg>
     <!-- /SVG Sprite -->
