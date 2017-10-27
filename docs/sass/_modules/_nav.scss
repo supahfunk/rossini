@@ -55,6 +55,24 @@ Nav
             overflow-y: auto;
             padding: 0 70px 70px;
 
+            &:before,
+            &:after {
+                content: '';
+                position: absolute;
+                z-index: 1;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 30px;
+                background: linear-gradient(to bottom, #fff, rgba(255, 255, 255, .0));
+            }
+
+            &:after {
+                top: auto;
+                bottom: 0;
+                background: linear-gradient(to top, #fff, rgba(255, 255, 255, .0));
+            }
+
             .scroll-content {
                 padding: 50px 0;
             }
@@ -62,8 +80,15 @@ Nav
             .logo {
                 width: 220px;
                 height: auto;
-                margin-bottom: 15px;
-                transform: translateZ(0);
+                margin-bottom: 25px;
+                opacity: 0;
+                transform: translate3d(0, -20px, 0);
+                transition: all .5s $bezier .3s;
+
+                .open-nav & {
+                    opacity: 1;
+                    transform: translate(0);
+                }
 
                 @include lg {
                     width: 180px;
@@ -75,6 +100,20 @@ Nav
 
                 > li {
                     padding-bottom: 20px;
+                    transition: all .5s $bezier;
+                    transform: translateY(-20px);
+                    opacity: 0;
+
+                    @for $i from 0 to 10 {
+                        &:nth-child(#{$i}) {
+                            transition-delay: .3s + 0.05s * $i;
+                        }
+                    }
+
+                    .open-nav & {
+                        transform: translate(0);
+                        opacity: 1;
+                    }
 
                     > a {
                         font-family: Didot, serif;
@@ -120,7 +159,7 @@ Nav
                             > a {
                                 font-family: Avenir, sans-serif;
                                 color: $black-tit;
-                                opacity: .7;
+                                opacity: .5;
                                 font-size: 20px;
                                 transition: opacity .2s ease-in-out;
 
@@ -128,7 +167,8 @@ Nav
                                     font-size: 18px;
                                 }
 
-                                &:hover {
+                                &:hover,
+                                &.active {
                                     opacity: 1;
                                 }
                             }
@@ -170,6 +210,7 @@ Nav
                     display: block;
                     padding: 0 0 10px;
                     font-size: 15px;
+                    transition: opacity .3s ease-in-out;
 
                     img {
                         display: none;
@@ -179,6 +220,14 @@ Nav
 
             .socials {
                 margin-top: 20px;
+                transform: translate3d(0, -20px, 0);
+                opacity: 0;
+                transition: all .5s $bezier .7s;
+
+                .open-nav & {
+                    opacity: 1;
+                    transform: translateZ(0);
+                }
 
                 a {
                     display: inline-block;
@@ -228,13 +277,13 @@ Nav
                 z-index: 1;
                 left: 50%;
                 top: 50%;
-                transform: translate(-50%, -50%);
+                transform: translate(-50%, -45%);
                 min-width: 100%;
                 min-height: 100%;
                 width: auto;
                 height: auto;
-                opacity: 0.15;
-                transition: opacity .5s ease-in-out;
+                opacity: 0;
+                transition: all .6s $bezier;
             }
 
             .paragraph-name {
@@ -246,7 +295,7 @@ Nav
                 padding: 20px 20px;
                 opacity: 0;
                 transform: translateY(20px);
-                transition: all .1s ease-in-out 0s;
+                transition: all .5s $bezier 0s;
 
                 span {
                     display: inline-block;
@@ -270,7 +319,6 @@ Nav
 
             &:hover {
                 img {
-                    opacity: 1;
                 }
 
                 span {
@@ -287,7 +335,7 @@ Nav
         @media (min-width: 1025px) {
 
             .main-nav {
-                left: 12.5%;
+                left: 15%;
 
                 @include lg {
                     left: 20%;
@@ -301,17 +349,45 @@ Nav
                     width: 60%;
                 }
 
-                a {
-                    .paragraph-name {
-                        opacity: 1;
-                        transition-duration: 0.5s;
-                        transform: translateY(0);
-                    }
+                &.switch {
+                    a {
+                        img {
+                            opacity: 0.15;
+                            transition-duration: 1.2s;
+                            transform: translate(-50%, -50%);
+                        }
 
-                    @for $i from 0 to 5 {
-                        &:nth-child(#{$i}) {
-                            .paragraph-name {
-                                transition-delay: .1s + 0.1s * $i;
+                        .paragraph-name {
+                            opacity: 1;
+                            transition-duration: 1.4s;
+                            transform: translateY(0);
+                        }
+
+                        @for $i from 0 to 5 {
+                            &:nth-child(#{$i}) {
+                                img {
+                                    transition-delay: .1s + 0.1s * $i;
+                                }
+
+                                .paragraph-name {
+                                    transition-delay: .2s + 0.1s * $i;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                &.switched {
+                    a {
+                        img {
+                            transform: translate3d(-50%, -50%, 0);
+                            transition: all .4s ease-in-out !important;
+                        }
+
+                        &:hover {
+                            img {
+                                transform: translate3d(-50%, -50%, 0);
+                                opacity: 1 !important;
                             }
                         }
                     }

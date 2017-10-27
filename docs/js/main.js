@@ -9,11 +9,26 @@ Nav
 --------------------------------------------------*/
 function nav() {
     $('.nav-toggle').on('click', function () {
-        $('body').toggleClass('open-nav');
+        if ($('body').is('.open-nav')) {
+            $('body').removeClass('open-nav');
+            $('.nav').removeClass('sub-nav-active');
+            $('.nav ul.active').slideUp(500).removeClass('active');
+        } else {
+            $('body').addClass('open-nav');
+        }
     });
 
-    $('.main-nav__scroll').on('click', 'ul > li:has("ul") > a',function () {
-        $(this).next().slideToggle(800, 'easeInOutQuart');
+    $('.main-nav__scroll').on('click', 'ul > li:has("ul") > a', function () {
+        if ($(this).next().is('.active')) {
+            $(this).next().slideUp(800, 'easeInOutQuart').removeClass('active');
+            if ($('.nav').is('.sub-nav-active')) {
+                $('.nav').removeClass('sub-nav-active');
+                $('.nav a.active').removeClass('active');
+            }
+        } else {
+            $(this).next().slideDown(800, 'easeInOutQuart').addClass('active');
+        }
+        
         return false;
     });
 
@@ -24,7 +39,28 @@ function nav() {
         });
     } else {
         $('.main-nav__scroll').on('click', 'ul ul > li:has(".main-nav__sub-nav") > a', function () {
-            $('.nav').toggleClass('sub-nav-active');
+            $('li:has(".main-nav__sub-nav") > a.active').not($(this)).removeClass('active');
+            $(this).addClass('active');
+            if ($('.nav').is('.sub-nav-active')) {
+                $('.sub-nav').removeClass('switch switched');
+                setTimeout(function () {
+                    var subnavContent = $(this).next().html();
+                    $('.sub-nav').html(subnavContent);
+                    $('.sub-nav').addClass('switch');
+                    setTimeout(function () {
+                        $('.sub-nav').addClass('switched');
+                    }, 1200);
+                }, 500);
+            } else {
+                $('.sub-nav').removeClass('switch switched');
+                $('.nav').addClass('sub-nav-active');
+                var subnavContent = $(this).next().html();
+                $('.sub-nav').html(subnavContent);
+                $('.sub-nav').addClass('switch');
+                setTimeout(function () {
+                    $('.sub-nav').addClass('switched');
+                }, 1200);
+            }
             return false;
         });
     }
@@ -125,8 +161,9 @@ function changeYear(from, to) {
     var $year = $('.tunnel-year'),
         $from = $('.tunnel-year__from'),
         $to = $('.tunnel-year__to'),
-        time = 2,
-        easing = Power3.easeOut,
+        time = 2.5,
+        delay = 0.1,
+        easing = Power1.ease,
         year = {
             from: $from.html(),
             to: $to.html()
@@ -134,13 +171,13 @@ function changeYear(from, to) {
 
     if (to === 'false') {
         $year.addClass('one-year');
-        TweenLite.to(year, time, { to: from, roundProps: 'year', onUpdate: updateYear, ease: easing });
+        TweenLite.to(year, time, { to: from, roundProps: 'year', onUpdate: updateYear, ease: easing, delay: delay });
     } else {
         $year.removeClass('one-year');
-        TweenLite.to(year, time, { to: to, roundProps: 'year', onUpdate: updateYear, ease: easing });
+        TweenLite.to(year, time, { to: to, roundProps: 'year', onUpdate: updateYear, ease: easing, delay: delay });
     }
 
-    TweenLite.to(year, time, { from: from, roundProps: 'year', onUpdate: updateYear, ease: easing });
+    TweenLite.to(year, time, { from: from, roundProps: 'year', onUpdate: updateYear, ease: easing, delay: delay });
 
     function updateYear() {
         $from.html(parseInt(year.from));

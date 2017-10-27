@@ -192,8 +192,9 @@ Tunnel Year
     white-space: nowrap;
     width: 100%;
     left: 0;
-    top: 2%;
+    top: 5%;
     pointer-events: none;
+    line-height: 1;
 
     & > div {
         display: inline-block;
@@ -214,6 +215,8 @@ Tunnel Year
 }
 
 .one-year {
+    top: 8%;
+
     .tunnel-year__from {
         transform: translate(50%) scale(1.2);
         text-indent: 50px;
@@ -282,6 +285,24 @@ Tunnel Slick
     }
 }
 
+
+/* Tunnel 0 */
+#tunnel-0 {
+
+    .intro {
+        position: absolute;
+        z-index: 1;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        img {
+            width: 400px;
+            height: auto;
+            margin-bottom: 30px;
+        }
+    }
+}
 
 /* Tunnel 1 */
 #tunnel-1 {
