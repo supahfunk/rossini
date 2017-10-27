@@ -9,6 +9,13 @@ Typography
     font-size: 3vw;
     line-height: 1.2;
 
+    @include lg {
+        line-height: 1.3;
+    }
+
+    @include md {
+        font-size: 4vw;
+    }
 }
 
 em {

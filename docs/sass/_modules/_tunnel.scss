@@ -187,7 +187,7 @@ Tunnel Year
     color: rgba($gold, 0.45);
     font-family: Didot, serif;
     font-weight: bold;
-    font-size: 18vw;
+    font-size: 17vw;
     text-align: center;
     white-space: nowrap;
     width: 100%;
@@ -195,6 +195,29 @@ Tunnel Year
     top: 5%;
     pointer-events: none;
     line-height: 1;
+    transition: all .8s $bezier;
+
+    @include lg {
+        top: 7%;
+    }
+
+    @include md {
+        top: 7%;
+    }
+
+    @include sm {
+        font-size: 15vw;
+        top: 8%;
+    }
+
+    @include xs {
+        font-size: 14vw;
+        top: 8%;
+    }
+
+    @include xxs {
+        top: 6%;
+    }
 
     & > div {
         display: inline-block;

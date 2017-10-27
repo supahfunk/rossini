@@ -16,9 +16,21 @@ Footer
     justify-content: space-between;
     align-items: center;
 
+    @include sm {
+        margin: 0 20px 15px;
+    }
+
     &__copy {
         color: $black-tit;
         transition: color .5s ease-in-out;
+
+        @include sm {
+            font-size: 12px;
+        }
+
+        @include xxs {
+            font-size: 0;
+        }
 
         .dark-bg & {
             color: #fff;
@@ -37,6 +49,11 @@ Footer
             width: 220px;
             height: auto;
             transition: opacity .5s ease-in-out;
+
+            @include sm {
+                width: 150px;
+                bottom: -10px;
+            }
 
             &.dark-logo {
                 opacity: 1;

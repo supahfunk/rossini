@@ -282,7 +282,7 @@
                 audio.src = $audioUrl;
                 audio.volume = options.audioVolume;
                 console.log('AnalyserService.setAudioUrl', $audioUrl);
-                audio.play();
+                // audio.play();
             }
         }
 
@@ -1256,7 +1256,7 @@
         circularStrength: 0.90,
     });
 
-    app.controller('RootCtrl', ['$scope', 'SceneOptions', 'StepperService', 'AnalyserService', 'DatGui', function($scope, SceneOptions, StepperService, AnalyserService, DatGui) {
+    app.controller('RootCtrl', ['$scope', 'SceneOptions', 'StepperService', 'AnalyserService', 'DatGui', '$timeout', function($scope, SceneOptions, StepperService, AnalyserService, DatGui, $timeout) {
 
         var scene = {
             objects: {},
@@ -1274,6 +1274,22 @@
             $scope.audio = AnalyserService;
             var gui = new DatGui();
         });
+
+        var detail = {};
+
+        $scope.openDetail = function () {
+
+            $.get(stepper.step.url, function (data) {
+                $timeout(function () {
+                        detail.active = true;
+                        detail.html = data;                
+                    });
+            });
+
+            return false;
+        };
+
+        $scope.detail = detail;
 
     }]);
 
@@ -1329,6 +1345,7 @@
             var items = new Array(options.ribbon.steps).fill().map(function(v, i) {
                 return {
                     id: i + 1,
+                    url: 'view.html',
                     title: titles[i % titles.length],
                     chapter: 'Passione, Genio e Silenzio',
                     paragraph: paragraphs[Math.floor(i / 3) % paragraphs.length],

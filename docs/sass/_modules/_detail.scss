@@ -1,0 +1,119 @@
+@import "variables";
+
+/*--------------------------------------------------
+Detail
+--------------------------------------------------*/
+.detail {
+    position: fixed;
+    z-index: 2;
+    width: 100%;
+    height: 100vh;
+    bottom: 0;
+    left: 0;
+    background: $detail-bg;
+    opacity: 0;
+    pointer-events: none;
+
+    &__container {
+        position: relative;
+        z-index: 1;
+        width: 90%;
+        height: 100vh;
+        max-width: 1580px;
+        padding: 0 2%;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+
+    &__wrap {
+        height: 100vh;
+        padding-top: 10vw;
+    }
+
+    &__scroll {
+        position: relative;
+        z-index: 1;
+        height: calc(100vh - 15vw);
+        padding-right: 30px;
+
+        .scrollbar-track {
+            background: rgba(0, 0, 0, .5);
+
+            &.show {
+                opacity: .2;
+            }
+        }
+
+        .scrollbar-thumb {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        &:before,
+        &:after {
+            content: '';
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5vw;
+            background: linear-gradient(to bottom, $detail-bg, rgba($detail-bg, 0));
+        }
+
+        &:after {
+            top: auto;
+            bottom: 0;
+            background: linear-gradient(to top, $detail-bg, rgba($detail-bg, 0));
+        }
+    }
+
+    &__content {
+        padding: 50px 0;
+        color: #fff;
+        font-size: 18px;
+        line-height: 1.7;
+    }
+
+    &__close {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translate(-50%);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        font-size: 15px;
+
+        .ico {
+            width: 26px;
+            height: 26px;
+            margin-right: 15px;
+        }
+    }
+}
+
+.detail-active {
+    #scene,
+    .footer,
+    .tunnel,
+    .tunnel-nav {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .tunnel-year {
+        color: rgba(255,255,255, 0.05);
+        transform: translateY(-50%);
+
+        &__to {
+            &:before {
+                color: rgba(255,255,255, 0.05);
+            }
+        }
+    }
+
+    .detail {
+        background: $detail-bg;
+    }
+}

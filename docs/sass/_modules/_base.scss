@@ -25,6 +25,13 @@ a {
     }
 }
 
+.resizing {
+    *,
+    *:before,
+    *:after {
+        transition: none !important;
+    }
+}
 
 /*--------------------------------------------------
 Canvas
