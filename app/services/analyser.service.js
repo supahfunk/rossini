@@ -27,7 +27,7 @@
                 var bufferLength;
                 source = analyserContext.createMediaElementSource(audio);
                 source.smoothingTimeConstant = 0.85;
-                // source.connect(analyser);
+                source.connect(analyser);
                 source.connect(analyserContext.destination);
                 analyser.fftSize = options.audio.bands * 2;
                 bufferLength = analyser.frequencyBinCount;
@@ -45,8 +45,6 @@
                     audio.volume = options.audio.volume;
                     // console.log('AnalyserService.setAudioUrl', $audioUrl);
                     play();
-                } else {
-                    pause();
                 }
             }
         }

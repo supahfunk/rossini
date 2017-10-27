@@ -33,6 +33,7 @@ a {
     }
 }
 
+
 /*--------------------------------------------------
 Canvas
 --------------------------------------------------*/
@@ -45,11 +46,7 @@ Canvas
     left: 0;
     width: 100%;
     height: 100vh;
-<<<<<<< HEAD
-    transition: background .6s ease-in-out;
-=======
     transition: opacity .8s $bezier;
->>>>>>> c80f63423fcf9794e39932cdc0b9d9b9baf054ab
 }
 
 [scene] {
