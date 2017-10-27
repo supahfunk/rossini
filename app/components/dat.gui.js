@@ -78,7 +78,7 @@
             colors.addColor(options.colors, 'background').listen().onChange(onOptionsChanged);
             colors.addColor(options.colors, 'lines').listen().onChange(onOptionsChanged);
             colors.addColor(options.colors, 'overLines').listen().onChange(onOptionsChanged);
-            gui.add(options, 'audioVolume', 0.01, 1.0).onChange(onOptionsChanged);
+            gui.add(options.audio, 'volume', 0.01, 1.0).onChange(onOptionsChanged);
             gui.add(options, 'audioStrength', 10, 100).onChange(onOptionsChanged);
             gui.add(options, 'noiseStrength', 10, 100).onChange(onOptionsChanged);
             gui.add(options, 'circularStrength', 0.01, 0.90).onChange(onOptionsChanged);
@@ -86,6 +86,15 @@
             gui.add(options, 'saveJson');
 
             onOptionsChanged();
+
+            angular.element(window).on('keydown', onKeyDown);
+
+            function onKeyDown(e) {
+                var key = e.key.toLowerCase();
+                if (key === 'a' && e.ctrlKey) {
+                    $(document).find('body').toggleClass('gui-active');
+                }
+            }
 
             return gui;
         }

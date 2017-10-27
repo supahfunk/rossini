@@ -1,75 +1,9 @@
-﻿/* global angular */
-
-'use strict';
+/* global angular */
 
 (function() {
     "use strict";
 
     var app = angular.module('app');
-
-    app.constant('SceneOptions', {
-        colors: {
-            background: 0xeae8e8,
-            lines: 0xb4bfdd,
-            overLines: 0x3353a4
-        },
-        camera: {
-            cameraHeight: 0,
-            targetHeight: 5
-        },
-        circle: {
-            position: new THREE.Vector3(),
-        },
-        ribbon: {
-            steps: 12,
-            points: 24,
-            vertices: 2400
-        },
-        audioVolume: 0.9,
-        bands: 128,
-        points: 128,
-        lines: 32,
-        radius: 200,
-        audioStrength: 100,
-        noiseStrength: 25,
-        circularStrength: 0.90
-    });
-
-    app.controller('RootCtrl', ['$scope', 'SceneOptions', 'StepperService', 'AnalyserService', 'DatGui', function($scope, SceneOptions, StepperService, AnalyserService, DatGui) {
-
-        var scene = {
-            objects: {},
-            options: SceneOptions,
-            stepper: StepperService
-        };
-
-        var objects = scene.objects;
-        var options = scene.options;
-        var stepper = scene.stepper;
-
-        stepper.init().then(function() {
-            $scope.scene = scene;
-            $scope.stepper = stepper;
-            $scope.audio = AnalyserService;
-            var gui = new DatGui();
-        });
-
-        var detail = {};
-
-        $scope.openDetail = function () {
-            $.ajax({
-                href: stepper.step.url,
-                success: function success(data) {
-                    $timeout(function () {
-                        detail.active = true;
-                        detail.html = data;
-                    });
-                }
-            });
-        };
-
-        $scope.detail = detail;
-    }]);
 
     app.service('StepperService', ['$rootScope', '$timeout', '$q', '$http', '$sce', 'SceneOptions', function($rootScope, $timeout, $q, $http, $sce, SceneOptions) {
 
@@ -87,43 +21,65 @@
             lines: new THREE.Color(options.colors.lines),
             overLines: new THREE.Color(options.colors.overLines),
             cameraHeight: options.camera.cameraHeight,
-            targetHeight: options.camera.targetHeight
+            targetHeight: options.camera.targetHeight,
         };
 
         function getItems() {
-            var titles = ['Il periodo francese:<br> la nascita della <em>Grand Opéra</em>', 'Il Barbiere di Siviglia<br> al teatro Argentina<br> di Roma', 'Il Silenzio'];
-            var paragraphs = ['Il giovane Gioacchino', 'Il folgorante debutto', 'La frenesia della produzione', 'Sulle strade di Parigi'];
-            var audioTitles = ['Il Barbiere di Siviglia', 'L\'italiana in Algeri'];
-            var audios = ['audio/07-rossini-192.mp3', 'audio/08-rossini-192.mp3'];
-            var backgrounds = ['img/tunnel-1.jpg', 'img/tunnel-2.jpg', 'img/tunnel-3.jpg'];
-            var contrasts = ['light-bg', 'light-bg', 'dark-bg'];
+            var titles = [
+                'Il periodo francese:<br> la nascita della <em>Grand Opéra</em>',
+                'Il Barbiere di Siviglia<br> al teatro Argentina<br> di Roma',
+                'Il Silenzio',
+            ];
+            var paragraphs = [
+                'Il giovane Gioacchino',
+                'Il folgorante debutto',
+                'La frenesia della produzione',
+                'Sulle strade di Parigi',
+            ];
+            var audioTitles = [
+                'Il Barbiere di Siviglia',
+                'L\'italiana in Algeri',
+            ];
+            var audios = [
+                'audio/07-rossini-192.mp3',
+                'audio/08-rossini-192.mp3',
+            ];
+            var backgrounds = [
+                'img/tunnel-1.jpg',
+                'img/tunnel-2.jpg',
+                'img/tunnel-3.jpg',
+            ];
+            var contrasts = [
+                'light-bg',
+                'light-bg',
+                'dark-bg',
+            ];
             var items = new Array(options.ribbon.steps).fill().map(function(v, i) {
                 return {
                     id: i + 1,
-                    url: 'view.html',
                     title: titles[i % titles.length],
                     chapter: 'Passione, Genio e Silenzio',
                     paragraph: paragraphs[Math.floor(i / 3) % paragraphs.length],
                     years: {
                         from: 1812 + Math.round(Math.random() * 50),
-                        to: 1812 + Math.round(Math.random() * 50)
+                        to: 1812 + Math.round(Math.random() * 50),
                     },
                     background: backgrounds[i % backgrounds.length],
                     contrast: contrasts[i % contrasts.length],
                     colors: angular.copy(SceneOptions.colors),
                     camera: {
                         cameraHeight: 0,
-                        targetHeight: 0
+                        targetHeight: 0,
                     },
                     circle: {
                         position: new THREE.Vector3(0, 0, 0),
-                        texture: 'img/rossini-01.png'
+                        texture: 'img/rossini-01.png',
                     },
-                    audio: {
+                    audio: i > 0 ? {
                         url: audios[i % audios.length],
                         title: audioTitles[i % audioTitles.length],
-                        orchestra: 'Academy of St Martin in the Fields Orchestra'
-                    }
+                        orchestra: 'Academy of St Martin in the Fields Orchestra',
+                    } : null,
                 };
             });
             return items;
@@ -140,10 +96,12 @@
                     steps.push(item);
                 });
                 setStep(0);
-                console.log('StepperService.load', steps);
+                // console.log('StepperService.load', steps);
                 deferred.resolve(steps);
+
             }, function(error) {
                 deferred.reject(error);
+
             });
             return deferred.promise;
         }
@@ -166,11 +124,11 @@
                 targetHeight: step.camera.targetHeight,
                 delay: 0,
                 ease: Power2.easeInOut,
-                onComplete: function onComplete() {
+                onComplete: function() {
                     if (callback) {
                         callback();
                     }
-                }
+                },
             }));
             tweens.push(TweenLite.to(stepper.values.background, duration, {
                 r: background.r,
@@ -178,7 +136,7 @@
                 b: background.b,
                 delay: 0,
                 ease: Power2.easeInOut,
-                onUpdate: function onUpdate() {
+                onUpdate: function() {
                     var color = stepper.values.background.getHexString();
                     document.body.style.backgroundColor = '#' + color;
                 }
@@ -188,14 +146,14 @@
                 g: lines.g,
                 b: lines.b,
                 delay: 0,
-                ease: Power2.easeInOut
+                ease: Power2.easeInOut,
             }));
             tweens.push(TweenLite.to(stepper.values.overLines, duration, {
                 r: overLines.r,
                 g: overLines.g,
                 b: overLines.b,
                 delay: 0,
-                ease: Power2.easeInOut
+                ease: Power2.easeInOut,
             }));
         }
 
@@ -204,7 +162,7 @@
             var step = steps[index];
             tweenTo(index / steps.length, step, duration, function() {
                 clearTweens();
-                console.log(step, stepper.values);
+                // console.log(step, stepper.values);
             });
         }
 
@@ -236,7 +194,7 @@
                 options.camera.targetHeight = step.camera.targetHeight;
                 options.circle.position.copy(step.circle.position);
                 $rootScope.$broadcast('onStepChanged', { current: index, previous: previous });
-                console.log('onStepChanged', index, step);
+                // console.log('onStepChanged', index, step);
                 setTweens(stepper.duration);
             });
         }
@@ -272,32 +230,7 @@
         this.previous = previous;
         this.getCurrentStep = getCurrentStep;
         this.getStepAtIndex = getStepAtIndex;
+
     }]);
 
-    app.directive('scrollbar', [function() {
-        return {
-            restrict: 'A',
-            link: function link(scope, element, attributes, model) {
-                var native = element[0];
-                var options = {
-                    speed: 1,
-                    damping: 0.1,
-                    overscrollDamping: 1.0,
-                    thumbMinSize: 20,
-                    continuousScrolling: true,
-                    alwaysShowTracks: false
-                };
-
-                function Init() {
-                    var scrollbar = Scrollbar.init(native, options);
-                    console.log(scrollbar);
-                    scope.$watch(scrollbar.contentEl.offsetHeight, function(height) {
-                        scrollbar.update();
-                    });
-                }
-
-                setTimeout(Init, 100);
-            }
-        };
-    }]);
-})();
+}());

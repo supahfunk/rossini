@@ -15,8 +15,7 @@
             link: function(scope, element, attributes) {
 
                 function onChangeYears() {
-
-                    console.log('onChangeYears', scope.from, scope.to);
+                    // console.log('onChangeYears', scope.from, scope.to);
 
                     var yearFrom = element.find('.tunnel-year__from'),
                         yearTo = element.find('.tunnel-year__to'),

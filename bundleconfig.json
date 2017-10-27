@@ -38,11 +38,15 @@
             "app/app.routes.js",
             "app/app.run.js",
             "app/components/dat.gui.js",
-            "app/components/scene.directive.js",
+            "app/components/scrollbar.directive.js",
             "app/components/slick.directive.js",
             "app/components/split.directive.js",
             "app/components/years.directive.js",
-            "app/controllers/root.controller.js"
+            "app/controllers/root.controller.js",
+            "app/services/analyser.service.js",
+            "app/services/stepper.service.js",
+            "app/scene/scene.directive.js",
+            "app/scene/scene.options.js"
         ],
         "outputFileName": "docs/js/app.js",
         "minify": {
