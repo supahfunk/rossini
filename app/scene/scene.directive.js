@@ -47,7 +47,7 @@
                 });
 
                 scope.$on('onOptionsChanged', function($scope) {
-
+                    // optionsChanged
                 });
 
                 createScene();
@@ -135,7 +135,7 @@
                     var points = new Array(options.ribbon.points).fill(null).map(function() {
                         var p = new THREE.Vector3().copy(prev);
                         prev.x += getRandomRange(500, 1000, true);
-                        prev.y += getRandomRange(5, 20, true);
+                        prev.y += getRandomRange(10, 40, true);
                         prev.z += getRandomRange(1000, 2000, false);
                         return p;
                     });
@@ -242,13 +242,6 @@
                         opacity: 1,
                         transparent: true,
                         resolution: resolution,
-                        /*
-                        sizeAttenuation: 1,
-                        near: 1,
-                        far: 1000,
-                        blending: THREE.AdditiveBlending,
-                        side: THREE.DoubleSide,
-                        */
                     });
 
                     var materialLine2 = new MeshLineMaterial({
@@ -258,13 +251,6 @@
                         opacity: 1,
                         transparent: true,
                         resolution: resolution,
-                        /*
-                        sizeAttenuation: 1,
-                        near: 1,
-                        far: 1000,
-                        blending: THREE.AdditiveBlending,
-                        side: THREE.DoubleSide,
-                        */
                     });
 
                     object = new THREE.Object3D();
@@ -298,7 +284,6 @@
 
                     var state = {
                         pow: 0,
-                        duration: 2.350,
                         enabled: false,
                         adding: false,
                         removing: false,
@@ -315,7 +300,7 @@
                         if (state.tween) {
                             state.tween.kill();
                         }
-                        state.tween = TweenLite.to(state, state.duration, {
+                        state.tween = TweenLite.to(state, 2.000, {
                             pow: 1,
                             delay: 0,
                             ease: Elastic.easeOut.config(1, 0.3),
@@ -332,7 +317,7 @@
                         if (state.tween) {
                             state.tween.kill();
                         }
-                        state.tween = TweenLite.to(state, state.duration, {
+                        state.tween = TweenLite.to(state, 0.350, {
                             pow: 0,
                             delay: 0,
                             ease: Power2.easeOut,
@@ -515,11 +500,9 @@
                         position.y += stepper.values.targetHeight;
                         object.position.copy(position);
 
-                        /*
-                        object.position.x += (position.x + Math.random() * 20 - object.position.x) / 40;
-                        object.position.y += (position.y + Math.random() * 20 - object.position.y) / 40;
-                        object.position.z += (position.z + Math.random() * 20 - object.position.z) / 40;
-*/
+                        // object.position.x += (position.x + Math.random() * 20 - object.position.x) / 40;
+                        // object.position.y += (position.y + Math.random() * 20 - object.position.y) / 40;
+                        // object.position.z += (position.z + Math.random() * 20 - object.position.z) / 40;
 
                         object.scale.x = object.scale.y = object.scale.z = 0.001 + 0.14 * state.pow;
                         object.lookAt(camera.position);
@@ -529,12 +512,11 @@
                         // material2.opacity = state.pow;
                         material1.color = stepper.values.lines;
                         material2.color = stepper.values.overLines;
-                        /*
-                        if (useMeshLines) {
-                            materialLine1.uniforms.lineWidth.value = state.pow;
-                            materialLine2.uniforms.lineWidth.value = state.pow;
-                        }
-                        */
+
+                        // if (useMeshLines) {
+                        //    materialLine1.uniforms.lineWidth.value = state.pow;
+                        //    materialLine2.uniforms.lineWidth.value = state.pow;
+                        // }
 
                         // iterator++;
                     }
@@ -575,6 +557,7 @@
                 // var mousePos = { x: 0, y: 0 };
 
                 function addListeners() {
+
                     function onWindowResize() {
                         width = window.innerWidth;
                         height = window.innerHeight;
@@ -584,6 +567,7 @@
                         camera.aspect = width / height;
                         camera.updateProjectionMatrix();
                     }
+
                     window.addEventListener('resize', onWindowResize, false);
                     /*
                     function handleMouseMove(event) {

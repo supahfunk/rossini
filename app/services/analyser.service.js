@@ -5,7 +5,7 @@
 
     var app = angular.module('app');
 
-    app.service('AnalyserService', ['$rootScope', '$q', '$http', 'SceneOptions', 'StepperService', function($rootScope, $q, $http, SceneOptions, StepperService) {
+    app.service('AnalyserService', ['$rootScope', '$timeout', '$q', '$http', 'SceneOptions', 'StepperService', function($rootScope, $timeout, $q, $http, SceneOptions, StepperService) {
 
         var service = this;
         var options = SceneOptions;
@@ -13,8 +13,8 @@
 
         var analyser, audio, audioUrl;
 
-        var aContext = (window.AudioContext || window.webkitAudioContext);
-        var analyserContext = new aContext();
+        var audioContext = (window.AudioContext || window.webkitAudioContext);
+        var analyserContext = new audioContext();
         analyser = analyserContext.createAnalyser();
 
         audio = new Audio();
@@ -26,7 +26,8 @@
             if (!source) {
                 var bufferLength;
                 source = analyserContext.createMediaElementSource(audio);
-                source.connect(analyser);
+                source.smoothingTimeConstant = 0.85;
+                // source.connect(analyser);
                 source.connect(analyserContext.destination);
                 analyser.fftSize = options.audio.bands * 2;
                 bufferLength = analyser.frequencyBinCount;
@@ -39,10 +40,14 @@
         function setAudioUrl($audioUrl) {
             if (audioUrl !== $audioUrl) {
                 audioUrl = $audioUrl;
-                audio.src = $audioUrl;
-                audio.volume = options.audio.volume;
-                // console.log('AnalyserService.setAudioUrl', $audioUrl);
-                // audio.play(); // !!! RIATTIVARE
+                if (audioUrl) {
+                    audio.src = $audioUrl;
+                    audio.volume = options.audio.volume;
+                    // console.log('AnalyserService.setAudioUrl', $audioUrl);
+                    play();
+                } else {
+                    pause();
+                }
             }
         }
 
@@ -71,7 +76,7 @@
 
         function setStep() {
             var step = stepper.getCurrentStep();
-            setAudioUrl(step.audio.url);
+            setAudioUrl(step.audio ? step.audio.url : null);
         }
 
         function update() {
@@ -80,16 +85,14 @@
             }
         }
 
-        var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
         service.unlocked = false;
 
-        function unlock(e) {
+        function unlock() {
             var deferred = $q.defer();
-            if (!isIOS || service.unlocked) {
+            if (!options.device.ios || service.unlocked) {
                 deferred.resolve();
             } else {
-                doUnlock(e);
+                source = doUnlock();
                 // by checking the play state after some time, we know if we're really unlocked
                 $timeout(function() {
                     if ((source.playbackState === source.PLAYING_STATE || source.playbackState === source.FINISHED_STATE)) {
@@ -102,18 +105,23 @@
             return deferred.promise;
         }
 
-        function doUnlock(e) {
+        function doUnlock() {
             // create empty buffer
-            var buffer = myContext.createBuffer(1, 1, 22050);
-            var source = myContext.createBufferSource();
+            var ctx = new audioContext();
+            var source = ctx.createBufferSource();
+            var buffer = ctx.createBuffer(1, 1, 22050);
             source.buffer = buffer;
 
             // connect to output (your speakers)
-            source.connect(myContext.destination);
+            source.connect(ctx.destination);
 
             // play the file
-            source.noteOn(0);
+            if (source.noteOn) {
+                source.noteOn(0);
+            }
+
             console.log('AudioAnalyser.doUnlock');
+            return source;
         }
 
         window.addEventListener('touchstart', unlock, false);

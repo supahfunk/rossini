@@ -24,6 +24,8 @@
             var gui = new DatGui();
         });
 
+        console.log('RootCtrl', SceneOptions);
+
     }]);
 
 }());

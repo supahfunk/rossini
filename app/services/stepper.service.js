@@ -75,11 +75,11 @@
                         position: new THREE.Vector3(0, 0, 0),
                         texture: 'img/rossini-01.png',
                     },
-                    audio: {
+                    audio: i > 0 ? {
                         url: audios[i % audios.length],
                         title: audioTitles[i % audioTitles.length],
                         orchestra: 'Academy of St Martin in the Fields Orchestra',
-                    },
+                    } : null,
                 };
             });
             return items;

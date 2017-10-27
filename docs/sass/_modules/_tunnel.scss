@@ -278,10 +278,15 @@ Tunnel Slick
 
     .tunnel-slick__header {
         position: absolute;
-        left: 45%;
+        left: 5%;
         top: 45%;
         max-width: 50%;
         color: $black-tit;
+        transition: all .2s $bezier .8s;
+
+        .dark-bg & {
+            color: #fff;
+        }
     }
 }
 
@@ -321,7 +326,6 @@ Tunnel Slick
     .tunnel-slick__header {
         left: 5%;
         top: 45%;
-        max-width: 95%;
         max-width: 50%;
     }
 }
