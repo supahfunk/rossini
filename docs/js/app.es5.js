@@ -10,8 +10,8 @@
     app.constant('SceneOptions', {
         colors: {
             background: 0xeae8e8,
-            lines: 0x3353a4,
-            overLines: 0xb4bfdd
+            lines: 0xb4bfdd,
+            overLines: 0x3353a4
         },
         camera: {
             cameraHeight: 0,
@@ -21,8 +21,9 @@
             position: new THREE.Vector3()
         },
         ribbon: {
-            points: 40, // 12
-            vertices: 3600 },
+            steps: 12,
+            points: 24, // 12
+            vertices: 2400 },
         // 1200
         audioVolume: 0.9,
         bands: 128,
@@ -34,7 +35,7 @@
         circularStrength: 0.90
     });
 
-    app.controller('RootCtrl', ['$scope', 'SceneOptions', 'StepperService', 'DatGui', function ($scope, SceneOptions, StepperService, DatGui) {
+    app.controller('RootCtrl', ['$scope', 'SceneOptions', 'StepperService', 'AnalyserService', 'DatGui', function ($scope, SceneOptions, StepperService, AnalyserService, DatGui) {
 
         var scene = {
             objects: {},
@@ -49,11 +50,12 @@
         stepper.init().then(function () {
             $scope.scene = scene;
             $scope.stepper = stepper;
+            $scope.audio = AnalyserService;
             var gui = new DatGui();
         });
     }]);
 
-    app.service('StepperService', ['$rootScope', '$q', '$http', 'SceneOptions', function ($rootScope, $q, $http, SceneOptions) {
+    app.service('StepperService', ['$rootScope', '$timeout', '$q', '$http', '$sce', 'SceneOptions', function ($rootScope, $timeout, $q, $http, $sce, SceneOptions) {
 
         var stepper = this;
         var options = SceneOptions;
@@ -73,10 +75,24 @@
         };
 
         function getItems() {
-            var items = new Array(24).fill().map(function (v, i) {
+            var titles = ['Il periodo francese:<br> la nascita della <em>Grand Opéra</em>', 'Il Barbiere di Siviglia<br> al teatro Argentina<br> di Roma', 'Il Silenzio'];
+            var audioTitles = ['Il Barbiere di Siviglia', 'L\'italiana in Algeri'];
+            var audios = ['audio/07-rossini-192.mp3', 'audio/08-rossini-192.mp3'];
+            var backgrounds = ['img/tunnel-1.jpg', 'img/tunnel-2.jpg', 'img/tunnel-3.jpg'];
+            var contrasts = ['light-bg', 'light-bg', 'dark-bg'];
+            var items = new Array(options.ribbon.steps).fill().map(function (v, i) {
                 return {
                     id: i + 1,
                     name: 'Step ' + (i + 1),
+                    title: titles[i % titles.length],
+                    chapter: 'Passione, Genio e Silenzio',
+                    paragraph: 'Sulle strade di Parigi',
+                    years: {
+                        from: 1812 + Math.round(Math.random() * 50),
+                        to: 1812 + Math.round(Math.random() * 50)
+                    },
+                    background: backgrounds[i % backgrounds.length],
+                    contrast: contrasts[i % contrasts.length],
                     colors: angular.copy(SceneOptions.colors),
                     camera: {
                         cameraHeight: 0,
@@ -87,7 +103,9 @@
                         texture: 'img/rossini-01.png'
                     },
                     audio: {
-                        url: "audio/07-rossini-192.mp3"
+                        url: audios[i % audios.length],
+                        title: audioTitles[i % audioTitles.length],
+                        orchestra: 'Academy of St Martin in the Fields Orchestra'
                     }
                 };
             });
@@ -97,11 +115,14 @@
         function init() {
             var deferred = $q.defer();
             $http.get('json/rossini.js').then(function (response) {
-                var items = response.data; // getItems(); //
+                // var items = response.data;
+                var items = getItems();
                 angular.forEach(items, function (item) {
+                    item.titleTrusted = $sce.trustAsHtml(item.title);
                     item.circle.position = new THREE.Vector3().copy(item.circle.position);
                     steps.push(item);
                 });
+                setStep(0);
                 console.log('StepperService.load', steps);
                 deferred.resolve(steps);
             }, function (error) {
@@ -181,30 +202,40 @@
             // setTweens(0.250);
         });
 
+        $rootScope.$on('onSlickBeforeChange', function ($scope, slick) {
+            setStep(slick.current);
+        });
+
         function setStep(index) {
-            var previous = stepper.current || 0;
-            stepper.current = index;
-            var step = steps[index];
-            options.colors.background = step.colors.background;
-            options.colors.lines = step.colors.lines;
-            options.colors.overLines = step.colors.overLines;
-            options.camera.cameraHeight = step.camera.cameraHeight;
-            options.camera.targetHeight = step.camera.targetHeight;
-            options.circle.position.copy(step.circle.position);
-            $rootScope.$broadcast('onStepChanged', { current: index, previous: previous });
-            setTweens(stepper.duration);
+            $timeout(function () {
+                var previous = stepper.current || 0;
+                stepper.current = index;
+                var step = steps[index];
+                stepper.step = step;
+                options.colors.background = step.colors.background;
+                options.colors.lines = step.colors.lines;
+                options.colors.overLines = step.colors.overLines;
+                options.camera.cameraHeight = step.camera.cameraHeight;
+                options.camera.targetHeight = step.camera.targetHeight;
+                options.circle.position.copy(step.circle.position);
+                $rootScope.$broadcast('onStepChanged', { current: index, previous: previous });
+                console.log('onStepChanged', index, step);
+                setTweens(stepper.duration);
+            });
         }
 
         function next() {
             current++;
             current = Math.min(steps.length - 1, current);
             setStep(current);
+            $rootScope.$broadcast('onGoStep', current);
         }
 
         function previous() {
             current--;
             current = Math.max(0, current);
             setStep(current);
+            $rootScope.$broadcast('onGoStep', current);
         }
 
         function getCurrentStep() {
@@ -226,94 +257,6 @@
         this.getStepAtIndex = getStepAtIndex;
     }]);
 
-    app.factory('DatGui', ['$rootScope', 'SceneOptions', 'StepperService', function ($rootScope, SceneOptions, StepperService) {
-
-        var downloadFile = (function downloadFile() {
-            var a = document.createElement("a");
-            document.body.appendChild(a);
-            a.style = "display: none";
-            return function (data, fileName, json, pretty) {
-                if (json) {
-                    if (pretty) {
-                        data = JSON.stringify(data, null, 2); // spacing level = 2
-                    } else {
-                            data = JSON.stringify(data);
-                        }
-                }
-                var blob = new Blob([data], { type: "octet/stream" }),
-                    url = window.URL.createObjectURL(blob);
-                a.href = url;
-                a.download = fileName;
-                a.click();
-                window.URL.revokeObjectURL(url);
-            };
-        })();
-
-        function DatGui() {
-            var options = SceneOptions;
-            var stepper = StepperService;
-            var gui = new dat.GUI();
-
-            options.randomize = function () {
-                for (var i = 0; i < gui.__controllers.length; i++) {
-                    var c = gui.__controllers[i];
-                    if (c.__min) {
-                        var value = c.__min + (c.__max - c.__min) * Math.random();
-                        this[c.property] = value;
-                        c.updateDisplay();
-                    }
-                    if (c.__color) {
-                        c.__color.r = Math.floor(Math.random() * 255);
-                        c.__color.g = Math.floor(Math.random() * 255);
-                        c.__color.b = Math.floor(Math.random() * 255);
-                        c.updateDisplay();
-                        c.setValue(c.__color.hex);
-                    }
-                }
-            };
-
-            options.saveJson = function () {
-                console.log('saveJson');
-                downloadFile(stepper.steps, 'rossini.js', true, true);
-            };
-
-            function onOptionsChanged(params) {
-                var step = stepper.getCurrentStep();
-                step.colors.background = options.colors.background;
-                step.colors.lines = options.colors.lines;
-                step.colors.overLines = options.colors.overLines;
-                step.camera.cameraHeight = options.camera.cameraHeight;
-                step.camera.targetHeight = options.camera.targetHeight;
-                step.circle.position.copy(options.circle.position);
-                $rootScope.$broadcast('onOptionsChanged');
-            }
-
-            gui.closed = true;
-            gui.add(options.camera, 'cameraHeight', -20.0, 20.0).listen().onChange(onOptionsChanged);
-            gui.add(options.camera, 'targetHeight', -20.0, 20.0).listen().onChange(onOptionsChanged);
-            var circlePosition = gui.addFolder('circlePosition');
-            circlePosition.add(options.circle.position, 'x', -300, 300).listen().onChange(onOptionsChanged);
-            circlePosition.add(options.circle.position, 'y', -300, 300).listen().onChange(onOptionsChanged);
-            circlePosition.add(options.circle.position, 'z', -300, 300).listen().onChange(onOptionsChanged);
-            var colors = gui.addFolder('colors');
-            colors.addColor(options.colors, 'background').listen().onChange(onOptionsChanged);
-            colors.addColor(options.colors, 'lines').listen().onChange(onOptionsChanged);
-            colors.addColor(options.colors, 'overLines').listen().onChange(onOptionsChanged);
-            gui.add(options, 'audioVolume', 0.01, 1.0).onChange(onOptionsChanged);
-            gui.add(options, 'audioStrength', 10, 100).onChange(onOptionsChanged);
-            gui.add(options, 'noiseStrength', 10, 100).onChange(onOptionsChanged);
-            gui.add(options, 'circularStrength', 0.01, 0.90).onChange(onOptionsChanged);
-            gui.add(options, 'randomize');
-            gui.add(options, 'saveJson');
-
-            onOptionsChanged();
-
-            return gui;
-        }
-
-        return DatGui;
-    }]);
-
     app.directive('scrollbar', [function () {
         return {
             restrict: 'A',
@@ -327,14 +270,15 @@
                     continuousScrolling: true,
                     alwaysShowTracks: false
                 };
-                var scrollbar;
 
                 function Init() {
-                    scrollbar = Scrollbar.init(native, options);
-                    scope.$watch(scrollbar.targets.content.offsetHeight, function (height) {
+                    var scrollbar = Scrollbar.init(native, options);
+                    console.log(scrollbar);
+                    scope.$watch(scrollbar.contentEl.offsetHeight, function (height) {
                         scrollbar.update();
                     });
                 }
+
                 setTimeout(Init, 100);
             }
         };

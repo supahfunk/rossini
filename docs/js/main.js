@@ -9,12 +9,26 @@ Nav
 --------------------------------------------------*/
 function nav() {
     $('.nav-toggle').on('click', function() {
-        $('body').toggleClass('open-nav');
-        $('.nav').toggleClass('sub-nav-active');
+        if ($('body').is('.open-nav')) {
+            $('body').removeClass('open-nav');
+            $('.nav').removeClass('sub-nav-active');
+            $('.nav ul.active').slideToggle(800, 'easeInOutQuart').removeClass('active');
+            $('.sub-nav').removeClass('switch switched');
+            $('li:has(".main-nav__sub-nav") > a.active').removeClass('active');
+        } else {
+            $('body').addClass('open-nav');
+        }
+        
     });
 
-    $('.main-nav__scroll > ul > li:has("ul") > a').on('click', function() {
-        $(this).next().slideToggle(800, 'easeInOutQuart');
+    $('.main-nav__scroll > ul > li:has("ul") > a').on('click', function () {
+        if ($(this).next().is('.active')) {
+            $('.nav').removeClass('sub-nav-active');
+            $(this).next().slideUp(800, 'easeInOutQuart').removeClass('active');
+        } else {
+            $(this).next().slideDown(800, 'easeInOutQuart').addClass('active');
+        }
+        
         return false;
     });
 
@@ -28,14 +42,17 @@ function nav() {
             $('li:has(".main-nav__sub-nav") > a.active').not($(this)).removeClass('active');
             $(this).addClass('active');
             if ($('.nav').is('.sub-nav-active')) {
-                $('.sub-nav').removeClass('switch switched');
+                $('.sub-nav').removeClass('switch ');
+                var subnavContent = $(this).next().html();
+
                 setTimeout(function() {
-                    var subnavContent = $(this).next().html();
                     $('.sub-nav').html(subnavContent);
-                    $('.sub-nav').addClass('switch');
+                    setTimeout(function() {
+                        $('.sub-nav').addClass('switch');
+                    }, 100);
                     setTimeout(function() {
                         $('.sub-nav').addClass('switched');
-                    }, 1200);
+                    }, 1300);
                 }, 500);
             } else {
                 $('.sub-nav').removeClass('switch switched');

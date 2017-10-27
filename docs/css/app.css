@@ -160,7 +160,7 @@ Buttons
   @media (max-width: 1280px) {
     .inline-btn {
       font-size: 14px; } }
-  .inline-btn--white {
+  .dark-bg .inline-btn {
     color: #fff; }
   .inline-btn:before {
     content: '';
