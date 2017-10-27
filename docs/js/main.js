@@ -8,12 +8,12 @@ website by Websolute
 Nav
 --------------------------------------------------*/
 function nav() {
-    $('.nav-toggle').on('click', function () {
+    $('.nav-toggle').on('click', function() {
         $('body').toggleClass('open-nav');
         $('.nav').toggleClass('sub-nav-active');
     });
 
-    $('.main-nav__scroll > ul > li:has("ul") > a').on('click', function () {
+    $('.main-nav__scroll > ul > li:has("ul") > a').on('click', function() {
         $(this).next().slideToggle(800, 'easeInOutQuart');
         return false;
     });
@@ -24,7 +24,7 @@ function nav() {
 Sound Toggle
 --------------------------------------------------*/
 function soundToggle() {
-    $('.sound-toggle').on('click', function () {
+    $('.sound-toggle').on('click', function() {
         $(this).toggleClass('active');
     });
 }
@@ -34,7 +34,7 @@ function soundToggle() {
 Split Text
 --------------------------------------------------*/
 function splitText(el) {
-    $(el).each(function () {
+    $(el).each(function() {
         var $t = $(this),
             nodes = $t[0].childNodes;
 
@@ -42,10 +42,12 @@ function splitText(el) {
 
         $t.html('').addClass('active');
 
-        var rows = [[]];
-        nodes.filter(function (node) {
+        var rows = [
+            []
+        ];
+        nodes.filter(function(node) {
             return node.nodeType === 3 || node.nodeType === 1;
-        }).map(function (node) {
+        }).map(function(node) {
             if (node.nodeType === 3) {
                 node = { text: $.trim(node.textContent), element: 'span' };
             } else {
@@ -142,10 +144,11 @@ function changeYear(from, to) {
 Tunnel
 --------------------------------------------------*/
 var tunnelAnimating = false;
+
 function tunnel() {
     splitText('.tunnel-slick__header .h1');
 
-    $('.tunnel-slick').on('mousewheel', function (e, delta) {
+    $('.tunnel-slick').on('mousewheel', function(e, delta) {
         if (tunnelAnimating) {
             return;
         }
@@ -157,17 +160,22 @@ function tunnel() {
             $('#tunnel-prev').click();
         };
         e.preventDefault();
-    }).on('init', function () {
+    }).on('init', function() {
 
         var letters = $('.slick-active .splitted-letter');
 
         TweenMax.staggerTo(letters, 1, {
-            delay: 0.2, y: 0, x: 0, ease: Power3.easeInOut, className: '+=viewed', onComplete: function () {
+            delay: 0.2,
+            y: 0,
+            x: 0,
+            ease: Power3.easeInOut,
+            className: '+=viewed',
+            onComplete: function() {
                 $('.slick-active .cta').addClass('active');
             }
         }, 0.009);
 
-    }).on('beforeChange', function (event, slick, currentSlide, nextSlide) {
+    }).on('beforeChange', function(event, slick, currentSlide, nextSlide) {
 
         tunnelAnimating = true;
 
@@ -187,13 +195,18 @@ function tunnel() {
 
         switchScene(nextSlide);
 
-    }).on('afterChange', function () {
+    }).on('afterChange', function() {
 
         tunnelAnimating = false;
 
         var letters = $('.slick-active .splitted-letter');
         TweenMax.staggerTo(letters, 1, {
-            delay: 0.2, y: 0, x: 0, ease: Power3.easeInOut, className: '+=viewed', onComplete: function () {
+            delay: 0.2,
+            y: 0,
+            x: 0,
+            ease: Power3.easeInOut,
+            className: '+=viewed',
+            onComplete: function() {
                 $('.slick-active .cta').addClass('active');
             }
         }, 0.009);
@@ -234,7 +247,7 @@ function mouseMove() {
         y = 0,
         friction = 1 / 12;
 
-    $(window).on('mousemove', function (e) {
+    $(window).on('mousemove', function(e) {
         var lMouseX = Math.max(-400, Math.min(400, $(window).width() / 2 - e.clientX));
         var lMouseY = Math.max(-400, Math.min(400, $(window).height() / 2 - e.clientY));
         lFollowX = (2 * lMouseX) / 100; // 100 : 2 = lMouxeX : lFollow
@@ -246,9 +259,9 @@ function mouseMove() {
         y += (lFollowY - y) * friction;
 
         $('.tunnel-bg .slick-active img').css({
-            '-webit-transform': 'translate(' + x/5 + 'px, ' + y/5 + 'px)',
-            '-moz-transform': 'translate(' + x/5 + 'px, ' + y/5 + 'px)',
-            'transform': 'translate(' + x/5 + 'px, ' + y/5 + 'px)'
+            '-webit-transform': 'translate(' + x / 5 + 'px, ' + y / 5 + 'px)',
+            '-moz-transform': 'translate(' + x / 5 + 'px, ' + y / 5 + 'px)',
+            'transform': 'translate(' + x / 5 + 'px, ' + y / 5 + 'px)'
         });
 
         $('.tunnel-slick .slick-active .tunnel-slick__item').css({
@@ -268,10 +281,10 @@ function mouseMove() {
 /*--------------------------------------------------
 Doc Ready
 --------------------------------------------------*/
-$(function () {
+$(function() {
     nav();
-    soundToggle();
-    tunnel();
+    // soundToggle();
+    // tunnel();
     mouseMove();
 });
 
@@ -280,5 +293,4 @@ $(function () {
 /*--------------------------------------------------
 Win Load
 --------------------------------------------------*/
-$(window).on('load', function () {
-});
+$(window).on('load', function() {});

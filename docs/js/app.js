@@ -3,7 +3,7 @@
 (function() {
     "use strict";
 
-    var app = angular.module('app', ['ngRoute', 'jsonFormatter']);
+    var app = angular.module('app', ['ngRoute', 'ngSanitize', 'jsonFormatter']);
 
 }());
 /* global angular */
@@ -42,6 +42,103 @@
     var app = angular.module('app');
 
     app.run(['$rootScope', function($rootScope) {
+
+    }]);
+
+}());
+/* global angular */
+
+(function() {
+    "use strict";
+
+    var app = angular.module('app');
+
+    app.factory('DatGui', ['$rootScope', 'SceneOptions', 'StepperService', function($rootScope, SceneOptions, StepperService) {
+
+        var downloadFile = function downloadFile() {
+            var a = document.createElement("a");
+            document.body.appendChild(a);
+            a.style = "display: none";
+            return function(data, fileName, json, pretty) {
+                if (json) {
+                    if (pretty) {
+                        data = JSON.stringify(data, null, 2); // spacing level = 2
+                    } else {
+                        data = JSON.stringify(data);
+                    }
+                }
+                var blob = new Blob([data], { type: "octet/stream" }),
+                    url = window.URL.createObjectURL(blob);
+                a.href = url;
+                a.download = fileName;
+                a.click();
+                window.URL.revokeObjectURL(url);
+            };
+        }();
+
+        function DatGui() {
+            var options = SceneOptions;
+            var stepper = StepperService;
+            var gui = new dat.GUI();
+
+            options.randomize = function() {
+                for (var i = 0; i < gui.__controllers.length; i++) {
+                    var c = gui.__controllers[i];
+                    if (c.__min) {
+                        var value = c.__min + (c.__max - c.__min) * Math.random();
+                        this[c.property] = value;
+                        c.updateDisplay();
+                    }
+                    if (c.__color) {
+                        c.__color.r = Math.floor(Math.random() * 255);
+                        c.__color.g = Math.floor(Math.random() * 255);
+                        c.__color.b = Math.floor(Math.random() * 255);
+                        c.updateDisplay();
+                        c.setValue(c.__color.hex);
+                    }
+                }
+            };
+
+            options.saveJson = function() {
+                console.log('saveJson');
+                downloadFile(stepper.steps, 'rossini.js', true, true);
+            };
+
+            function onOptionsChanged(params) {
+                var step = stepper.getCurrentStep();
+                step.colors.background = options.colors.background;
+                step.colors.lines = options.colors.lines;
+                step.colors.overLines = options.colors.overLines;
+                step.camera.cameraHeight = options.camera.cameraHeight;
+                step.camera.targetHeight = options.camera.targetHeight;
+                step.circle.position.copy(options.circle.position);
+                $rootScope.$broadcast('onOptionsChanged');
+            }
+
+            gui.closed = true;
+            gui.add(options.camera, 'cameraHeight', -20.0, 20.0).listen().onChange(onOptionsChanged);
+            gui.add(options.camera, 'targetHeight', -20.0, 20.0).listen().onChange(onOptionsChanged);
+            var circlePosition = gui.addFolder('circlePosition');
+            circlePosition.add(options.circle.position, 'x', -300, 300).listen().onChange(onOptionsChanged);
+            circlePosition.add(options.circle.position, 'y', -300, 300).listen().onChange(onOptionsChanged);
+            circlePosition.add(options.circle.position, 'z', -300, 300).listen().onChange(onOptionsChanged);
+            var colors = gui.addFolder('colors');
+            colors.addColor(options.colors, 'background').listen().onChange(onOptionsChanged);
+            colors.addColor(options.colors, 'lines').listen().onChange(onOptionsChanged);
+            colors.addColor(options.colors, 'overLines').listen().onChange(onOptionsChanged);
+            gui.add(options, 'audioVolume', 0.01, 1.0).onChange(onOptionsChanged);
+            gui.add(options, 'audioStrength', 10, 100).onChange(onOptionsChanged);
+            gui.add(options, 'noiseStrength', 10, 100).onChange(onOptionsChanged);
+            gui.add(options, 'circularStrength', 0.01, 0.90).onChange(onOptionsChanged);
+            gui.add(options, 'randomize');
+            gui.add(options, 'saveJson');
+
+            onOptionsChanged();
+
+            return gui;
+        }
+
+        return DatGui;
 
     }]);
 
@@ -187,6 +284,29 @@
             }
         }
 
+        function play() {
+            if (audio) {
+                audio.play();
+            }
+        }
+
+        function pause() {
+            if (audio) {
+                audio.pause();
+            }
+        }
+
+        function toggle() {
+            if (audio) {
+                service.active = !service.active;
+                if (service.active) {
+                    audio.play();
+                } else {
+                    audio.pause();
+                }
+            }
+        }
+
         function setStep() {
             var step = stepper.getCurrentStep();
             setAudioUrl(step.audio.url);
@@ -208,10 +328,14 @@
             }
         });
 
+        this.active = true;
         this.audio = audio;
         this.data = null;
         this.init = init;
         this.update = update;
+        this.play = play;
+        this.pause = pause;
+        this.toggle = toggle;
 
     }]);
 
@@ -795,11 +919,320 @@
 
     var app = angular.module('app');
 
+    app.directive('slickBackgrounds', [function() {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attributes) {
+
+                function unSlick() {
+                    if (element.hasClass('slick-initialized')) {
+                        element.slick('unslick');
+                    }
+                }
+
+                function onSlick() {
+                    unSlick();
+                    element.slick({
+                        arrows: false,
+                        dots: false,
+                        fade: true,
+                        speed: 1100,
+                        infinite: false,
+                        lazyLoad: 'ondemand',
+                        cssEase: 'cubic-bezier(0.7, 0, 0.3, 1)'
+                    });
+                }
+
+                scope.$watchCollection(attributes.slickBackgrounds, function(items) {
+                    if (items && items.length) {
+                        onSlick();
+                    }
+                });
+
+                scope.$on('$destroy', function() {
+                    unSlick();
+                });
+            }
+        };
+    }]);
+
+    app.directive('slickTunnel', [function() {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attributes) {
+
+                function unSlick() {
+                    if (element.hasClass('slick-initialized')) {
+                        element.slick('unslick');
+                    }
+                }
+
+                function onSlick() {
+                    unSlick();
+                    element.slick({
+                        arrows: false,
+                        dots: false,
+                        fade: true,
+                        speed: 1100,
+                        infinite: false,
+                        draggable: false,
+                        asNavFor: '.tunnel-bg',
+                        cssEase: 'cubic-bezier(0.7, 0, 0.3, 1)'
+                    });
+                }
+
+                scope.$watchCollection(attributes.slickTunnel, function(items) {
+                    if (items && items.length) {
+                        onSlick();
+                    }
+                });
+
+                var tunnelAnimating = false;
+
+                function onInit() {
+                    var letters = $('.slick-active .splitted-letter');
+                    TweenMax.staggerTo(letters, 1, {
+                        delay: 0.2,
+                        y: 0,
+                        x: 0,
+                        ease: Power3.easeInOut,
+                        className: '+=viewed',
+                        onComplete: function() {
+                            $('.slick-active .cta').addClass('active');
+                        }
+                    }, 0.009);
+                }
+
+                function onBeforeChange(event, slick, currentSlide, nextSlide) {
+                    tunnelAnimating = true;
+                    var letters = $('.slick-active .splitted-letter');
+                    TweenMax.staggerTo(letters, 1, { delay: 0, y: 100, x: 50, ease: Power3.easeInOut, className: '-=viewed' }, 0.009);
+                    $('.slick-active .cta').removeClass('active');
+                    /*
+                    var $next = $(slick.$slides.get(nextSlide)).find('.tunnel-slick__item');
+                    var from = $next.attr('data-from');
+                    var to = $next.attr('data-to');
+                    changeYear(from, to);
+                    var bg = $next.attr('data-bg');
+                    $('body').removeClass('light-bg dark-bg');
+                    $('body').addClass(bg + '-bg');
+                    switchScene(nextSlide);
+                    */
+                    scope.$root.$broadcast('onSlickBeforeChange', { current: nextSlide, previouse: currentSlide });
+                }
+
+                function onAfterChange() {
+                    tunnelAnimating = false;
+                    var letters = $('.slick-active .splitted-letter');
+                    TweenMax.staggerTo(letters, 1, {
+                        delay: 0.2,
+                        y: 0,
+                        x: 0,
+                        ease: Power3.easeInOut,
+                        className: '+=viewed',
+                        onComplete: function() {
+                            $('.slick-active .cta').addClass('active');
+                        }
+                    }, 0.009);
+                    scope.$root.$broadcast('onAfterChange');
+                }
+
+                function onWheel(e) {
+                    if (tunnelAnimating) {
+                        return;
+                    }
+                    if (element.hasClass('slick-initialized')) {
+                        if (e.deltaX > 0 || e.deltaY < 0) {
+                            element.slick('slickNext');
+                        } else if (e.deltaX < 0 || e.deltaY > 0) {
+                            element.slick('slickPrev');
+                        }
+                    }
+                    e.preventDefault();
+                }
+
+                scope.$on('onGoStep', function($scope, index) {
+                    if (element.hasClass('slick-initialized')) {
+                        element.slick('slickGoTo', index);
+                    }
+                });
+
+                function addListeners() {
+                    element
+                        .on('init', onInit)
+                        .on('beforeChange', onBeforeChange)
+                        .on('afterChange', onAfterChange)
+                        .on('mousewheel', onWheel);
+                }
+
+                function removeListeners() {
+                    element
+                        .off('init', onInit)
+                        .off('beforeChange', onBeforeChange)
+                        .off('afterChange', onAfterChange)
+                        .off('mousewheel', onWheel);
+                }
+
+                addListeners();
+
+                scope.$on('$destroy', function() {
+                    removeListeners();
+                    unSlick();
+                });
+            }
+        };
+    }]);
+
+}());
+/* global angular */
+
+(function() {
+    "use strict";
+
+    var app = angular.module('app');
+
+    app.directive('splitText', [function() {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attributes) {
+
+                function splitText() {
+
+                    var nodes = element[0].childNodes;
+                    nodes = Array.prototype.slice.call(nodes, 0);
+
+                    element.html('').addClass('active');
+
+                    var rows = [
+                        []
+                    ];
+
+                    nodes.filter(function(node) {
+                        return node.nodeType === 3 || node.nodeType === 1;
+                    }).map(function(node) {
+                        if (node.nodeType === 3) {
+                            node = { text: $.trim(node.textContent), element: 'span' };
+                        } else {
+                            if (node.nodeName.toLowerCase() === 'br') {
+                                rows.push([]);
+                                return;
+                            }
+                            node = { text: $.trim(node.innerHTML), element: node.nodeName };
+                        }
+                        if (node.text !== '') {
+                            rows[rows.length - 1].push(node);
+                        }
+                    });
+
+                    for (var r = 0; r < rows.length; r++) {
+                        /* Riga */
+                        // console.log('riga ' + r, rows[r]);
+                        var row = rows[r];
+                        $('<div class="splitted-row"></div>').appendTo(element);
+
+                        /* Elemento */
+                        for (var e = 0; e < row.length; e++) {
+                            var el = row[e];
+                            var type = el.element.toLowerCase();
+                            var text = el.text;
+                            // console.log('\telemento ' + e, type, text);
+
+                            /* Parola */
+                            var words = text.split(' ');
+                            for (var w = 0; w < words.length; w++) {
+                                // console.log('\t\tword ' + w, words[w]);
+                                $('<' + type + ' class="splitted-word"></' + type + '>').appendTo($('.splitted-row:last'), element);
+
+                                /* Lettera */
+                                var word = words[w];
+                                var letters = word.split('');
+                                for (var l = 0; l < letters.length; l++) {
+                                    // console.log('\t\t\tlettera' + l, letters[l]);
+                                    var letter = letters[l];
+                                    $('<span class="splitted-letter" data-content="' + letter + '">' + letter + '</span>').appendTo($('.splitted-word:last'), element);
+                                }
+                                $('<span class="splitted-space">&nbsp;</span>').appendTo($('.splitted-word:last'), element);
+                            }
+                        }
+                    }
+                }
+
+                setTimeout(function() {
+                    splitText();
+                }, 1);
+            }
+        };
+    }]);
+
+}());
+/* global angular */
+
+(function() {
+    "use strict";
+
+    var app = angular.module('app');
+
+    app.directive('yearsFrom', [function() {
+        return {
+            restrict: 'A',
+            scope: {
+                from: '=yearsFrom',
+                to: '=yearsTo',
+            },
+            link: function(scope, element, attributes) {
+
+                function onChangeYears() {
+
+                    console.log('onChangeYears', scope.from, scope.to);
+
+                    var yearFrom = element.find('.tunnel-year__from'),
+                        yearTo = element.find('.tunnel-year__to'),
+                        time = 2,
+                        easing = Power3.easeOut,
+                        years = {
+                            from: yearFrom.html(),
+                            to: yearTo.html()
+                        };
+
+                    if (scope.to) {
+                        element.removeClass('one-year');
+                        TweenLite.to(years, time, { to: scope.to, roundProps: 'year', onUpdate: updateYear, ease: easing });
+                    } else {
+                        element.addClass('one-year');
+                        TweenLite.to(years, time, { to: scope.from, roundProps: 'year', onUpdate: updateYear, ease: easing });
+                    }
+
+                    TweenLite.to(years, time, { from: scope.from, roundProps: 'year', onUpdate: updateYear, ease: easing });
+
+                    function updateYear() {
+                        yearFrom.html(parseInt(years.from));
+                        yearTo.html(parseInt(years.to));
+                    }
+                }
+
+                scope.$watch('from', function(newValue, oldValue) {
+                    if (newValue) {
+                        onChangeYears();
+                    }
+                });
+
+            }
+        };
+    }]);
+
+}());
+/* global angular */
+
+(function() {
+    "use strict";
+
+    var app = angular.module('app');
+
     app.constant('SceneOptions', {
         colors: {
             background: 0xeae8e8,
-            lines: 0x3353a4,
-            overLines: 0xb4bfdd,
+            lines: 0xb4bfdd,
+            overLines: 0x3353a4,
         },
         camera: {
             cameraHeight: 0,
@@ -809,8 +1242,9 @@
             position: new THREE.Vector3(),
         },
         ribbon: {
-            points: 40, // 12
-            vertices: 3600, // 1200
+            steps: 12,
+            points: 24, // 12
+            vertices: 2400, // 1200
         },
         audioVolume: 0.9,
         bands: 128,
@@ -822,7 +1256,7 @@
         circularStrength: 0.90,
     });
 
-    app.controller('RootCtrl', ['$scope', 'SceneOptions', 'StepperService', 'DatGui', function($scope, SceneOptions, StepperService, DatGui) {
+    app.controller('RootCtrl', ['$scope', 'SceneOptions', 'StepperService', 'AnalyserService', 'DatGui', function($scope, SceneOptions, StepperService, AnalyserService, DatGui) {
 
         var scene = {
             objects: {},
@@ -837,12 +1271,13 @@
         stepper.init().then(function() {
             $scope.scene = scene;
             $scope.stepper = stepper;
+            $scope.audio = AnalyserService;
             var gui = new DatGui();
         });
 
     }]);
 
-    app.service('StepperService', ['$rootScope', '$q', '$http', 'SceneOptions', function($rootScope, $q, $http, SceneOptions) {
+    app.service('StepperService', ['$rootScope', '$timeout', '$q', '$http', '$sce', 'SceneOptions', function($rootScope, $timeout, $q, $http, $sce, SceneOptions) {
 
         var stepper = this;
         var options = SceneOptions;
@@ -862,10 +1297,42 @@
         };
 
         function getItems() {
-            var items = new Array(24).fill().map(function(v, i) {
+            var titles = [
+                'Il periodo francese:<br> la nascita della <em>Grand Opéra</em>',
+                'Il Barbiere di Siviglia<br> al teatro Argentina<br> di Roma',
+                'Il Silenzio',
+            ];
+            var audioTitles = [
+                'Il Barbiere di Siviglia',
+                'L\'italiana in Algeri',
+            ];
+            var audios = [
+                'audio/07-rossini-192.mp3',
+                'audio/08-rossini-192.mp3',
+            ];
+            var backgrounds = [
+                'img/tunnel-1.jpg',
+                'img/tunnel-2.jpg',
+                'img/tunnel-3.jpg',
+            ];
+            var contrasts = [
+                'light-bg',
+                'light-bg',
+                'dark-bg',
+            ];
+            var items = new Array(options.ribbon.steps).fill().map(function(v, i) {
                 return {
                     id: i + 1,
                     name: 'Step ' + (i + 1),
+                    title: titles[i % titles.length],
+                    chapter: 'Passione, Genio e Silenzio',
+                    paragraph: 'Sulle strade di Parigi',
+                    years: {
+                        from: 1812 + Math.round(Math.random() * 50),
+                        to: 1812 + Math.round(Math.random() * 50),
+                    },
+                    background: backgrounds[i % backgrounds.length],
+                    contrast: contrasts[i % contrasts.length],
                     colors: angular.copy(SceneOptions.colors),
                     camera: {
                         cameraHeight: 0,
@@ -876,7 +1343,9 @@
                         texture: 'img/rossini-01.png',
                     },
                     audio: {
-                        url: "audio/07-rossini-192.mp3",
+                        url: audios[i % audios.length],
+                        title: audioTitles[i % audioTitles.length],
+                        orchestra: 'Academy of St Martin in the Fields Orchestra',
                     },
                 };
             });
@@ -886,11 +1355,14 @@
         function init() {
             var deferred = $q.defer();
             $http.get('json/rossini.js').then(function(response) {
-                var items = response.data; // getItems(); // 
+                // var items = response.data;
+                var items = getItems();
                 angular.forEach(items, function(item) {
+                    item.titleTrusted = $sce.trustAsHtml(item.title);
                     item.circle.position = new THREE.Vector3().copy(item.circle.position);
                     steps.push(item);
                 });
+                setStep(0);
                 console.log('StepperService.load', steps);
                 deferred.resolve(steps);
 
@@ -972,30 +1444,40 @@
             // setTweens(0.250);
         });
 
+        $rootScope.$on('onSlickBeforeChange', function($scope, slick) {
+            setStep(slick.current);
+        });
+
         function setStep(index) {
-            var previous = stepper.current || 0;
-            stepper.current = index;
-            var step = steps[index];
-            options.colors.background = step.colors.background;
-            options.colors.lines = step.colors.lines;
-            options.colors.overLines = step.colors.overLines;
-            options.camera.cameraHeight = step.camera.cameraHeight;
-            options.camera.targetHeight = step.camera.targetHeight;
-            options.circle.position.copy(step.circle.position);
-            $rootScope.$broadcast('onStepChanged', { current: index, previous: previous });
-            setTweens(stepper.duration);
+            $timeout(function() {
+                var previous = stepper.current || 0;
+                stepper.current = index;
+                var step = steps[index];
+                stepper.step = step;
+                options.colors.background = step.colors.background;
+                options.colors.lines = step.colors.lines;
+                options.colors.overLines = step.colors.overLines;
+                options.camera.cameraHeight = step.camera.cameraHeight;
+                options.camera.targetHeight = step.camera.targetHeight;
+                options.circle.position.copy(step.circle.position);
+                $rootScope.$broadcast('onStepChanged', { current: index, previous: previous });
+                console.log('onStepChanged', index, step);
+                setTweens(stepper.duration);
+            });
         }
 
         function next() {
             current++;
             current = Math.min(steps.length - 1, current);
             setStep(current);
+            $rootScope.$broadcast('onGoStep', current);
         }
 
         function previous() {
             current--;
             current = Math.max(0, current);
             setStep(current);
+            $rootScope.$broadcast('onGoStep', current);
         }
 
         function getCurrentStep() {
@@ -1018,95 +1500,6 @@
 
     }]);
 
-    app.factory('DatGui', ['$rootScope', 'SceneOptions', 'StepperService', function($rootScope, SceneOptions, StepperService) {
-
-        var downloadFile = function downloadFile() {
-            var a = document.createElement("a");
-            document.body.appendChild(a);
-            a.style = "display: none";
-            return function(data, fileName, json, pretty) {
-                if (json) {
-                    if (pretty) {
-                        data = JSON.stringify(data, null, 2); // spacing level = 2
-                    } else {
-                        data = JSON.stringify(data);
-                    }
-                }
-                var blob = new Blob([data], { type: "octet/stream" }),
-                    url = window.URL.createObjectURL(blob);
-                a.href = url;
-                a.download = fileName;
-                a.click();
-                window.URL.revokeObjectURL(url);
-            };
-        }();
-
-        function DatGui() {
-            var options = SceneOptions;
-            var stepper = StepperService;
-            var gui = new dat.GUI();
-
-            options.randomize = function() {
-                for (var i = 0; i < gui.__controllers.length; i++) {
-                    var c = gui.__controllers[i];
-                    if (c.__min) {
-                        var value = c.__min + (c.__max - c.__min) * Math.random();
-                        this[c.property] = value;
-                        c.updateDisplay();
-                    }
-                    if (c.__color) {
-                        c.__color.r = Math.floor(Math.random() * 255);
-                        c.__color.g = Math.floor(Math.random() * 255);
-                        c.__color.b = Math.floor(Math.random() * 255);
-                        c.updateDisplay();
-                        c.setValue(c.__color.hex);
-                    }
-                }
-            };
-
-            options.saveJson = function() {
-                console.log('saveJson');
-                downloadFile(stepper.steps, 'rossini.js', true, true);
-            };
-
-            function onOptionsChanged(params) {
-                var step = stepper.getCurrentStep();
-                step.colors.background = options.colors.background;
-                step.colors.lines = options.colors.lines;
-                step.colors.overLines = options.colors.overLines;
-                step.camera.cameraHeight = options.camera.cameraHeight;
-                step.camera.targetHeight = options.camera.targetHeight;
-                step.circle.position.copy(options.circle.position);
-                $rootScope.$broadcast('onOptionsChanged');
-            }
-
-            gui.closed = true;
-            gui.add(options.camera, 'cameraHeight', -20.0, 20.0).listen().onChange(onOptionsChanged);
-            gui.add(options.camera, 'targetHeight', -20.0, 20.0).listen().onChange(onOptionsChanged);
-            var circlePosition = gui.addFolder('circlePosition');
-            circlePosition.add(options.circle.position, 'x', -300, 300).listen().onChange(onOptionsChanged);
-            circlePosition.add(options.circle.position, 'y', -300, 300).listen().onChange(onOptionsChanged);
-            circlePosition.add(options.circle.position, 'z', -300, 300).listen().onChange(onOptionsChanged);
-            var colors = gui.addFolder('colors');
-            colors.addColor(options.colors, 'background').listen().onChange(onOptionsChanged);
-            colors.addColor(options.colors, 'lines').listen().onChange(onOptionsChanged);
-            colors.addColor(options.colors, 'overLines').listen().onChange(onOptionsChanged);
-            gui.add(options, 'audioVolume', 0.01, 1.0).onChange(onOptionsChanged);
-            gui.add(options, 'audioStrength', 10, 100).onChange(onOptionsChanged);
-            gui.add(options, 'noiseStrength', 10, 100).onChange(onOptionsChanged);
-            gui.add(options, 'circularStrength', 0.01, 0.90).onChange(onOptionsChanged);
-            gui.add(options, 'randomize');
-            gui.add(options, 'saveJson');
-
-            onOptionsChanged();
-
-            return gui;
-        }
-
-        return DatGui;
-
-    }]);
-
     app.directive('scrollbar', [function() {
         return {
             restrict: 'A',
@@ -1120,14 +1513,15 @@
                     continuousScrolling: true,
                     alwaysShowTracks: false
                 };
-                var scrollbar;
 
                 function Init() {
-                    scrollbar = Scrollbar.init(native, options);
-                    scope.$watch(scrollbar.targets.content.offsetHeight, function(height) {
+                    var scrollbar = Scrollbar.init(native, options);
+                    console.log(scrollbar);
+                    scope.$watch(scrollbar.contentEl.offsetHeight, function(height) {
                         scrollbar.update();
                     });
                 }
+
                 setTimeout(Init, 100);
             }
         };

@@ -3,6 +3,6 @@
 (function() {
     "use strict";
 
-    var app = angular.module('app', ['ngRoute', 'jsonFormatter']);
+    var app = angular.module('app', ['ngRoute', 'ngSanitize', 'jsonFormatter']);
 
 }());
