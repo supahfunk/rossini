@@ -282,7 +282,7 @@
                 audio.src = $audioUrl;
                 audio.volume = options.audioVolume;
                 console.log('AnalyserService.setAudioUrl', $audioUrl);
-                // audio.play();
+                audio.play();
             }
         }
 
@@ -1160,6 +1160,7 @@
                 setTimeout(function() {
                     splitText();
                 }, 1);
+
             }
         };
     }]);

@@ -74,6 +74,7 @@
                 setTimeout(function() {
                     splitText();
                 }, 1);
+
             }
         };
     }]);

@@ -10,7 +10,7 @@ Tunnel
     left: 0;
     width: 100%;
     height: 100vh;
-    transition: opacity .8s $bezier;
+    transition: all 1.4s $bezier 0.8s;
 }
 
 
@@ -196,7 +196,7 @@ Tunnel Year
     top: 6%;
     pointer-events: none;
     line-height: 1;
-    transition: all .8s $bezier;
+    transition: all 1.4s $bezier;
 
     @include lg {
         top: 7%;
@@ -222,7 +222,7 @@ Tunnel Year
 
     & > div {
         display: inline-block;
-        transition: all .5s $bezier;
+        transition: all 1.4s $bezier;
     }
 
     &__to {
@@ -231,7 +231,7 @@ Tunnel Year
             display: inline-block;
             color: rgba($gold, 0.45);
             margin: 0 20px 0 -40px;
-            transition: all .5s $bezier .2s;
+            transition: all 1.4s $bezier .1s;
             text-indent: 28px;
             font-size: 80%;
         }

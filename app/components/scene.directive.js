@@ -137,7 +137,7 @@
                 audio.src = $audioUrl;
                 audio.volume = options.audioVolume;
                 console.log('AnalyserService.setAudioUrl', $audioUrl);
-                // audio.play();
+                audio.play();
             }
         }
 

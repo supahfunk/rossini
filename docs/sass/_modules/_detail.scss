@@ -13,6 +13,8 @@ Detail
     background: $detail-bg;
     opacity: 0;
     pointer-events: none;
+    transform: scale(1.2);
+    transition: all 1.5s $bezier;
 
     &__container {
         position: relative;
@@ -79,15 +81,24 @@ Detail
     &__subtitle {
         font-size: 14px;
         margin-bottom: 4px;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 1.2s $bezier;
     }
 
     &__title {
         font-size: 29px;
         margin-bottom: 15px;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 1.2s $bezier;
     }
 
     &__box {
         display: flex;
+        transform: translateY(30px);
+        opacity: 0;
+        transition: all 1.2s $bezier;
     }
 
     &__text {
@@ -164,10 +175,30 @@ Detail
 
 .detail-active {
 
-    /*.detail {
+    .detail {
         opacity: 1;
+        transform: scale(1);
         pointer-events: all;
-    }*/
+        transition-delay: .5s;
+
+        &__subtitle {
+            opacity: 1;
+            transform: translateZ(0);
+            transition-delay: 1s;
+        }
+
+        &__title {
+            opacity: 1;
+            transform: translateZ(0);
+            transition-delay: 1.2s;
+        }
+
+        &__box {
+            opacity: 1;
+            transform: translateZ(0);
+            transition-delay: 1.4s;
+        }
+    }
 
     #scene,
     .footer,
@@ -175,6 +206,8 @@ Detail
     .tunnel-nav {
         opacity: 0;
         pointer-events: none;
+        transition-delay: 0s;
+        transition-duration: 0.8s;
     }
 
     .tunnel-year {
