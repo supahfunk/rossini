@@ -192,8 +192,9 @@ Tunnel Year
     white-space: nowrap;
     width: 100%;
     left: 0;
-    top: 2%;
+    top: 5%;
     pointer-events: none;
+    line-height: 1;
 
     & > div {
         display: inline-block;
@@ -214,6 +215,8 @@ Tunnel Year
 }
 
 .one-year {
+    top: 8%;
+
     .tunnel-year__from {
         transform: translate(50%) scale(1.2);
         text-indent: 50px;
@@ -272,17 +275,42 @@ Tunnel Slick
             }
         }
     }
-}
-
-
-/* Tunnel 1 */
-#tunnel-1 {
 
     .tunnel-slick__header {
         position: absolute;
         left: 45%;
         top: 45%;
-        max-width: 45%;
+        max-width: 50%;
+        color: $black-tit;
+    }
+}
+
+
+/* Tunnel 0 */
+#tunnel-0 {
+
+    .intro {
+        position: absolute;
+        z-index: 1;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        img {
+            width: 400px;
+            height: auto;
+            margin-bottom: 30px;
+        }
+    }
+}
+
+/* Tunnel 1 */
+#tunnel-1 {
+
+    .tunnel-slick__header {
+        left: 45%;
+        top: 45%;
+        max-width: 55%;
         color: $black-tit;
     }
 }
@@ -291,11 +319,10 @@ Tunnel Slick
 #tunnel-2 {
 
     .tunnel-slick__header {
-        position: absolute;
         left: 5%;
         top: 45%;
+        max-width: 95%;
         max-width: 50%;
-        color: $black-tit;
     }
 }
 
@@ -303,10 +330,9 @@ Tunnel Slick
 #tunnel-3 {
 
     .tunnel-slick__header {
-        position: absolute;
         left: 60%;
         top: 40%;
-        max-width: 50%;
+        max-width: 40%;
         color: #fff;
     }
 }
