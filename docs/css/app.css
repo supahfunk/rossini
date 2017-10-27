@@ -123,6 +123,9 @@ Canvas
   z-index: 10000 !important;
   display: none !important; }
 
+.gui-active .dg {
+  display: block !important; }
+
 /*--------------------------------------------------
 Smooth Scrollbar
 --------------------------------------------------*/
