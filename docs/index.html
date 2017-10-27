@@ -250,7 +250,15 @@
 
         <!-- Detail -->
         <div class="detail" ng-class="{ active: detail.active }">
-            <div ng-bind-html="detail.html"></div>
+            <div class="detail__container">
+                <div class="detail__wrap">
+                    <div class="detail__scroll" scrollbar>
+                        <div class="detail__content">
+                            <div ng-bind-html="detail.html"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <button ng-click="detail.active = false" class="detail__close">
                 <svg class="ico">
                     <use xlink:href="#close"></use>
