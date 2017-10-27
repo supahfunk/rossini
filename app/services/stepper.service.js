@@ -58,6 +58,7 @@
                 return {
                     id: i + 1,
                     title: titles[i % titles.length],
+                    url: 'view.html',
                     chapter: 'Passione, Genio e Silenzio',
                     paragraph: paragraphs[Math.floor(i / 3) % paragraphs.length],
                     years: {

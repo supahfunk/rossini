@@ -5,7 +5,7 @@
 
     var app = angular.module('app');
 
-    app.controller('RootCtrl', ['$scope', 'SceneOptions', 'StepperService', 'AnalyserService', 'DatGui', function($scope, SceneOptions, StepperService, AnalyserService, DatGui) {
+    app.controller('RootCtrl', ['$scope', 'SceneOptions', 'StepperService', 'AnalyserService', 'DatGui', '$timeout', function($scope, SceneOptions, StepperService, AnalyserService, DatGui, $timeout) {
 
         var scene = {
             objects: {},
@@ -23,6 +23,22 @@
             $scope.audio = AnalyserService;
             var gui = new DatGui();
         });
+
+        var detail = {};
+
+        $scope.openDetail = function () {
+
+            $.get(stepper.step.url, function (data) {
+                $timeout(function () {
+                        detail.active = true;
+                        detail.html = data;                
+                    });
+            });
+
+            return false;
+        };
+
+        $scope.detail = detail;
 
         console.log('RootCtrl', SceneOptions);
 
