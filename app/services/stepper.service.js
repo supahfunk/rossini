@@ -61,7 +61,9 @@
                     url: 'view.html',
                     chapter: 'Passione, Genio e Silenzio',
                     paragraph: paragraphs[Math.floor(i / 3) % paragraphs.length],
-                    years: {
+                    years: i % 4 === 0 ? {
+                        from: 1812 + Math.round(Math.random() * 50),
+                    } : {
                         from: 1812 + Math.round(Math.random() * 50),
                         to: 1812 + Math.round(Math.random() * 50),
                     },
@@ -89,8 +91,8 @@
         function init() {
             var deferred = $q.defer();
             $http.get('json/rossini.js').then(function(response) {
-                // var items = response.data;
-                var items = getItems();
+                var items = response.data;
+                // var items = getItems();
                 angular.forEach(items, function(item) {
                     item.titleTrusted = $sce.trustAsHtml(item.title);
                     item.circle.position = new THREE.Vector3().copy(item.circle.position);

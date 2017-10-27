@@ -52,8 +52,18 @@
             };
 
             options.saveJson = function() {
-                console.log('saveJson');
-                downloadFile(stepper.steps, 'rossini.js', true, true);
+                var json = stepper.steps.map(function(item) {
+                    item = angular.copy(item);
+                    var colors = {
+                        background: '#' + new THREE.Color(item.colors.background).getHexString(),
+                        lines: '#' + new THREE.Color(item.colors.lines).getHexString(),
+                        overLines: '#' + new THREE.Color(item.colors.overLines).getHexString(),
+                    }
+                    item.colors = colors;
+                    return item;
+                });
+                console.log('saveJson', json);
+                downloadFile(json, 'rossini.js', true, true);
             };
 
             function onOptionsChanged(params) {

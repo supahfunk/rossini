@@ -1,19 +1,18 @@
 [{
         "id": 1,
-        "name": "Step 1",
         "title": "Il periodo francese:<br> la nascita della <em>Grand Opéra</em>",
+        "url": "view.html",
         "chapter": "Passione, Genio e Silenzio",
-        "paragraph": "Sulle strade di Parigi",
+        "paragraph": "Il giovane Gioacchino",
         "years": {
-            "from": 1828,
-            "to": 1853
+            "from": 1831
         },
         "background": "img/tunnel-1.jpg",
         "contrast": "light-bg",
         "colors": {
-            "background": 15395048,
-            "lines": 11845597,
-            "overLines": 3363748
+            "background": "#eae8e8",
+            "lines": "#b4bfdd",
+            "overLines": "#3353a4"
         },
         "camera": {
             "cameraHeight": 0,
@@ -27,29 +26,25 @@
             },
             "texture": "img/rossini-01.png"
         },
-        "audio": {
-            "url": "audio/07-rossini-192.mp3",
-            "title": "Il Barbiere di Siviglia",
-            "orchestra": "Academy of St Martin in the Fields Orchestra"
-        },
+        "audio": null,
         "titleTrusted": {}
     },
     {
         "id": 2,
-        "name": "Step 2",
         "title": "Il Barbiere di Siviglia<br> al teatro Argentina<br> di Roma",
+        "url": "view.html",
         "chapter": "Passione, Genio e Silenzio",
-        "paragraph": "Sulle strade di Parigi",
+        "paragraph": "Il giovane Gioacchino",
         "years": {
-            "from": 1814,
-            "to": 1820
+            "from": 1845,
+            "to": 1847
         },
         "background": "img/tunnel-2.jpg",
-        "contrast": "dark-bg",
+        "contrast": "light-bg",
         "colors": {
-            "background": 15395048,
-            "lines": 11845597,
-            "overLines": 3363748
+            "background": "#eae8e8",
+            "lines": "#b4bfdd",
+            "overLines": "#3353a4"
         },
         "camera": {
             "cameraHeight": 0,
@@ -72,20 +67,20 @@
     },
     {
         "id": 3,
-        "name": "Step 3",
         "title": "Il Silenzio",
+        "url": "view.html",
         "chapter": "Passione, Genio e Silenzio",
-        "paragraph": "Sulle strade di Parigi",
+        "paragraph": "Il giovane Gioacchino",
         "years": {
-            "from": 1847,
-            "to": 1842
+            "from": 1850,
+            "to": 1852
         },
         "background": "img/tunnel-3.jpg",
-        "contrast": "light-bg",
+        "contrast": "dark-bg",
         "colors": {
-            "background": 15395048,
-            "lines": 11845597,
-            "overLines": 3363748
+            "background": "#eae8e8",
+            "lines": "#b4bfdd",
+            "overLines": "#3353a4"
         },
         "camera": {
             "cameraHeight": 0,
@@ -108,20 +103,20 @@
     },
     {
         "id": 4,
-        "name": "Step 4",
         "title": "Il periodo francese:<br> la nascita della <em>Grand Opéra</em>",
+        "url": "view.html",
         "chapter": "Passione, Genio e Silenzio",
-        "paragraph": "Sulle strade di Parigi",
+        "paragraph": "Il folgorante debutto",
         "years": {
-            "from": 1857,
-            "to": 1860
+            "from": 1827,
+            "to": 1828
         },
         "background": "img/tunnel-1.jpg",
-        "contrast": "dark-bg",
+        "contrast": "light-bg",
         "colors": {
-            "background": 15395048,
-            "lines": 11845597,
-            "overLines": 3363748
+            "background": "#eae8e8",
+            "lines": "#b4bfdd",
+            "overLines": "#3353a4"
         },
         "camera": {
             "cameraHeight": 0,
@@ -144,20 +139,19 @@
     },
     {
         "id": 5,
-        "name": "Step 5",
         "title": "Il Barbiere di Siviglia<br> al teatro Argentina<br> di Roma",
+        "url": "view.html",
         "chapter": "Passione, Genio e Silenzio",
-        "paragraph": "Sulle strade di Parigi",
+        "paragraph": "Il folgorante debutto",
         "years": {
-            "from": 1818,
-            "to": 1836
+            "from": 1845
         },
         "background": "img/tunnel-2.jpg",
         "contrast": "light-bg",
         "colors": {
-            "background": 15395048,
-            "lines": 11845597,
-            "overLines": 3363748
+            "background": "#eae8e8",
+            "lines": "#b4bfdd",
+            "overLines": "#3353a4"
         },
         "camera": {
             "cameraHeight": 0,
@@ -180,20 +174,20 @@
     },
     {
         "id": 6,
-        "name": "Step 6",
         "title": "Il Silenzio",
+        "url": "view.html",
         "chapter": "Passione, Genio e Silenzio",
-        "paragraph": "Sulle strade di Parigi",
+        "paragraph": "Il folgorante debutto",
         "years": {
-            "from": 1845,
-            "to": 1844
+            "from": 1835,
+            "to": 1852
         },
         "background": "img/tunnel-3.jpg",
         "contrast": "dark-bg",
         "colors": {
-            "background": 15395048,
-            "lines": 11845597,
-            "overLines": 3363748
+            "background": "#eae8e8",
+            "lines": "#b4bfdd",
+            "overLines": "#3353a4"
         },
         "camera": {
             "cameraHeight": 0,
@@ -216,20 +210,20 @@
     },
     {
         "id": 7,
-        "name": "Step 7",
         "title": "Il periodo francese:<br> la nascita della <em>Grand Opéra</em>",
+        "url": "view.html",
         "chapter": "Passione, Genio e Silenzio",
-        "paragraph": "Sulle strade di Parigi",
+        "paragraph": "La frenesia della produzione",
         "years": {
-            "from": 1835,
-            "to": 1858
+            "from": 1813,
+            "to": 1824
         },
         "background": "img/tunnel-1.jpg",
         "contrast": "light-bg",
         "colors": {
-            "background": 15395048,
-            "lines": 11845597,
-            "overLines": 3363748
+            "background": "#eae8e8",
+            "lines": "#b4bfdd",
+            "overLines": "#3353a4"
         },
         "camera": {
             "cameraHeight": 0,
@@ -252,20 +246,20 @@
     },
     {
         "id": 8,
-        "name": "Step 8",
         "title": "Il Barbiere di Siviglia<br> al teatro Argentina<br> di Roma",
+        "url": "view.html",
         "chapter": "Passione, Genio e Silenzio",
-        "paragraph": "Sulle strade di Parigi",
+        "paragraph": "La frenesia della produzione",
         "years": {
             "from": 1812,
-            "to": 1813
+            "to": 1851
         },
         "background": "img/tunnel-2.jpg",
-        "contrast": "dark-bg",
+        "contrast": "light-bg",
         "colors": {
-            "background": 15395048,
-            "lines": 11845597,
-            "overLines": 3363748
+            "background": "#eae8e8",
+            "lines": "#b4bfdd",
+            "overLines": "#3353a4"
         },
         "camera": {
             "cameraHeight": 0,
@@ -288,20 +282,19 @@
     },
     {
         "id": 9,
-        "name": "Step 9",
         "title": "Il Silenzio",
+        "url": "view.html",
         "chapter": "Passione, Genio e Silenzio",
-        "paragraph": "Sulle strade di Parigi",
+        "paragraph": "La frenesia della produzione",
         "years": {
-            "from": 1845,
-            "to": 1848
+            "from": 1855
         },
         "background": "img/tunnel-3.jpg",
-        "contrast": "light-bg",
+        "contrast": "dark-bg",
         "colors": {
-            "background": 15395048,
-            "lines": 11845597,
-            "overLines": 3363748
+            "background": "#eae8e8",
+            "lines": "#b4bfdd",
+            "overLines": "#3353a4"
         },
         "camera": {
             "cameraHeight": 0,
@@ -324,20 +317,20 @@
     },
     {
         "id": 10,
-        "name": "Step 10",
         "title": "Il periodo francese:<br> la nascita della <em>Grand Opéra</em>",
+        "url": "view.html",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Sulle strade di Parigi",
         "years": {
-            "from": 1859,
-            "to": 1826
+            "from": 1836,
+            "to": 1819
         },
         "background": "img/tunnel-1.jpg",
-        "contrast": "dark-bg",
+        "contrast": "light-bg",
         "colors": {
-            "background": 15395048,
-            "lines": 11845597,
-            "overLines": 3363748
+            "background": "#eae8e8",
+            "lines": "#b4bfdd",
+            "overLines": "#3353a4"
         },
         "camera": {
             "cameraHeight": 0,
@@ -360,20 +353,20 @@
     },
     {
         "id": 11,
-        "name": "Step 11",
         "title": "Il Barbiere di Siviglia<br> al teatro Argentina<br> di Roma",
+        "url": "view.html",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Sulle strade di Parigi",
         "years": {
-            "from": 1858,
-            "to": 1854
+            "from": 1819,
+            "to": 1830
         },
         "background": "img/tunnel-2.jpg",
         "contrast": "light-bg",
         "colors": {
-            "background": 15395048,
-            "lines": 11845597,
-            "overLines": 3363748
+            "background": "#eae8e8",
+            "lines": "#b4bfdd",
+            "overLines": "#3353a4"
         },
         "camera": {
             "cameraHeight": 0,
@@ -396,20 +389,20 @@
     },
     {
         "id": 12,
-        "name": "Step 12",
         "title": "Il Silenzio",
+        "url": "view.html",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Sulle strade di Parigi",
         "years": {
-            "from": 1825,
-            "to": 1841
+            "from": 1845,
+            "to": 1820
         },
         "background": "img/tunnel-3.jpg",
         "contrast": "dark-bg",
         "colors": {
-            "background": 15395048,
-            "lines": 11845597,
-            "overLines": 3363748
+            "background": "#eae8e8",
+            "lines": "#b4bfdd",
+            "overLines": "#3353a4"
         },
         "camera": {
             "cameraHeight": 0,

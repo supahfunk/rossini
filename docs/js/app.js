@@ -100,8 +100,18 @@
             };
 
             options.saveJson = function() {
-                console.log('saveJson');
-                downloadFile(stepper.steps, 'rossini.js', true, true);
+                var json = stepper.steps.map(function(item) {
+                    item = angular.copy(item);
+                    var colors = {
+                        background: '#' + new THREE.Color(item.colors.background).getHexString(),
+                        lines: '#' + new THREE.Color(item.colors.lines).getHexString(),
+                        overLines: '#' + new THREE.Color(item.colors.overLines).getHexString(),
+                    }
+                    item.colors = colors;
+                    return item;
+                });
+                console.log('saveJson', json);
+                downloadFile(json, 'rossini.js', true, true);
             };
 
             function onOptionsChanged(params) {
@@ -579,7 +589,6 @@
                 service.data = new Uint8Array(bufferLength);
                 // console.log('AnalyserService.attachAnalyser');
             }
-            console.log('pippo');
             return service.data;
         }
 
@@ -755,7 +764,9 @@
                     url: 'view.html',
                     chapter: 'Passione, Genio e Silenzio',
                     paragraph: paragraphs[Math.floor(i / 3) % paragraphs.length],
-                    years: {
+                    years: i % 4 === 0 ? {
+                        from: 1812 + Math.round(Math.random() * 50),
+                    } : {
                         from: 1812 + Math.round(Math.random() * 50),
                         to: 1812 + Math.round(Math.random() * 50),
                     },
@@ -783,8 +794,8 @@
         function init() {
             var deferred = $q.defer();
             $http.get('json/rossini.js').then(function(response) {
-                // var items = response.data;
-                var items = getItems();
+                var items = response.data;
+                // var items = getItems();
                 angular.forEach(items, function(item) {
                     item.titleTrusted = $sce.trustAsHtml(item.title);
                     item.circle.position = new THREE.Vector3().copy(item.circle.position);
@@ -955,6 +966,8 @@
 
                 var stats, scene, camera, shadow, back, light, renderer, width, height, w2, h2;
                 var controls = null;
+                var mouse = { x: 0, y: 0 };
+                // var mousePos = { x: 0, y: 0 };
 
                 scope.$on('onStepChanged', function($scope, step) {
                     // console.log('onStepChanged', step.current);
@@ -1051,14 +1064,14 @@
                     var material = new MeshLineMaterial({
                         color: stepper.values.lines,
                         lineWidth: 5,
-                        depthTest: false,
-                        opacity: 1,
+                        opacity: 0.8,
                         transparent: true,
+                        depthTest: false,
+                        sizeAttenuation: 1,
                         near: 1,
                         far: 1000,
-                        blending: THREE.AdditiveBlending,
                         resolution: resolution,
-                        sizeAttenuation: 1,
+                        // blending: THREE.AdditiveBlending,
                         // side: THREE.DoubleSide,
                     });
 
@@ -1119,6 +1132,10 @@
                         // target.add(tangent);
                         camera.position.copy(position);
                         camera.target.copy(target);
+
+                        camera.position.x += (position.x + (mouse.x * 20) - camera.position.x) / 12;
+                        camera.position.y += (position.y + (mouse.y * 20) - camera.position.y) / 12;
+
                         camera.lookAt(camera.target);
                     }
 
@@ -1423,6 +1440,8 @@
 
                         var step = stepper.getStepAtIndex(index);
                         dummy.position.copy(step.circle.position);
+                        dummy.rotation.x += ((mouse.y * 0.125) - dummy.rotation.x) / 12;
+                        dummy.rotation.y += ((mouse.x * 0.250) - dummy.rotation.y) / 12;
 
                         var position = objects.ribbon.cameraSpline.getPointAt((index + 0.1) / stepper.steps.length);
                         // var tangent = objects.ribbon.cameraSpline.getTangent(index + 0.1 / stepper.steps.length).normalize().multiplyScalar(300);
@@ -1484,9 +1503,6 @@
                     requestAnimationFrame(loop);
                 }
 
-                // var mouse = { x: 0, y: 0 };
-                // var mousePos = { x: 0, y: 0 };
-
                 function addListeners() {
 
                     function onWindowResize() {
@@ -1499,11 +1515,18 @@
                         camera.updateProjectionMatrix();
                     }
 
-                    window.addEventListener('resize', onWindowResize, false);
-                    /*
                     function handleMouseMove(event) {
-                        mouse = { x: event.clientX, y: event.clientY };
+                        var halfW = window.innerWidth / 2;
+                        var halfH = window.innerHeight / 2;
+                        mouse.x = (event.clientX - halfW) / halfW;
+                        mouse.y = (event.clientY - halfH) / halfH;
                     }
+
+                    window.addEventListener('resize', onWindowResize, false);
+                    document.addEventListener('mousemove', handleMouseMove, false);
+
+                    /*
+                    
 
                     function handleMouseDown(event) {
                         //
@@ -1532,7 +1555,6 @@
                     }
                     */
                     /*
-                    document.addEventListener('mousemove', handleMouseMove, false);
                     document.addEventListener('mousedown', handleMouseDown, false);
                     document.addEventListener('mouseup', handleMouseUp, false);
                     document.addEventListener('touchstart', handleTouchStart, false);
