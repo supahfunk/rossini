@@ -55,7 +55,7 @@
                 'dark-bg',
             ];
             var items = new Array(options.ribbon.steps).fill().map(function(v, i) {
-                return {
+                var item = {
                     id: i + 1,
                     title: titles[i % titles.length],
                     url: 'view.html',
@@ -84,6 +84,10 @@
                         orchestra: 'Academy of St Martin in the Fields Orchestra',
                     } : null,
                 };
+                if (item.contrast === 'dark-bg') {
+                    item.colors.background = 0x111111;
+                }
+                return item;
             });
             return items;
         }
@@ -91,8 +95,8 @@
         function init() {
             var deferred = $q.defer();
             $http.get('json/rossini.js').then(function(response) {
-                var items = response.data;
-                // var items = getItems();
+                // var items = response.data;
+                var items = getItems();
                 angular.forEach(items, function(item) {
                     item.titleTrusted = $sce.trustAsHtml(item.title);
                     item.circle.position = new THREE.Vector3().copy(item.circle.position);
@@ -140,8 +144,10 @@
                 delay: 0,
                 ease: Power2.easeInOut,
                 onUpdate: function() {
-                    var color = stepper.values.background.getHexString();
-                    document.body.style.backgroundColor = '#' + color;
+                    if (!options.useBackground) {
+                        var color = stepper.values.background.getHexString();
+                        document.body.style.backgroundColor = '#' + color;
+                    }
                 }
             }));
             tweens.push(TweenLite.to(stepper.values.lines, duration, {
@@ -178,6 +184,10 @@
             stepper.values.lines.copy(new THREE.Color(step.colors.lines));
             stepper.values.overLines.copy(new THREE.Color(step.colors.overLines));
             // setTweens(0.250);
+            if (!options.useBackground) {
+                var color = stepper.values.background.getHexString();
+                document.body.style.backgroundColor = '#' + color;
+            }
         });
 
         $rootScope.$on('onSlickBeforeChange', function($scope, slick) {

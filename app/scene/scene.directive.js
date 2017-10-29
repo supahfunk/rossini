@@ -486,9 +486,25 @@
                     }
 
                     function updateCircle() {
+
+                        material.opacity = state.pow;
+                        // material1.opacity = state.pow;
+                        // material2.opacity = state.pow;
+                        // material1.color = stepper.values.lines;
+                        // material2.color = stepper.values.overLines;
+
+                        // console.log(stepper.values.overLines);
+
+                        // if (useMeshLines) {
+                        //    materialLine1.uniforms.lineWidth.value = state.pow;
+                        //    materialLine2.uniforms.lineWidth.value = state.pow;
+                        // }
+
                         angular.forEach(lines1, function(line, l) {
                             updateLine(line.geometry, points1[l], l, 1);
                             line.material.opacity = (0.0 + (1.0 * l / ln)) * state.pow;
+                            line.material.color = stepper.values.lines;
+                            // line.geometry.colorsNeedUpdate = true;
                             if (useMeshLines) {
                                 meshLines1[l].setGeometry(meshLineGeometries1[l]);
                             }
@@ -497,6 +513,8 @@
                         angular.forEach(lines2, function(line, l) {
                             updateLine(line.geometry, points2[l], l, 2);
                             line.material.opacity = (0.0 + (1.0 * l / ln)) * state.pow;
+                            line.material.color = stepper.values.overLines;
+                            // line.geometry.colorsNeedUpdate = true;
                             if (useMeshLines) {
                                 meshLines2[l].setGeometry(meshLineGeometries2[l]);
                             }
@@ -525,17 +543,6 @@
 
                         object.scale.x = object.scale.y = object.scale.z = 0.001 + 0.14 * state.pow;
                         object.lookAt(camera.position);
-
-                        material.opacity = state.pow;
-                        // material1.opacity = state.pow;
-                        // material2.opacity = state.pow;
-                        material1.color = stepper.values.lines;
-                        material2.color = stepper.values.overLines;
-
-                        // if (useMeshLines) {
-                        //    materialLine1.uniforms.lineWidth.value = state.pow;
-                        //    materialLine2.uniforms.lineWidth.value = state.pow;
-                        // }
 
                         // iterator++;
                     }

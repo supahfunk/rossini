@@ -82,21 +82,31 @@
             var gui = new dat.GUI();
 
             options.randomize = function() {
-                for (var i = 0; i < gui.__controllers.length; i++) {
-                    var c = gui.__controllers[i];
-                    if (c.__min) {
-                        var value = c.__min + (c.__max - c.__min) * Math.random();
-                        this[c.property] = value;
-                        c.updateDisplay();
-                    }
-                    if (c.__color) {
-                        c.__color.r = Math.floor(Math.random() * 255);
-                        c.__color.g = Math.floor(Math.random() * 255);
-                        c.__color.b = Math.floor(Math.random() * 255);
-                        c.updateDisplay();
-                        c.setValue(c.__color.hex);
+                // console.log(gui);
+                function randomize(controllers) {
+                    for (var i = 0; i < controllers.length; i++) {
+                        var c = controllers[i];
+                        if (c.__min) {
+                            var value = c.__min + (c.__max - c.__min) * Math.random();
+                            // options[c.property] = value;
+                            c.setValue(value);
+                            c.updateDisplay();
+                        }
+                        if (c.__color) {
+                            c.__color.r = Math.floor(Math.random() * 255);
+                            c.__color.g = Math.floor(Math.random() * 255);
+                            c.__color.b = Math.floor(Math.random() * 255);
+                            c.updateDisplay();
+                            c.setValue(c.__color.hex);
+                        }
                     }
                 }
+                randomize(gui.__controllers);
+                angular.forEach(gui.__folders, function(folder) {
+                    randomize(folder.__controllers);
+                });
+                // console.log(options.circle.position);
+                // console.log(stepper.step.circle.position);
             };
 
             options.saveJson = function() {
@@ -126,8 +136,8 @@
             }
 
             gui.closed = true;
-            gui.add(options.camera, 'cameraHeight', -20.0, 20.0).listen().onChange(onOptionsChanged);
-            gui.add(options.camera, 'targetHeight', -20.0, 20.0).listen().onChange(onOptionsChanged);
+            gui.add(options.camera, 'cameraHeight', -10.0, 30.0).listen().onChange(onOptionsChanged);
+            gui.add(options.camera, 'targetHeight', -10.0, 30.0).listen().onChange(onOptionsChanged);
             var circlePosition = gui.addFolder('circlePosition');
             circlePosition.add(options.circle.position, 'x', -300, 300).listen().onChange(onOptionsChanged);
             circlePosition.add(options.circle.position, 'y', -300, 300).listen().onChange(onOptionsChanged);
@@ -204,11 +214,12 @@
 
     var app = angular.module('app');
 
-    app.directive('slickTunnel', ['StepperService', function(StepperService) {
+    app.directive('slickTunnel', ['StepperService', 'SceneOptions', function(StepperService, SceneOptions) {
         return {
             restrict: 'A',
             link: function(scope, element, attributes) {
 
+                var options = SceneOptions;
                 var stepper = StepperService;
 
                 function unSlick() {
@@ -226,7 +237,7 @@
                         speed: 1100,
                         infinite: false,
                         draggable: false,
-                        asNavFor: '.tunnel-bg',
+                        asNavFor: options.useBackground ? '.tunnel-bg' : null,
                         cssEase: 'cubic-bezier(0.7, 0, 0.3, 1)'
                     });
                 }
@@ -754,7 +765,7 @@
                 'dark-bg',
             ];
             var items = new Array(options.ribbon.steps).fill().map(function(v, i) {
-                return {
+                var item = {
                     id: i + 1,
                     title: titles[i % titles.length],
                     url: 'view.html',
@@ -783,6 +794,10 @@
                         orchestra: 'Academy of St Martin in the Fields Orchestra',
                     } : null,
                 };
+                if (item.contrast === 'dark-bg') {
+                    item.colors.background = 0x111111;
+                }
+                return item;
             });
             return items;
         }
@@ -790,8 +805,8 @@
         function init() {
             var deferred = $q.defer();
             $http.get('json/rossini.js').then(function(response) {
-                var items = response.data;
-                // var items = getItems();
+                // var items = response.data;
+                var items = getItems();
                 angular.forEach(items, function(item) {
                     item.titleTrusted = $sce.trustAsHtml(item.title);
                     item.circle.position = new THREE.Vector3().copy(item.circle.position);
@@ -839,8 +854,10 @@
                 delay: 0,
                 ease: Power2.easeInOut,
                 onUpdate: function() {
-                    var color = stepper.values.background.getHexString();
-                    document.body.style.backgroundColor = '#' + color;
+                    if (!options.useBackground) {
+                        var color = stepper.values.background.getHexString();
+                        document.body.style.backgroundColor = '#' + color;
+                    }
                 }
             }));
             tweens.push(TweenLite.to(stepper.values.lines, duration, {
@@ -877,6 +894,10 @@
             stepper.values.lines.copy(new THREE.Color(step.colors.lines));
             stepper.values.overLines.copy(new THREE.Color(step.colors.overLines));
             // setTweens(0.250);
+            if (!options.useBackground) {
+                var color = stepper.values.background.getHexString();
+                document.body.style.backgroundColor = '#' + color;
+            }
         });
 
         $rootScope.$on('onSlickBeforeChange', function($scope, slick) {
@@ -1272,7 +1293,7 @@
                     }
 
                     function remove() {
-                        console.log('objects.circles.remove');
+                        // console.log('objects.circles.remove');
                         state.adding = false;
                         state.removing = Date.now();
                         if (state.tween) {
@@ -1430,9 +1451,25 @@
                     }
 
                     function updateCircle() {
+
+                        material.opacity = state.pow;
+                        // material1.opacity = state.pow;
+                        // material2.opacity = state.pow;
+                        // material1.color = stepper.values.lines;
+                        // material2.color = stepper.values.overLines;
+
+                        // console.log(stepper.values.overLines);
+
+                        // if (useMeshLines) {
+                        //    materialLine1.uniforms.lineWidth.value = state.pow;
+                        //    materialLine2.uniforms.lineWidth.value = state.pow;
+                        // }
+
                         angular.forEach(lines1, function(line, l) {
                             updateLine(line.geometry, points1[l], l, 1);
                             line.material.opacity = (0.0 + (1.0 * l / ln)) * state.pow;
+                            line.material.color = stepper.values.lines;
+                            // line.geometry.colorsNeedUpdate = true;
                             if (useMeshLines) {
                                 meshLines1[l].setGeometry(meshLineGeometries1[l]);
                             }
@@ -1441,6 +1478,8 @@
                         angular.forEach(lines2, function(line, l) {
                             updateLine(line.geometry, points2[l], l, 2);
                             line.material.opacity = (0.0 + (1.0 * l / ln)) * state.pow;
+                            line.material.color = stepper.values.overLines;
+                            // line.geometry.colorsNeedUpdate = true;
                             if (useMeshLines) {
                                 meshLines2[l].setGeometry(meshLineGeometries2[l]);
                             }
@@ -1469,17 +1508,6 @@
 
                         object.scale.x = object.scale.y = object.scale.z = 0.001 + 0.14 * state.pow;
                         object.lookAt(camera.position);
-
-                        material.opacity = state.pow;
-                        // material1.opacity = state.pow;
-                        // material2.opacity = state.pow;
-                        material1.color = stepper.values.lines;
-                        material2.color = stepper.values.overLines;
-
-                        // if (useMeshLines) {
-                        //    materialLine1.uniforms.lineWidth.value = state.pow;
-                        //    materialLine2.uniforms.lineWidth.value = state.pow;
-                        // }
 
                         // iterator++;
                     }
@@ -1729,6 +1757,7 @@
         audioStrength: 100,
         noiseStrength: 25,
         circularStrength: 0.90,
+        useBackground: false,
         device: {
             mobile: isMobileAndTabled,
             ios: isIOS,

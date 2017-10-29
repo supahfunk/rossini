@@ -5,11 +5,12 @@
 
     var app = angular.module('app');
 
-    app.directive('slickTunnel', ['StepperService', function(StepperService) {
+    app.directive('slickTunnel', ['StepperService', 'SceneOptions', function(StepperService, SceneOptions) {
         return {
             restrict: 'A',
             link: function(scope, element, attributes) {
 
+                var options = SceneOptions;
                 var stepper = StepperService;
 
                 function unSlick() {
@@ -27,7 +28,7 @@
                         speed: 1100,
                         infinite: false,
                         draggable: false,
-                        asNavFor: '.tunnel-bg',
+                        asNavFor: options.useBackground ? '.tunnel-bg' : null,
                         cssEase: 'cubic-bezier(0.7, 0, 0.3, 1)'
                     });
                 }

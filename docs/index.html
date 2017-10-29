@@ -176,7 +176,7 @@
         <!-- /Nav -->
 
         <!-- Tunnel Background -->
-        <div class="tunnel-bg" slick-backgrounds="stepper.steps">
+        <div class="tunnel-bg" slick-backgrounds="stepper.steps" ng-if="scene.options.useBackground">
             <div class="item" ng-repeat="item in stepper.steps track by $index">
                 <img data-lazy="{{item.background}}" />
             </div>

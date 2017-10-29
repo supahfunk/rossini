@@ -34,21 +34,31 @@
             var gui = new dat.GUI();
 
             options.randomize = function() {
-                for (var i = 0; i < gui.__controllers.length; i++) {
-                    var c = gui.__controllers[i];
-                    if (c.__min) {
-                        var value = c.__min + (c.__max - c.__min) * Math.random();
-                        this[c.property] = value;
-                        c.updateDisplay();
-                    }
-                    if (c.__color) {
-                        c.__color.r = Math.floor(Math.random() * 255);
-                        c.__color.g = Math.floor(Math.random() * 255);
-                        c.__color.b = Math.floor(Math.random() * 255);
-                        c.updateDisplay();
-                        c.setValue(c.__color.hex);
+                // console.log(gui);
+                function randomize(controllers) {
+                    for (var i = 0; i < controllers.length; i++) {
+                        var c = controllers[i];
+                        if (c.__min) {
+                            var value = c.__min + (c.__max - c.__min) * Math.random();
+                            // options[c.property] = value;
+                            c.setValue(value);
+                            c.updateDisplay();
+                        }
+                        if (c.__color) {
+                            c.__color.r = Math.floor(Math.random() * 255);
+                            c.__color.g = Math.floor(Math.random() * 255);
+                            c.__color.b = Math.floor(Math.random() * 255);
+                            c.updateDisplay();
+                            c.setValue(c.__color.hex);
+                        }
                     }
                 }
+                randomize(gui.__controllers);
+                angular.forEach(gui.__folders, function(folder) {
+                    randomize(folder.__controllers);
+                });
+                // console.log(options.circle.position);
+                // console.log(stepper.step.circle.position);
             };
 
             options.saveJson = function() {
@@ -78,8 +88,8 @@
             }
 
             gui.closed = true;
-            gui.add(options.camera, 'cameraHeight', -20.0, 20.0).listen().onChange(onOptionsChanged);
-            gui.add(options.camera, 'targetHeight', -20.0, 20.0).listen().onChange(onOptionsChanged);
+            gui.add(options.camera, 'cameraHeight', -10.0, 30.0).listen().onChange(onOptionsChanged);
+            gui.add(options.camera, 'targetHeight', -10.0, 30.0).listen().onChange(onOptionsChanged);
             var circlePosition = gui.addFolder('circlePosition');
             circlePosition.add(options.circle.position, 'x', -300, 300).listen().onChange(onOptionsChanged);
             circlePosition.add(options.circle.position, 'y', -300, 300).listen().onChange(onOptionsChanged);

@@ -50,6 +50,7 @@
         audioStrength: 100,
         noiseStrength: 25,
         circularStrength: 0.90,
+        useBackground: false,
         device: {
             mobile: isMobileAndTabled,
             ios: isIOS,
