@@ -204,6 +204,131 @@
 
     var app = angular.module('app');
 
+    app.directive('slickTunnel', ['StepperService', function(StepperService) {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attributes) {
+
+                var stepper = StepperService;
+
+                function unSlick() {
+                    if (element.hasClass('slick-initialized')) {
+                        element.slick('unslick');
+                    }
+                }
+
+                function onSlick() {
+                    unSlick();
+                    element.slick({
+                        arrows: false,
+                        dots: false,
+                        fade: true,
+                        speed: 1100,
+                        infinite: false,
+                        draggable: false,
+                        asNavFor: '.tunnel-bg',
+                        cssEase: 'cubic-bezier(0.7, 0, 0.3, 1)'
+                    });
+                }
+
+                function showLetters() {
+                    var letters = $('.slick-active .splitted-letter');
+                    TweenMax.staggerTo(letters, 1, {
+                        delay: 0.2,
+                        y: 0,
+                        x: 0,
+                        ease: Power3.easeInOut,
+                        className: '+=viewed',
+                        onComplete: function() {
+                            $('.slick-active .cta').addClass('active');
+                        }
+                    }, 0.009);
+                }
+
+                function hideLetters() {
+                    var letters = $('.slick-active .splitted-letter');
+                    TweenMax.staggerTo(letters, 1, {
+                        delay: 0,
+                        y: 100,
+                        x: 50,
+                        ease: Power3.easeInOut,
+                        className: '-=viewed'
+                    }, 0.009);
+                    $('.slick-active .cta').removeClass('active');
+                }
+
+                function onInit() {
+                    // console.log('onInit');
+                    showLetters();
+                    scope.$root.$broadcast('onSlickInit', { current: 0 });
+                }
+
+                function onBeforeChange(event, slick, currentSlide, nextSlide) {
+                    stepper.slicking = true;
+                    hideLetters();
+                    // console.log('onBeforeChange');
+                    scope.$root.$broadcast('onSlickBeforeChange', { current: nextSlide, previouse: currentSlide });
+                }
+
+                function onAfterChange(event, slick, currentSlide) {
+                    stepper.slicking = false;
+                    showLetters();
+                    // console.log('onAfterChange');
+                    scope.$root.$broadcast('onSlickAfterChange', { current: currentSlide });
+                }
+
+                function onWheel(e) {
+                    if (stepper.slicking) {
+                        return;
+                    }
+                    if (element.hasClass('slick-initialized')) {
+                        if (e.deltaX > 0 || e.deltaY < 0) {
+                            element.slick('slickNext');
+                        } else if (e.deltaX < 0 || e.deltaY > 0) {
+                            element.slick('slickPrev');
+                        }
+                    }
+                    e.preventDefault();
+                }
+
+                function addListeners() {
+                    element
+                        .on('init', onInit)
+                        .on('beforeChange', onBeforeChange)
+                        .on('afterChange', onAfterChange)
+                        .on('mousewheel', onWheel);
+                }
+
+                function removeListeners() {
+                    element
+                        .off('init', onInit)
+                        .off('beforeChange', onBeforeChange)
+                        .off('afterChange', onAfterChange)
+                        .off('mousewheel', onWheel);
+                }
+
+                addListeners();
+
+                scope.$watchCollection(attributes.slickTunnel, function(items) {
+                    if (items && items.length) {
+                        onSlick();
+                    }
+                });
+
+                scope.$on('onGoStep', function($scope, index) {
+                    if (element.hasClass('slick-initialized')) {
+                        element.slick('slickGoTo', index);
+                    }
+                });
+
+                scope.$on('$destroy', function() {
+                    removeListeners();
+                    unSlick();
+                });
+            }
+        };
+    }]);
+
     app.directive('slickBackgrounds', [function() {
         return {
             restrict: 'A',
@@ -235,133 +360,6 @@
                 });
 
                 scope.$on('$destroy', function() {
-                    unSlick();
-                });
-            }
-        };
-    }]);
-
-    app.directive('slickTunnel', [function() {
-        return {
-            restrict: 'A',
-            link: function(scope, element, attributes) {
-
-                function unSlick() {
-                    if (element.hasClass('slick-initialized')) {
-                        element.slick('unslick');
-                    }
-                }
-
-                function onSlick() {
-                    unSlick();
-                    element.slick({
-                        arrows: false,
-                        dots: false,
-                        fade: true,
-                        speed: 1100,
-                        infinite: false,
-                        draggable: false,
-                        asNavFor: '.tunnel-bg',
-                        cssEase: 'cubic-bezier(0.7, 0, 0.3, 1)'
-                    });
-                }
-
-                scope.$watchCollection(attributes.slickTunnel, function(items) {
-                    if (items && items.length) {
-                        onSlick();
-                    }
-                });
-
-                var tunnelAnimating = false;
-
-                function onInit() {
-                    var letters = $('.slick-active .splitted-letter');
-                    TweenMax.staggerTo(letters, 1, {
-                        delay: 0.2,
-                        y: 0,
-                        x: 0,
-                        ease: Power3.easeInOut,
-                        className: '+=viewed',
-                        onComplete: function() {
-                            $('.slick-active .cta').addClass('active');
-                        }
-                    }, 0.009);
-                }
-
-                function onBeforeChange(event, slick, currentSlide, nextSlide) {
-                    tunnelAnimating = true;
-                    var letters = $('.slick-active .splitted-letter');
-                    TweenMax.staggerTo(letters, 1, { delay: 0, y: 100, x: 50, ease: Power3.easeInOut, className: '-=viewed' }, 0.009);
-                    $('.slick-active .cta').removeClass('active');
-                    /*
-                    var $next = $(slick.$slides.get(nextSlide)).find('.tunnel-slick__item');
-                    var from = $next.attr('data-from');
-                    var to = $next.attr('data-to');
-                    changeYear(from, to);
-                    var bg = $next.attr('data-bg');
-                    $('body').removeClass('light-bg dark-bg');
-                    $('body').addClass(bg + '-bg');
-                    switchScene(nextSlide);
-                    */
-                    scope.$root.$broadcast('onSlickBeforeChange', { current: nextSlide, previouse: currentSlide });
-                }
-
-                function onAfterChange() {
-                    tunnelAnimating = false;
-                    var letters = $('.slick-active .splitted-letter');
-                    TweenMax.staggerTo(letters, 1, {
-                        delay: 0.2,
-                        y: 0,
-                        x: 0,
-                        ease: Power3.easeInOut,
-                        className: '+=viewed',
-                        onComplete: function() {
-                            $('.slick-active .cta').addClass('active');
-                        }
-                    }, 0.009);
-                    scope.$root.$broadcast('onAfterChange');
-                }
-
-                function onWheel(e) {
-                    if (tunnelAnimating) {
-                        return;
-                    }
-                    if (element.hasClass('slick-initialized')) {
-                        if (e.deltaX > 0 || e.deltaY < 0) {
-                            element.slick('slickNext');
-                        } else if (e.deltaX < 0 || e.deltaY > 0) {
-                            element.slick('slickPrev');
-                        }
-                    }
-                    e.preventDefault();
-                }
-
-                scope.$on('onGoStep', function($scope, index) {
-                    if (element.hasClass('slick-initialized')) {
-                        element.slick('slickGoTo', index);
-                    }
-                });
-
-                function addListeners() {
-                    element
-                        .on('init', onInit)
-                        .on('beforeChange', onBeforeChange)
-                        .on('afterChange', onAfterChange)
-                        .on('mousewheel', onWheel);
-                }
-
-                function removeListeners() {
-                    element
-                        .off('init', onInit)
-                        .off('beforeChange', onBeforeChange)
-                        .off('afterChange', onAfterChange)
-                        .off('mousewheel', onWheel);
-                }
-
-                addListeners();
-
-                scope.$on('$destroy', function() {
-                    removeListeners();
                     unSlick();
                 });
             }
@@ -534,15 +532,13 @@
 
         var detail = {};
 
-        $scope.openDetail = function () {
-
-            $.get(stepper.step.url, function (data) {
-                $timeout(function () {
-                        detail.active = true;
-                        detail.html = data;                
-                    });
+        $scope.openDetail = function() {
+            $.get(stepper.step.url, function(data) {
+                $timeout(function() {
+                    detail.active = true;
+                    detail.html = data;
+                });
             });
-
             return false;
         };
 
@@ -890,7 +886,7 @@
         function setStep(index) {
             $timeout(function() {
                 var previous = stepper.current || 0;
-                stepper.current = index;
+                stepper.current = current = index;
                 var step = steps[index];
                 stepper.step = step;
                 options.colors.background = step.colors.background;
@@ -905,20 +901,6 @@
             });
         }
 
-        function next() {
-            current++;
-            current = Math.min(steps.length - 1, current);
-            setStep(current);
-            $rootScope.$broadcast('onGoStep', current);
-        }
-
-        function previous() {
-            current--;
-            current = Math.max(0, current);
-            setStep(current);
-            $rootScope.$broadcast('onGoStep', current);
-        }
-
         function getCurrentStep() {
             return steps[current];
         }
@@ -927,15 +909,35 @@
             return steps[index];
         }
 
+        function previous() {
+            if (stepper.slicking) {
+                return;
+            }
+            current--;
+            current = Math.max(0, current);
+            setStep(current);
+            $rootScope.$broadcast('onGoStep', current);
+        }
+
+        function next() {
+            if (stepper.slicking) {
+                return;
+            }
+            current++;
+            current = Math.min(steps.length - 1, current);
+            setStep(current);
+            $rootScope.$broadcast('onGoStep', current);
+        }
+
         this.init = init;
         this.values = values;
         this.duration = duration;
         this.steps = steps;
-        this.current = current;
-        this.next = next;
-        this.previous = previous;
         this.getCurrentStep = getCurrentStep;
         this.getStepAtIndex = getStepAtIndex;
+        this.current = current;
+        this.previous = previous;
+        this.next = next;
 
     }]);
 
@@ -966,8 +968,6 @@
 
                 var stats, scene, camera, shadow, back, light, renderer, width, height, w2, h2;
                 var controls = null;
-                var mouse = { x: 0, y: 0 };
-                // var mousePos = { x: 0, y: 0 };
 
                 scope.$on('onStepChanged', function($scope, step) {
                     // console.log('onStepChanged', step.current);
@@ -993,6 +993,16 @@
                 scope.$on('onOptionsChanged', function($scope) {
                     // optionsChanged
                 });
+
+                var mouse = { x: 0, y: 0 };
+                // var mousePos = { x: 0, y: 0 };
+                var parallax = { x: 0, y: 0, i: 0 };
+
+                function updateParallax() {
+                    parallax.x = (mouse.x * 20) + Math.cos(parallax.i / 100) * 10;
+                    parallax.y = (mouse.y * 20) + Math.sin(parallax.i / 100) * 10;
+                    parallax.i++;
+                }
 
                 createScene();
                 // createLights();
@@ -1069,7 +1079,7 @@
                         depthTest: false,
                         sizeAttenuation: 1,
                         near: 1,
-                        far: 1000,
+                        far: 100,
                         resolution: resolution,
                         // blending: THREE.AdditiveBlending,
                         // side: THREE.DoubleSide,
@@ -1099,10 +1109,9 @@
 
                     var line = new MeshLine();
                     line.setGeometry(geometry);
-
                     // line.setGeometry( geometry, function( p ) { return 2; } ); // makes width 2 * lineWidth
                     // line.setGeometry( geometry, function( p ) { return 1 - p; } ); // makes width taper
-                    // line.setGeometry( geometry, function( p ) { return 2 + Math.sin( 50 * p ); } ); // makes width sinusoidal
+                    // line.setGeometry(geometry, function(p) { return 2 + Math.sin(50 * p); }); // makes width sinusoidal
 
                     var object = new THREE.Mesh(line.geometry, material);
                     add();
@@ -1120,22 +1129,24 @@
                     camera.target = camera.target || new THREE.Vector3(0, 0, 0);
 
                     function updateRibbon() {
-                        var c = (1 / stepper.steps.length) * 0.1;
+                        var s = (1 / stepper.steps.length);
+                        var c = s * 0.1;
                         var cpow = stepper.values.pow;
                         var tpow = (cpow + c).mod(1);
                         var step = stepper.getCurrentStep();
                         var position = cameraSpline.getPointAt(cpow);
                         position.y += stepper.values.cameraHeight;
+
+                        object.material.uniforms.visibility.value = Math.min(1.0, stepper.values.pow + s);
+
                         var target = cameraSpline.getPointAt(tpow);
                         target.y += stepper.values.targetHeight;
                         // var tangent = cameraSpline.getTangent(tpow).normalize().multiplyScalar(100);
                         // target.add(tangent);
                         camera.position.copy(position);
                         camera.target.copy(target);
-
-                        camera.position.x += (position.x + (mouse.x * 20) - camera.position.x) / 12;
-                        camera.position.y += (position.y + (mouse.y * 20) - camera.position.y) / 12;
-
+                        camera.position.x += (position.x + parallax.x - camera.position.x) / 12;
+                        camera.position.y += (position.y + parallax.y - camera.position.y) / 12;
                         camera.lookAt(camera.target);
                     }
 
@@ -1152,14 +1163,16 @@
                 }
 
                 function getObjectCircles(index) {
-                    var geometry, object, circles = [];
+                    var noiseMap1 = getPerlinNoise(options.circle.points, options.circle.lines);
+                    var noiseMap2 = getPerlinNoise(options.circle.points, options.circle.lines);
 
-                    var noiseMap = getPerlinNoise(options.circle.points, options.circle.lines);
+                    var geometry, object, circles = [];
 
                     var ln = options.circle.lines,
                         pn = options.circle.points;
 
-                    var step = stepper.steps[index];
+                    var step = stepper.getStepAtIndex(index);
+
                     var texture = new THREE.TextureLoader().load(step.circle.texture);
                     texture.wrapS = THREE.RepeatWrapping;
                     texture.wrapT = THREE.RepeatWrapping;
@@ -1240,7 +1253,7 @@
                     var to = null;
 
                     function add() {
-                        console.log('objects.circles.add');
+                        // console.log('objects.circles.add');
                         scene.add(object);
                         state.adding = Date.now();
                         state.removing = false;
@@ -1359,6 +1372,7 @@
                         var audioStrength = options.audioStrength,
                             noiseStrength = options.noiseStrength,
                             circularStrength = options.circularStrength,
+                            noiseMap = g === 1 ? noiseMap1 : noiseMap2,
                             data = analyser.data;
 
                         angular.forEach(vertices, function(v, i) {
@@ -1394,6 +1408,8 @@
                             // console.log(v.sincos.radius);
                         });
 
+                        geometry.verticesNeedUpdate = true;
+
                         /*
                         var f = 0;
                         var l = pn - 1;
@@ -1401,17 +1417,12 @@
                         var last = new THREE.Vector3().copy(vertices[l]);
                         vertices[f].add(new THREE.Vector3().subVectors(first, last).multiplyScalar(0.5));
                         vertices[l].add(new THREE.Vector3().subVectors(first, last).multiplyScalar(-0.5));
-                        */
-
-                        geometry.verticesNeedUpdate = true;
-
-                        /*
-                                    lines.forEach( function( l, i ) {
+                        
+                        lines.forEach( function( l, i ) {
                         if( params.animateWidth ) l.material.uniforms.lineWidth.value = params.lineWidth * ( 1 + .5 * Math.sin( 5 * t + i ) );
                         if( params.autoRotate ) l.rotation.y += .125 * delta;
-                      l.material.uniforms.visibility.value= params.animateVisibility ? (time/3000) % 1.0 : 1.0;
-                                */
-                        /*
+                        l.material.uniforms.visibility.value= params.animateVisibility ? (time/3000) % 1.0 : 1.0;
+                        
                         if (iterator === 60 && g === 2 && l === 0) {
                             console.log('vertices', geometry.vertices.map(function(v) { return v.x + ',' + v.y; }));
                         }
@@ -1438,10 +1449,12 @@
                         group1.rotation.z += 0.001;
                         group2.rotation.z -= 0.001;
 
-                        var step = stepper.getStepAtIndex(index);
-                        dummy.position.copy(step.circle.position);
-                        dummy.rotation.x += ((mouse.y * 0.125) - dummy.rotation.x) / 12;
-                        dummy.rotation.y += ((mouse.x * 0.250) - dummy.rotation.y) / 12;
+                        if (width > 1023) {
+                            dummy.position.copy(step.circle.position);
+                        }
+
+                        dummy.rotation.x += ((parallax.y * 0.00625) - dummy.rotation.x) / 12;
+                        dummy.rotation.y += ((parallax.x * 0.01250) - dummy.rotation.y) / 12;
 
                         var position = objects.ribbon.cameraSpline.getPointAt((index + 0.1) / stepper.steps.length);
                         // var tangent = objects.ribbon.cameraSpline.getTangent(index + 0.1 / stepper.steps.length).normalize().multiplyScalar(300);
@@ -1481,6 +1494,7 @@
                 }
 
                 function render() {
+                    updateParallax();
                     analyser.update();
                     if (controls) {
                         controls.update();

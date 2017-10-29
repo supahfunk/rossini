@@ -90,7 +90,7 @@ gulp.task('bundle', ['bundle:css', 'bundle:js', 'bundle:partials']);
 gulp.task('webserver', function() {
     return gulp.src('./')
         .pipe(webserver({
-            livereload: true,
+            livereload: false,
             directoryListing: true,
             port: 5556,
             open: 'http://localhost:5556/docs/index.html',

@@ -187,7 +187,7 @@
         function setStep(index) {
             $timeout(function() {
                 var previous = stepper.current || 0;
-                stepper.current = index;
+                stepper.current = current = index;
                 var step = steps[index];
                 stepper.step = step;
                 options.colors.background = step.colors.background;
@@ -202,20 +202,6 @@
             });
         }
 
-        function next() {
-            current++;
-            current = Math.min(steps.length - 1, current);
-            setStep(current);
-            $rootScope.$broadcast('onGoStep', current);
-        }
-
-        function previous() {
-            current--;
-            current = Math.max(0, current);
-            setStep(current);
-            $rootScope.$broadcast('onGoStep', current);
-        }
-
         function getCurrentStep() {
             return steps[current];
         }
@@ -224,15 +210,35 @@
             return steps[index];
         }
 
+        function previous() {
+            if (stepper.slicking) {
+                return;
+            }
+            current--;
+            current = Math.max(0, current);
+            setStep(current);
+            $rootScope.$broadcast('onGoStep', current);
+        }
+
+        function next() {
+            if (stepper.slicking) {
+                return;
+            }
+            current++;
+            current = Math.min(steps.length - 1, current);
+            setStep(current);
+            $rootScope.$broadcast('onGoStep', current);
+        }
+
         this.init = init;
         this.values = values;
         this.duration = duration;
         this.steps = steps;
-        this.current = current;
-        this.next = next;
-        this.previous = previous;
         this.getCurrentStep = getCurrentStep;
         this.getStepAtIndex = getStepAtIndex;
+        this.current = current;
+        this.previous = previous;
+        this.next = next;
 
     }]);
 

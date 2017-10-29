@@ -24,8 +24,6 @@
 
                 var stats, scene, camera, shadow, back, light, renderer, width, height, w2, h2;
                 var controls = null;
-                var mouse = { x: 0, y: 0 };
-                // var mousePos = { x: 0, y: 0 };
 
                 scope.$on('onStepChanged', function($scope, step) {
                     // console.log('onStepChanged', step.current);
@@ -51,6 +49,16 @@
                 scope.$on('onOptionsChanged', function($scope) {
                     // optionsChanged
                 });
+
+                var mouse = { x: 0, y: 0 };
+                // var mousePos = { x: 0, y: 0 };
+                var parallax = { x: 0, y: 0, i: 0 };
+
+                function updateParallax() {
+                    parallax.x = (mouse.x * 20) + Math.cos(parallax.i / 100) * 10;
+                    parallax.y = (mouse.y * 20) + Math.sin(parallax.i / 100) * 10;
+                    parallax.i++;
+                }
 
                 createScene();
                 // createLights();
@@ -127,7 +135,7 @@
                         depthTest: false,
                         sizeAttenuation: 1,
                         near: 1,
-                        far: 1000,
+                        far: 100,
                         resolution: resolution,
                         // blending: THREE.AdditiveBlending,
                         // side: THREE.DoubleSide,
@@ -157,10 +165,9 @@
 
                     var line = new MeshLine();
                     line.setGeometry(geometry);
-
                     // line.setGeometry( geometry, function( p ) { return 2; } ); // makes width 2 * lineWidth
                     // line.setGeometry( geometry, function( p ) { return 1 - p; } ); // makes width taper
-                    // line.setGeometry( geometry, function( p ) { return 2 + Math.sin( 50 * p ); } ); // makes width sinusoidal
+                    // line.setGeometry(geometry, function(p) { return 2 + Math.sin(50 * p); }); // makes width sinusoidal
 
                     var object = new THREE.Mesh(line.geometry, material);
                     add();
@@ -178,22 +185,24 @@
                     camera.target = camera.target || new THREE.Vector3(0, 0, 0);
 
                     function updateRibbon() {
-                        var c = (1 / stepper.steps.length) * 0.1;
+                        var s = (1 / stepper.steps.length);
+                        var c = s * 0.1;
                         var cpow = stepper.values.pow;
                         var tpow = (cpow + c).mod(1);
                         var step = stepper.getCurrentStep();
                         var position = cameraSpline.getPointAt(cpow);
                         position.y += stepper.values.cameraHeight;
+
+                        object.material.uniforms.visibility.value = Math.min(1.0, stepper.values.pow + s);
+
                         var target = cameraSpline.getPointAt(tpow);
                         target.y += stepper.values.targetHeight;
                         // var tangent = cameraSpline.getTangent(tpow).normalize().multiplyScalar(100);
                         // target.add(tangent);
                         camera.position.copy(position);
                         camera.target.copy(target);
-
-                        camera.position.x += (position.x + (mouse.x * 20) - camera.position.x) / 12;
-                        camera.position.y += (position.y + (mouse.y * 20) - camera.position.y) / 12;
-
+                        camera.position.x += (position.x + parallax.x - camera.position.x) / 12;
+                        camera.position.y += (position.y + parallax.y - camera.position.y) / 12;
                         camera.lookAt(camera.target);
                     }
 
@@ -210,14 +219,16 @@
                 }
 
                 function getObjectCircles(index) {
-                    var geometry, object, circles = [];
+                    var noiseMap1 = getPerlinNoise(options.circle.points, options.circle.lines);
+                    var noiseMap2 = getPerlinNoise(options.circle.points, options.circle.lines);
 
-                    var noiseMap = getPerlinNoise(options.circle.points, options.circle.lines);
+                    var geometry, object, circles = [];
 
                     var ln = options.circle.lines,
                         pn = options.circle.points;
 
-                    var step = stepper.steps[index];
+                    var step = stepper.getStepAtIndex(index);
+
                     var texture = new THREE.TextureLoader().load(step.circle.texture);
                     texture.wrapS = THREE.RepeatWrapping;
                     texture.wrapT = THREE.RepeatWrapping;
@@ -298,7 +309,7 @@
                     var to = null;
 
                     function add() {
-                        console.log('objects.circles.add');
+                        // console.log('objects.circles.add');
                         scene.add(object);
                         state.adding = Date.now();
                         state.removing = false;
@@ -317,7 +328,7 @@
                     }
 
                     function remove() {
-                        console.log('objects.circles.remove');
+                        // console.log('objects.circles.remove');
                         state.adding = false;
                         state.removing = Date.now();
                         if (state.tween) {
@@ -417,6 +428,7 @@
                         var audioStrength = options.audioStrength,
                             noiseStrength = options.noiseStrength,
                             circularStrength = options.circularStrength,
+                            noiseMap = g === 1 ? noiseMap1 : noiseMap2,
                             data = analyser.data;
 
                         angular.forEach(vertices, function(v, i) {
@@ -452,6 +464,8 @@
                             // console.log(v.sincos.radius);
                         });
 
+                        geometry.verticesNeedUpdate = true;
+
                         /*
                         var f = 0;
                         var l = pn - 1;
@@ -459,17 +473,12 @@
                         var last = new THREE.Vector3().copy(vertices[l]);
                         vertices[f].add(new THREE.Vector3().subVectors(first, last).multiplyScalar(0.5));
                         vertices[l].add(new THREE.Vector3().subVectors(first, last).multiplyScalar(-0.5));
-                        */
-
-                        geometry.verticesNeedUpdate = true;
-
-                        /*
-                                    lines.forEach( function( l, i ) {
+                        
+                        lines.forEach( function( l, i ) {
                         if( params.animateWidth ) l.material.uniforms.lineWidth.value = params.lineWidth * ( 1 + .5 * Math.sin( 5 * t + i ) );
                         if( params.autoRotate ) l.rotation.y += .125 * delta;
-                      l.material.uniforms.visibility.value= params.animateVisibility ? (time/3000) % 1.0 : 1.0;
-                                */
-                        /*
+                        l.material.uniforms.visibility.value= params.animateVisibility ? (time/3000) % 1.0 : 1.0;
+                        
                         if (iterator === 60 && g === 2 && l === 0) {
                             console.log('vertices', geometry.vertices.map(function(v) { return v.x + ',' + v.y; }));
                         }
@@ -496,10 +505,12 @@
                         group1.rotation.z += 0.001;
                         group2.rotation.z -= 0.001;
 
-                        var step = stepper.getStepAtIndex(index);
-                        dummy.position.copy(step.circle.position);
-                        dummy.rotation.x += ((mouse.y * 0.125) - dummy.rotation.x) / 12;
-                        dummy.rotation.y += ((mouse.x * 0.250) - dummy.rotation.y) / 12;
+                        if (width > 1023) {
+                            dummy.position.copy(step.circle.position);
+                        }
+
+                        dummy.rotation.x += ((parallax.y * 0.00625) - dummy.rotation.x) / 12;
+                        dummy.rotation.y += ((parallax.x * 0.01250) - dummy.rotation.y) / 12;
 
                         var position = objects.ribbon.cameraSpline.getPointAt((index + 0.1) / stepper.steps.length);
                         // var tangent = objects.ribbon.cameraSpline.getTangent(index + 0.1 / stepper.steps.length).normalize().multiplyScalar(300);
@@ -539,6 +550,7 @@
                 }
 
                 function render() {
+                    updateParallax();
                     analyser.update();
                     if (controls) {
                         controls.update();

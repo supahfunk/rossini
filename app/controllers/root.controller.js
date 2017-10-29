@@ -26,15 +26,13 @@
 
         var detail = {};
 
-        $scope.openDetail = function () {
-
-            $.get(stepper.step.url, function (data) {
-                $timeout(function () {
-                        detail.active = true;
-                        detail.html = data;                
-                    });
+        $scope.openDetail = function() {
+            $.get(stepper.step.url, function(data) {
+                $timeout(function() {
+                    detail.active = true;
+                    detail.html = data;
+                });
             });
-
             return false;
         };
 
