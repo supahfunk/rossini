@@ -139,6 +139,10 @@
                             <a href="#">Contatti</a>
                         </li>
                     </ul>
+                    <div class="extra-mobile">
+                        © Comitato Nazionale Celebrazioni Centenari Rossiniani 2017
+                        <a href="#">Privacy</a>
+                    </div>
                     <div class="socials">
                         <a href="#">
                             <svg class="ico-facebook">
@@ -156,6 +160,7 @@
                             </svg>
                         </a>
                     </div>
+                    
                 </div>
             </div>
             <div class="sub-nav">
@@ -234,7 +239,13 @@
         <div class="tunnel">
             <div class="tunnel-slick" slick-tunnel="stepper.steps">
                 <div id="tunnel-{{item.id}}" class="tunnel-slick__item" data-from="1832" data-to="false" data-bg="light" ng-repeat="item in stepper.steps track by $index">
-                    <div class="tunnel-slick__header">
+                    <div class="tunnel-slick__header" ng-if="$first">
+                        <div class="big-title h1 splitted-text">Sono la prima</div>
+                        <div class="cta">
+                            <a href="#" class="inline-btn">Start experience</a>
+                        </div>
+                    </div>
+                    <div class="tunnel-slick__header" ng-if="!$first">
                         <div class="big-title h1 splitted-text" split-text ng-bind-html="item.titleTrusted">-</div>
                         <div class="cta" ng-if="item.title">
                             <a href="#" ng-href="{{stepper.step.url}}" ng-click="openDetail()" class="inline-btn">View more</a>
@@ -242,9 +253,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tunnel-nav">
-
-            </div>
+            <div class="tunnel-nav"></div>
         </div>
         <!-- /Tunnel -->
 
@@ -253,8 +262,7 @@
             <div class="detail__container">
                 <div class="detail__wrap">
                     <div class="detail__scroll" scrollbar>
-                        <div class="detail__content">
-                            <div ng-bind-html="detail.html"></div>
+                        <div class="detail__content" ng-bind-html="detail.html">
                         </div>
                     </div>
                 </div>
@@ -271,6 +279,7 @@
         <!-- Footer -->
         <footer class="footer">
             <div class="footer__copy">© Comitato Nazionale Celebrazioni Centenari Rossiniani 2017</div>
+            <div class="footer__copy--mobile"><a href="#">Credits</a></div>
             <div class="logo-fondazione-rossini">
                 <img src="img/200Rossini150.svg" class="dark-logo" alt="Fondazione Rossini" />
                 <img src="img/200Rossini150-light.svg" class="light-logo" alt="Fondazione Rossini" />

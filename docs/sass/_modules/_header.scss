@@ -27,6 +27,7 @@ Nav Toggle
 
     @include xs {
         top: 12px;
+        font-size: 0;
     }
 
     &:before,
@@ -95,12 +96,8 @@ Breadcrumb
     text-align: center;
     line-height: 1.3;
 
-    @include md {
-        top: 25vw;
-    }
-
-    @include xs {
-        width: 100%;
+    @include sm {
+        display: none;
     }
 
     &__chapter {
