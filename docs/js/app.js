@@ -580,11 +580,15 @@
         analyser = analyserContext.createAnalyser();
 
         audio = new Audio();
-        audio.addEventListener('canplay', attachAnalyser);
+        audio.addEventListener('canplay', onCanPlay);
+        audio.addEventListener('play', onPlay);
+        audio.addEventListener('pause', onPause);
+        audio.addEventListener('ended', onEnded);
 
         var source = null;
 
-        function attachAnalyser() {
+        function onCanPlay() {
+            // console.log('AnalyserService.onCanPlay');
             if (!source) {
                 var bufferLength;
                 source = analyserContext.createMediaElementSource(audio);
@@ -594,9 +598,26 @@
                 analyser.fftSize = options.audio.bands * 2;
                 bufferLength = analyser.frequencyBinCount;
                 service.data = new Uint8Array(bufferLength);
-                // console.log('AnalyserService.attachAnalyser');
             }
-            return service.data;
+            // return service.data;
+        }
+
+        function onPlay() {
+            $timeout(function() {
+                service.playing = true;
+            });
+        }
+
+        function onPause() {
+            $timeout(function() {
+                service.playing = false;
+            });
+        }
+
+        function onEnded() {
+            $timeout(function() {
+                service.playing = false;
+            });
         }
 
         function setAudioUrl($audioUrl) {
@@ -612,25 +633,31 @@
         }
 
         function play() {
-            if (audio) {
+            if (service.active && audioUrl && !isPlaying()) {
                 audio.play();
             }
         }
 
         function pause() {
-            if (audio) {
+            if (audioUrl && isPlaying()) {
                 audio.pause();
             }
         }
 
+        function shouldPlay() {
+            return service.active && isPlaying();
+        }
+
+        function isPlaying() {
+            return !audio.paused && !audio.ended && audio.currentTime > 0;
+        }
+
         function toggle() {
-            if (audio) {
-                service.active = !service.active;
-                if (service.active) {
-                    audio.play();
-                } else {
-                    audio.pause();
-                }
+            service.active = !service.active;
+            if (service.active) {
+                play();
+            } else {
+                pause();
             }
         }
 
@@ -691,9 +718,7 @@
         });
 
         $rootScope.$on('onOptionsChanged', function($scope) {
-            if (audio) {
-                audio.volume = options.audio.volume;
-            }
+            audio.volume = options.audio.volume;
         });
 
         this.active = true;
@@ -704,6 +729,8 @@
         this.pause = pause;
         this.toggle = toggle;
         this.unlock = unlock;
+        this.isPlaying = isPlaying;
+        this.shouldPlay = shouldPlay;
 
     }]);
 

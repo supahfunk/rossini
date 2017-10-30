@@ -196,7 +196,7 @@
 
         <!-- Sound Info -->
         <div class="sound-info">
-            <button class="sound-toggle" ng-class="{ active: audio.active }" ng-click="audio.toggle()">
+            <button class="sound-toggle" ng-class="{ active: audio.shouldPlay() }" ng-click="audio.toggle()">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
