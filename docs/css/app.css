@@ -399,6 +399,9 @@ Nav
         transform: translate3d(0, -20px, 0);
         opacity: 0;
         transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1) 0.7s; }
+        @media (max-width: 768px) {
+          .nav .main-nav__scroll .socials {
+            transition-delay: .8s; } }
         .open-nav .nav .main-nav__scroll .socials {
           opacity: 1;
           transform: translateZ(0); }
@@ -420,7 +423,13 @@ Nav
             padding: 30px;
             font-size: 13px;
             line-height: 1.4;
-            color: rgba(0, 0, 0, 0.7); }
+            color: rgba(0, 0, 0, 0.7);
+            transform: translate3d(0, -20px, 0);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1) 0.7s; }
+            .open-nav .nav .main-nav__scroll .extra-mobile {
+              opacity: 1;
+              transform: translateZ(0); }
             .nav .main-nav__scroll .extra-mobile a {
               margin-top: 5px;
               color: #b2954d;
@@ -765,6 +774,9 @@ Splitted Text
   opacity: 0; }
   .splitted-text.active {
     opacity: 1; }
+  @media (max-width: 768px) {
+    .splitted-text {
+      text-align: center; } }
   .splitted-text .splitted-row {
     overflow: hidden;
     line-height: 1;
@@ -772,9 +784,6 @@ Splitted Text
     @media (max-width: 768px) {
       .splitted-text .splitted-row {
         margin-bottom: -10px; } }
-    @media (max-width: 575px) {
-      .splitted-text .splitted-row {
-        margin-bottom: -5px; } }
     .splitted-text .splitted-row .splitted-word {
       overflow: hidden;
       display: inline-block;
@@ -1036,7 +1045,10 @@ Tunnel Slick
     @media (max-width: 768px) {
       .tunnel-slick .tunnel-slick__header {
         top: 65% !important;
-        left: 5% !important; } }
+        left: 0 !important;
+        width: 100%;
+        text-align: center;
+        padding: 0 20px; } }
 
 /* Tunnel 0 */
 #tunnel-0 .intro {
@@ -1109,6 +1121,7 @@ Detail
     @media (max-width: 768px) {
       .detail__scroll {
         padding: 0;
+        margin: 80px 0 0;
         height: calc(100vh - 100px);
         border: none; } }
     .detail__scroll .scrollbar-track {
@@ -1143,7 +1156,7 @@ Detail
         font-size: 16px; } }
     @media (max-width: 768px) {
       .detail__content {
-        padding: 88px 0 50px; } }
+        padding: 30px 0 50px; } }
   .detail__subtitle {
     flex: 0 0 100%;
     width: 100%;
@@ -1321,6 +1334,9 @@ Detail
 .detail-active .tunnel-year {
   color: rgba(255, 255, 255, 0.05);
   transform: translateY(-50%); }
+  @media (max-width: 575px) {
+    .detail-active .tunnel-year {
+      transform: none; } }
   .detail-active .tunnel-year__to:before {
     color: rgba(255, 255, 255, 0.05); }
 
