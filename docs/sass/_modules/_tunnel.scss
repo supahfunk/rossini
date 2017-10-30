@@ -180,6 +180,35 @@ Tunnel Background
 
 
 /*--------------------------------------------------
+Tunnel Gradient
+--------------------------------------------------*/
+.tunnel-gradient {
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    transition: all .7s $bezier;
+
+    &:before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 25%;
+        background: linear-gradient(to top, rgba(255, 255, 255, .5), rgba(255, 255, 255, 0));
+    }
+
+    .detail-active & {
+        opacity: 0;
+    }
+}
+
+
+/*--------------------------------------------------
 Tunnel Year
 --------------------------------------------------*/
 .tunnel-year {

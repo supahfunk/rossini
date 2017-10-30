@@ -92,8 +92,8 @@ gulp.task('webserver', function() {
         .pipe(webserver({
             livereload: false,
             directoryListing: true,
-            port: 5556,
-            open: 'http://localhost:5556/docs/index.html',
+            port: 40010,
+            open: 'http://localhost:40010/docs/index.html',
             fallback: 'docs/index.html'
         }));
 });
