@@ -605,18 +605,21 @@
         function onPlay() {
             $timeout(function() {
                 service.playing = true;
+                console.log('AnalyserService.onPlay', service);
             });
         }
 
         function onPause() {
             $timeout(function() {
                 service.playing = false;
+                console.log('AnalyserService.onPause', service);
             });
         }
 
         function onEnded() {
             $timeout(function() {
                 service.playing = false;
+                console.log('AnalyserService.onEnded', service);
             });
         }
 
@@ -644,12 +647,13 @@
             }
         }
 
-        function shouldPlay() {
+        function isActive() {
+            console.log('isActive', service.active, isPlaying());
             return service.active && isPlaying();
         }
 
         function isPlaying() {
-            return !audio.paused && !audio.ended && audio.currentTime > 0;
+            return !audio.paused && !audio.ended; //  && audio.currentTime > 0;
         }
 
         function toggle() {
@@ -730,7 +734,7 @@
         this.toggle = toggle;
         this.unlock = unlock;
         this.isPlaying = isPlaying;
-        this.shouldPlay = shouldPlay;
+        this.isActive = isActive;
 
     }]);
 
@@ -880,12 +884,14 @@
                 b: background.b,
                 delay: 0,
                 ease: Power2.easeInOut,
+                /*
                 onUpdate: function() {
                     if (!options.useBackground) {
                         var color = stepper.values.background.getHexString();
                         document.body.style.backgroundColor = '#' + color;
                     }
                 }
+                */
             }));
             tweens.push(TweenLite.to(stepper.values.lines, duration, {
                 r: lines.r,
@@ -923,7 +929,7 @@
             // setTweens(0.250);
             if (!options.useBackground) {
                 var color = stepper.values.background.getHexString();
-                document.body.style.backgroundColor = '#' + color;
+                $('.tunnel-gradient').css('background-color', '#' + color);
             }
         });
 
@@ -943,6 +949,10 @@
                 options.camera.cameraHeight = step.camera.cameraHeight;
                 options.camera.targetHeight = step.camera.targetHeight;
                 options.circle.position.copy(step.circle.position);
+                if (!options.useBackground) {
+                    var color = new THREE.Color(options.colors.background).getHexString();
+                    $('.tunnel-gradient').css('background-color', '#' + color);
+                }
                 $rootScope.$broadcast('onStepChanged', { current: index, previous: previous });
                 // console.log('onStepChanged', index, step);
                 setTweens(stepper.duration);
@@ -1035,7 +1045,7 @@
                             }
                         }
                     }, stepper.duration * 1000);
-                    // console.log('objects', objects);
+                    // console.log('objects', objects);                    
                 });
 
                 scope.$on('onOptionsChanged', function($scope) {
@@ -1070,7 +1080,7 @@
                     var far = 20000;
 
                     scene = new THREE.Scene();
-                    // scene.fog = new THREE.Fog(0x000000, 300, 1000);
+                    // scene.fog = new THREE.Fog(0x000000, 250, 800);
 
                     camera = new THREE.PerspectiveCamera(fov, ratio, near, far);
                     /*
@@ -1088,6 +1098,7 @@
                     renderer.setClearColor(0x000000, 0); // the default
                     // renderer.setClearColor(stepper.values.background, 1);
                     renderer.setSize(width, height);
+                    renderer.sortObjects = false; // avoid flickering effect
                     // renderer.shadowMap.enabled = true;
 
                     stats = new Stats();
@@ -1125,10 +1136,10 @@
                         opacity: 0.8,
                         transparent: true,
                         depthTest: false,
-                        sizeAttenuation: 1,
-                        near: 1,
-                        far: 100,
+                        sizeAttenuation: true,
                         resolution: resolution,
+                        near: camera.near,
+                        far: camera.far,
                         // blending: THREE.AdditiveBlending,
                         // side: THREE.DoubleSide,
                     });
@@ -1186,6 +1197,7 @@
                         position.y += stepper.values.cameraHeight;
 
                         object.material.uniforms.visibility.value = Math.min(1.0, stepper.values.pow + s);
+                        // object.material.uniforms.lineWidth.value = 5;
 
                         var target = cameraSpline.getPointAt(tpow);
                         target.y += stepper.values.targetHeight;
@@ -1211,6 +1223,7 @@
                 }
 
                 function getObjectCircles(index) {
+
                     var noiseMap1 = getPerlinNoise(options.circle.points, options.circle.lines);
                     var noiseMap2 = getPerlinNoise(options.circle.points, options.circle.lines);
 
@@ -1251,6 +1264,8 @@
                         opacity: 1,
                         transparent: true,
                         resolution: resolution,
+                        near: camera.near,
+                        far: camera.far,
                     });
 
                     var materialLine2 = new MeshLineMaterial({
@@ -1260,6 +1275,8 @@
                         opacity: 1,
                         transparent: true,
                         resolution: resolution,
+                        near: camera.near,
+                        far: camera.far,
                     });
 
                     object = new THREE.Object3D();
@@ -1452,7 +1469,7 @@
 
                             v.x = v.sincos.x * v.sincos.radius;
                             v.y = v.sincos.y * v.sincos.radius;
-                            v.z = 10 * g; // -l;
+                            v.z = 10 * g + l * 0.01; // -l;
                             // console.log(v.sincos.radius);
                         });
 
@@ -1549,6 +1566,7 @@
                 }
 
                 function render() {
+                    // scene.fog.color = stepper.values.background;
                     updateParallax();
                     analyser.update();
                     if (controls) {

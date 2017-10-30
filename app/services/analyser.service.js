@@ -43,18 +43,21 @@
         function onPlay() {
             $timeout(function() {
                 service.playing = true;
+                console.log('AnalyserService.onPlay', service);
             });
         }
 
         function onPause() {
             $timeout(function() {
                 service.playing = false;
+                console.log('AnalyserService.onPause', service);
             });
         }
 
         function onEnded() {
             $timeout(function() {
                 service.playing = false;
+                console.log('AnalyserService.onEnded', service);
             });
         }
 
@@ -82,12 +85,13 @@
             }
         }
 
-        function shouldPlay() {
+        function isActive() {
+            console.log('isActive', service.active, isPlaying());
             return service.active && isPlaying();
         }
 
         function isPlaying() {
-            return !audio.paused && !audio.ended && audio.currentTime > 0;
+            return !audio.paused && !audio.ended; //  && audio.currentTime > 0;
         }
 
         function toggle() {
@@ -168,7 +172,7 @@
         this.toggle = toggle;
         this.unlock = unlock;
         this.isPlaying = isPlaying;
-        this.shouldPlay = shouldPlay;
+        this.isActive = isActive;
 
     }]);
 

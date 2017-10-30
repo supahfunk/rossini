@@ -143,12 +143,14 @@
                 b: background.b,
                 delay: 0,
                 ease: Power2.easeInOut,
+                /*
                 onUpdate: function() {
                     if (!options.useBackground) {
                         var color = stepper.values.background.getHexString();
                         document.body.style.backgroundColor = '#' + color;
                     }
                 }
+                */
             }));
             tweens.push(TweenLite.to(stepper.values.lines, duration, {
                 r: lines.r,
@@ -186,7 +188,7 @@
             // setTweens(0.250);
             if (!options.useBackground) {
                 var color = stepper.values.background.getHexString();
-                document.body.style.backgroundColor = '#' + color;
+                $('.tunnel-gradient').css('background-color', '#' + color);
             }
         });
 
@@ -206,6 +208,10 @@
                 options.camera.cameraHeight = step.camera.cameraHeight;
                 options.camera.targetHeight = step.camera.targetHeight;
                 options.circle.position.copy(step.circle.position);
+                if (!options.useBackground) {
+                    var color = new THREE.Color(options.colors.background).getHexString();
+                    $('.tunnel-gradient').css('background-color', '#' + color);
+                }
                 $rootScope.$broadcast('onStepChanged', { current: index, previous: previous });
                 // console.log('onStepChanged', index, step);
                 setTweens(stepper.duration);
