@@ -20,8 +20,13 @@ Footer
         margin: 0 20px 15px;
     }
 
+    @include xxs {
+        margin-bottom: 10px;
+    }
+
     &__copy {
         color: $black-tit;
+        opacity: .7;
         transition: color .5s ease-in-out;
 
         @include sm {
@@ -35,11 +40,37 @@ Footer
         .dark-bg & {
             color: #fff;
         }
+
+        @include xs {
+            display: none;
+        }
+    }
+
+    &__copy--mobile {
+        display: none;
+
+        a {
+            color: $gold;
+        }
+
+        @include xs {
+            display: block;
+        }
+
+        @include xxs {
+            font-size: 13px;
+        }
     }
 
     .logo-fondazione-rossini {
         position: relative;
         z-index: 1;
+
+        @include xs {
+            overflow: hidden;
+            width: 50px;
+            height: 30px;
+        }
 
         img {
             position: absolute;
@@ -53,6 +84,11 @@ Footer
             @include sm {
                 width: 150px;
                 bottom: -10px;
+            }
+
+            @include xs {
+                width: 190px;
+                bottom: 0;
             }
 
             &.dark-logo {

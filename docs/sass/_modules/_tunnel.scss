@@ -180,6 +180,35 @@ Tunnel Background
 
 
 /*--------------------------------------------------
+Tunnel Gradient
+--------------------------------------------------*/
+.tunnel-gradient {
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    transition: all .7s $bezier;
+
+    &:before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 25%;
+        background: linear-gradient(to top, rgba(255, 255, 255, .5), rgba(255, 255, 255, 0));
+    }
+
+    .detail-active & {
+        opacity: 0;
+    }
+}
+
+
+/*--------------------------------------------------
 Tunnel Year
 --------------------------------------------------*/
 .tunnel-year {
@@ -193,31 +222,28 @@ Tunnel Year
     white-space: nowrap;
     width: 100%;
     left: 0;
-    top: 6%;
+    top: 75px;
     pointer-events: none;
     line-height: 1;
     transition: all 1.4s $bezier;
 
     @include lg {
-        top: 7%;
     }
 
     @include md {
-        top: 7%;
     }
 
     @include sm {
         font-size: 15vw;
-        top: 8%;
     }
 
     @include xs {
-        font-size: 14vw;
-        top: 8%;
+        font-size: 18vw;
+        top: 78px;
     }
 
     @include xxs {
-        top: 6%;
+        top: 48px;
     }
 
     & > div {
@@ -230,20 +256,39 @@ Tunnel Year
             content: '-';
             display: inline-block;
             color: rgba($gold, 0.45);
-            margin: 0 20px 0 -40px;
+            margin: 0 0.1em 0 -0.25em;
             transition: all 1.4s $bezier .1s;
             text-indent: 28px;
             font-size: 80%;
+
+            @include xs {
+                margin: 0 0 0 -40px;
+            }
         }
     }
 }
 
 .one-year {
-    top: 8%;
+    top: 90px;
+
+    @include sm {
+    }
+
+    @include xs {
+        top: 78px;
+    }
+
+    @include xxs {
+        top: 48px;
+    }
 
     .tunnel-year__from {
         transform: translate(50%) scale(1.2);
         text-indent: 50px;
+
+        @include xs {
+            text-indent: 0;
+        }
     }
 
     .tunnel-year__to {
@@ -294,6 +339,10 @@ Tunnel Slick
             opacity: 0;
             transition: all 1.2s $bezier;
 
+            @include xxs {
+                margin-top: 10px;
+            }
+
             &.active {
                 opacity: 1;
                 transform: translateY(0);
@@ -305,12 +354,19 @@ Tunnel Slick
         position: absolute;
         left: 5%;
         top: 45%;
-        max-width: 50%;
         color: $black-tit;
-        transition: all .2s $bezier .8s;
+        transition: all .5s $bezier .8s;
 
         .dark-bg & {
             color: #fff;
+        }
+
+        @include xs {
+            top: 65%!important;
+            left: 0!important;
+            width: 100%;
+            text-align: center;
+            padding: 0 20px;
         }
     }
 }
@@ -340,7 +396,6 @@ Tunnel Slick
     .tunnel-slick__header {
         left: 45%;
         top: 45%;
-        max-width: 55%;
         color: $black-tit;
     }
 }
@@ -351,7 +406,6 @@ Tunnel Slick
     .tunnel-slick__header {
         left: 5%;
         top: 45%;
-        max-width: 50%;
     }
 }
 
@@ -361,7 +415,6 @@ Tunnel Slick
     .tunnel-slick__header {
         left: 60%;
         top: 40%;
-        max-width: 40%;
         color: #fff;
     }
 }

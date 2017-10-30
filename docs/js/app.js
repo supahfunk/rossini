@@ -808,8 +808,8 @@
                     contrast: contrasts[i % contrasts.length],
                     colors: angular.copy(SceneOptions.colors),
                     camera: {
-                        cameraHeight: 0,
-                        targetHeight: 0,
+                        cameraHeight: -10,
+                        targetHeight: 30,
                     },
                     circle: {
                         position: new THREE.Vector3(0, 0, 0),

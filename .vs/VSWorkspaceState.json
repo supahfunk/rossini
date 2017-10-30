@@ -2,7 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\app",
-    "\\docs\\fonts"
+    "\\docs",
+    "\\docs\\fonts",
+    "\\docs\\sass",
+    "\\docs\\sass\\_modules"
   ],
+  "SelectedNode": "\\bundleconfig.json",
   "PreviewInSolutionExplorer": false
 }

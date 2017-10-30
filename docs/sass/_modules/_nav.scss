@@ -55,6 +55,10 @@ Nav
             overflow-y: auto;
             padding: 0 70px 70px;
 
+            @include xs {
+                padding: 0 20px 70px;
+            }
+
             &:before,
             &:after {
                 content: '';
@@ -224,6 +228,10 @@ Nav
                 opacity: 0;
                 transition: all .5s $bezier .7s;
 
+                @include xs {
+                    transition-delay: .8s;
+                }
+
                 .open-nav & {
                     opacity: 1;
                     transform: translateZ(0);
@@ -244,6 +252,32 @@ Nav
                         svg {
                             fill: $violet;
                         }
+                    }
+                }
+            }
+
+            .extra-mobile {
+                display: none;
+
+                @include xs {
+                    display: block;
+                    padding: 30px;
+                    font-size: 13px;
+                    line-height: 1.4;
+                    color: rgba(0, 0, 0, .7);
+                    transform: translate3d(0, -20px, 0);
+                    opacity: 0;
+                    transition: all .5s $bezier .7s;
+
+                    .open-nav & {
+                        opacity: 1;
+                        transform: translateZ(0);
+                    }
+
+                    a {
+                        margin-top: 5px;
+                        color: $gold;
+                        display: block;
                     }
                 }
             }

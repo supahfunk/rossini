@@ -10,11 +10,28 @@ Typography
     line-height: 1.2;
 
     @include lg {
+        font-size: 4vw;
         line-height: 1.3;
     }
 
     @include md {
-        font-size: 4vw;
+        font-size: 4.5vw;
+        line-height: 1.4;
+    }
+
+    @include sm {
+        font-size: 5vw;
+        line-height: 1.5;
+    }
+
+    @include xs {
+        font-size: 40px;
+        line-height: 1.6;
+    }
+
+    @include xxs {
+        font-size: 30px;
+        line-height: 1.2;
     }
 }
 
@@ -42,6 +59,10 @@ Buttons
         font-size: 14px;
     }
 
+    @include xxs {
+        font-size: 13px;
+    }
+
     .dark-bg & {
         color: #fff;
     }
@@ -60,6 +81,11 @@ Buttons
         @include md {
             height: 3px;
             bottom: 2px;
+        }
+
+        @include xxs {
+            height: 2px;
+            bottom: 3px;
         }
     }
 

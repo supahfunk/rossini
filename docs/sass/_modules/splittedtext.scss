@@ -1,3 +1,5 @@
+@import "variables";
+
 /*--------------------------------------------------
 Splitted Text
 --------------------------------------------------*/
@@ -8,10 +10,18 @@ Splitted Text
         opacity: 1;
     }
 
+    @include xs {
+        text-align: center;
+    }
+
     .splitted-row {
         overflow: hidden;
         line-height: 1;
         margin-bottom: -20px;
+
+        @include xs {
+            margin-bottom: -10px;
+        }
 
         .splitted-word {
             overflow: hidden;
