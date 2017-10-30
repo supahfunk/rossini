@@ -492,6 +492,8 @@
                         */
                     }
 
+                    var dummyMobilePosition = new THREE.Vector3(0, 100, 0);
+
                     function updateCircle() {
 
                         material.opacity = state.pow;
@@ -532,6 +534,8 @@
 
                         if (width > 1023) {
                             dummy.position.copy(step.circle.position);
+                        } else {
+                            dummy.position.copy(dummyMobilePosition);
                         }
 
                         dummy.rotation.x += ((parallax.y * 0.00625) - dummy.rotation.x) / 12;
