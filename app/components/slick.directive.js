@@ -62,9 +62,9 @@
 
                 function onInit() {
                     // console.log('onInit');
-                    $timeout(function() {
+                    setTimeout(function() {
                         showLetters();
-                    }, 1000);
+                    }, 500);
                     scope.$root.$broadcast('onSlickInit');
                 }
 
@@ -78,7 +78,7 @@
                 function onAfterChange(event, slick, currentSlide) {
                     stepper.slicking = false;
                     showLetters();
-                    console.log('onAfterChange');
+                    // console.log('onAfterChange');
                     scope.$root.$broadcast('onSlickAfterChange', { current: currentSlide });
                 }
 

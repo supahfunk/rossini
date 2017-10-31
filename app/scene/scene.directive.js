@@ -94,7 +94,6 @@
                     });
 
                     renderer.setClearColor(0x000000, 0); // the default
-                    // renderer.setClearColor(stepper.values.background, 1);
                     renderer.setSize(width, height);
                     renderer.sortObjects = false; // avoid flickering effect
                     // renderer.shadowMap.enabled = true;
@@ -568,7 +567,6 @@
                 }
 
                 function render() {
-                    // scene.fog.color = stepper.values.background;
                     updateParallax();
                     analyser.update();
                     if (controls) {

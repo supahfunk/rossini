@@ -105,8 +105,6 @@
             gui.add(options, 'randomize');
             gui.add(options, 'saveJson');
 
-            onOptionsChanged();
-
             angular.element(window).on('keydown', onKeyDown);
 
             function onKeyDown(e) {

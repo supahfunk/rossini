@@ -178,8 +178,6 @@
             gui.add(options, 'randomize');
             gui.add(options, 'saveJson');
 
-            onOptionsChanged();
-
             angular.element(window).on('keydown', onKeyDown);
 
             function onKeyDown(e) {
@@ -296,9 +294,9 @@
 
                 function onInit() {
                     // console.log('onInit');
-                    $timeout(function() {
+                    setTimeout(function() {
                         showLetters();
-                    }, 1000);
+                    }, 500);
                     scope.$root.$broadcast('onSlickInit');
                 }
 
@@ -312,7 +310,7 @@
                 function onAfterChange(event, slick, currentSlide) {
                     stepper.slicking = false;
                     showLetters();
-                    console.log('onAfterChange');
+                    // console.log('onAfterChange');
                     scope.$root.$broadcast('onSlickAfterChange', { current: currentSlide });
                 }
 
@@ -806,74 +804,6 @@
             targetHeight: options.camera.targetHeight,
         };
 
-        function getItems() {
-            var titles = [
-                'Il periodo francese:<br> la nascita della <em>Grand Opéra</em>',
-                'Il Barbiere di Siviglia<br> al teatro Argentina<br> di Roma',
-                'Il Silenzio',
-            ];
-            var paragraphs = [
-                'Il giovane Gioacchino',
-                'Il folgorante debutto',
-                'La frenesia della produzione',
-                'Sulle strade di Parigi',
-            ];
-            var audioTitles = [
-                'Il Barbiere di Siviglia',
-                'L\'italiana in Algeri',
-            ];
-            var audios = [
-                'audio/07-rossini-192.mp3',
-                'audio/08-rossini-192.mp3',
-            ];
-            var backgrounds = [
-                'img/tunnel-1.jpg',
-                'img/tunnel-2.jpg',
-                'img/tunnel-3.jpg',
-            ];
-            var contrasts = [
-                'light-bg',
-                'light-bg',
-                'dark-bg',
-            ];
-            var items = new Array(options.ribbon.steps).fill().map(function(v, i) {
-                var item = {
-                    id: i + 1,
-                    title: titles[i % titles.length],
-                    url: 'view.html',
-                    chapter: 'Passione, Genio e Silenzio',
-                    paragraph: paragraphs[Math.floor(i / 3) % paragraphs.length],
-                    years: i % 4 === 0 ? {
-                        from: 1812 + Math.round(Math.random() * 50),
-                    } : {
-                        from: 1812 + Math.round(Math.random() * 50),
-                        to: 1812 + Math.round(Math.random() * 50),
-                    },
-                    background: backgrounds[i % backgrounds.length],
-                    contrast: contrasts[i % contrasts.length],
-                    colors: angular.copy(SceneOptions.colors),
-                    camera: {
-                        cameraHeight: -10,
-                        targetHeight: 30,
-                    },
-                    circle: {
-                        position: new THREE.Vector3(0, 0, 0),
-                        texture: 'img/rossini-01.png',
-                    },
-                    audio: i > 0 ? {
-                        url: audios[i % audios.length],
-                        title: audioTitles[i % audioTitles.length],
-                        orchestra: 'Academy of St Martin in the Fields Orchestra',
-                    } : null,
-                };
-                if (item.contrast === 'dark-bg') {
-                    item.colors.background = 0x111111;
-                }
-                return item;
-            });
-            return items;
-        }
-
         function init(yearsKey) {
             var deferred = $q.defer();
             var index = 0;
@@ -900,6 +830,7 @@
                             index = i;
                         }
                         item.titleTrusted = $sce.trustAsHtml(item.title);
+                        item.contrast = getContrast(item.colors.background);
                         item.circle.position = new THREE.Vector3().copy(item.circle.position);
                         steps.push(item);
                     });
@@ -941,21 +872,6 @@
                     }
                 },
             }));
-            tweens.push(TweenLite.to(stepper.values.background, duration, {
-                r: background.r,
-                g: background.g,
-                b: background.b,
-                delay: 0,
-                ease: Power2.easeInOut,
-                /*
-                onUpdate: function() {
-                    if (!options.useBackground) {
-                        var color = stepper.values.background.getHexString();
-                        document.body.style.backgroundColor = '#' + color;
-                    }
-                }
-                */
-            }));
             tweens.push(TweenLite.to(stepper.values.lines, duration, {
                 r: lines.r,
                 g: lines.g,
@@ -990,10 +906,8 @@
             stepper.values.lines.copy(new THREE.Color(step.colors.lines));
             stepper.values.overLines.copy(new THREE.Color(step.colors.overLines));
             // setTweens(0.250);
-            if (!options.useBackground) {
-                var color = stepper.values.background.getHexString();
-                $('.tunnel-gradient').css('background-color', '#' + color);
-            }
+            console.log('StepperService.onOptionsChanged', index);
+            setBackground(index);
         });
 
         $rootScope.$on('onSlickBeforeChange', function($scope, slick) {
@@ -1001,7 +915,7 @@
         });
 
         function setStep(index) {
-            console.log('setStep');
+            console.log('StepperService.setStep', index);
             $timeout(function() {
                 var previous = stepper.current || 0;
                 stepper.current = current = index;
@@ -1013,10 +927,7 @@
                 options.camera.cameraHeight = step.camera.cameraHeight;
                 options.camera.targetHeight = step.camera.targetHeight;
                 options.circle.position.copy(step.circle.position);
-                if (!options.useBackground) {
-                    var color = new THREE.Color(options.colors.background).getHexString();
-                    $('.tunnel-gradient').css('background-color', '#' + color);
-                }
+                setBackground(index);
                 $rootScope.$broadcast('onStepChanged', { current: index, previous: previous });
                 // console.log('onStepChanged', index, step);
                 setTweens(stepper.duration);
@@ -1052,17 +963,96 @@
         }
 
         function navStep(index) {
-            console.log('cambio pagina');
             setStep(index);
             $rootScope.$broadcast('onGoStep', index);
-
             $timeout(function() {
                 var $active = $('.tunnel-nav__step.active'),
                     position = $active.position().top,
                     width = $active.width() + 16;
-
                 $('.tunnel-nav__follower').css({ width: width + 'px', '-webkit-transform': 'translateY(' + position + 'px)', '-moz-transform': 'translateY(' + position + 'px)', '-ms-transform': 'translateY(' + position + 'px)', 'transform': 'translateY(' + position + 'px)' });
             });
+        }
+
+        function getItems() {
+            var titles = [
+                'Il periodo francese:<br> la nascita della <em>Grand Opéra</em>',
+                'Il Barbiere di Siviglia<br> al teatro Argentina<br> di Roma',
+                'Il Silenzio',
+            ];
+            var paragraphs = [
+                'Il giovane Gioacchino',
+                'Il folgorante debutto',
+                'La frenesia della produzione',
+                'Sulle strade di Parigi',
+            ];
+            var audioTitles = [
+                'Il Barbiere di Siviglia',
+                'L\'italiana in Algeri',
+            ];
+            var audios = [
+                'audio/07-rossini-192.mp3',
+                'audio/08-rossini-192.mp3',
+            ];
+            var backgrounds = [
+                'img/tunnel-1.jpg',
+                'img/tunnel-2.jpg',
+                'img/tunnel-3.jpg',
+            ];
+            var items = new Array(options.ribbon.steps).fill().map(function(v, i) {
+                var item = {
+                    id: i + 1,
+                    title: titles[i % titles.length],
+                    url: 'view.html',
+                    chapter: 'Passione, Genio e Silenzio',
+                    paragraph: paragraphs[Math.floor(i / 3) % paragraphs.length],
+                    years: i % 4 === 0 ? {
+                        from: 1812 + Math.round(Math.random() * 50),
+                    } : {
+                        from: 1812 + Math.round(Math.random() * 50),
+                        to: 1812 + Math.round(Math.random() * 50),
+                    },
+                    background: backgrounds[i % backgrounds.length],
+                    colors: angular.copy(SceneOptions.colors),
+                    camera: {
+                        cameraHeight: -10,
+                        targetHeight: 30,
+                    },
+                    circle: {
+                        position: new THREE.Vector3(0, 0, 0),
+                        texture: 'img/rossini-01.png',
+                    },
+                    audio: i > 0 ? {
+                        url: audios[i % audios.length],
+                        title: audioTitles[i % audioTitles.length],
+                        orchestra: 'Academy of St Martin in the Fields Orchestra',
+                    } : null,
+                };
+                if (i > 0 && i % 3 === 0) {
+                    item.colors.background = 0x111111;
+                }
+                return item;
+            });
+            return items;
+        }
+
+        function setBackground(index) {
+            if (!options.useBackground) {
+                var step = stepper.getStepAtIndex(index);
+                var color = new THREE.Color(step.colors.background).getHexString();
+                $('.tunnel-gradient').css('background-color', '#' + color);
+                console.log('StepperService.setBackground', index, color, step.contrast);
+            }
+        }
+
+        function getContrast(value) {
+            var color = new THREE.Color(value);
+            var r = parseInt(color.r * 255);
+            var g = parseInt(color.g * 255);
+            var b = parseInt(color.b * 255);
+            var pow = r * 0.299 + g * 0.587 + b * 0.114;
+            var contrast = (pow > 186) ? 'light-bg' : 'dark-bg';
+            console.log('StepperService.getContrast', color.getHexString(), pow, contrast);
+            return contrast;
         }
 
         this.init = init;
@@ -1175,7 +1165,6 @@
                     });
 
                     renderer.setClearColor(0x000000, 0); // the default
-                    // renderer.setClearColor(stepper.values.background, 1);
                     renderer.setSize(width, height);
                     renderer.sortObjects = false; // avoid flickering effect
                     // renderer.shadowMap.enabled = true;
@@ -1649,7 +1638,6 @@
                 }
 
                 function render() {
-                    // scene.fog.color = stepper.values.background;
                     updateParallax();
                     analyser.update();
                     if (controls) {
