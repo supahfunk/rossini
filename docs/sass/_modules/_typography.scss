@@ -54,6 +54,9 @@ Buttons
     text-decoration: none;
     padding: 6px 0;
     outline: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
 
     @include md {
         font-size: 14px;

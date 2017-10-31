@@ -1,4 +1,4 @@
-/*--------------------------------------------------
+﻿/*--------------------------------------------------
 Reset
 --------------------------------------------------*/
 html {
@@ -184,7 +184,10 @@ Buttons
   font-size: 16px;
   text-decoration: none;
   padding: 6px 0;
-  outline: none; }
+  outline: none;
+  background: transparent;
+  border: none;
+  cursor: pointer; }
   @media (max-width: 1280px) {
     .inline-btn {
       font-size: 14px; } }
@@ -827,6 +830,8 @@ Slick
     background: transparent;
     color: transparent;
     top: 50%;
+    -webkit-transform: translate(0, -50%);
+    -ms-transform: translate(0, -50%);
     transform: translate(0, -50%);
     padding: 0;
     border: none;
@@ -1501,3 +1506,4 @@ Footer
         opacity: 0; }
       .dark-bg .footer .logo-fondazione-rossini img.light-logo {
         opacity: 1; }
+

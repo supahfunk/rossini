@@ -878,7 +878,7 @@
             var deferred = $q.defer();
             var index = 0;
             if (steps.length) {
-                angular.forEach(items, function(item, i) {
+                angular.forEach(steps, function(item, i) {
                     if (item.years.key === yearsKey) {
                         index = i;
                     }
