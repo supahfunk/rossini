@@ -21,10 +21,10 @@
         }
 
         function onDeviceOrientation(e) {
-            var x = (e.alpha) / 45;
-            var y = (e.beta - 90) / 45;
-            var z = (e.gamma) / 45;
-            console.log('onDeviceOrientation', x, y, z);
+            var x = (e.alpha) / 90;
+            var y = (e.beta - 90) / 90;
+            var z = (e.gamma) / 90;
+            // console.log('onDeviceOrientation', x, y, z);
             set(x, y, z);
         }
 
@@ -32,7 +32,7 @@
             var x = (e.acceleration.x) / 1;
             var y = (e.acceleration.y) / 1;
             var z = (e.acceleration.z) / 1;
-            console.log('onDeviceMotion', x, y, z);
+            // console.log('onDeviceMotion', x, y, z);
             set(x, y, z);
         }
 
