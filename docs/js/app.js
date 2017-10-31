@@ -57,7 +57,7 @@
 
         });
 
-        $routeProvider.otherwise('/test');
+        $routeProvider.otherwise('/years');
 
     }]);
 
@@ -562,7 +562,6 @@
         function updateParallax() {
             $timeout(function() {
                 motion.update();
-                console.log(motion);
             });
         }
 
@@ -954,7 +953,6 @@
                 */
                 window.addEventListener("deviceorientation", onDeviceOrientation, true);
             }
-
             /*
             if (window.DeviceMotionEvent) {
                 var motion = FULLTILT.getDeviceMotion({ 'type': 'world' }).then(function(controller) {
@@ -963,8 +961,8 @@
                     console.log('MotionService.getDeviceMotion', error);
                 });
                 window.addEventListener('devicemotion', onDeviceMotion, true);
-            }    */
-
+            }    
+            */
         }
 
         function onDeviceOrientation(e) {
@@ -1351,7 +1349,7 @@
 
                 function updateParallax() {
                     if (options.device.mobile) {
-                        motion.update();
+                        // motion.update();
                         parallax.x = (motion.x * 20);
                         parallax.y = (motion.y * 20);
                     } else {

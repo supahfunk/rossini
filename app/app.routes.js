@@ -37,7 +37,7 @@
 
         });
 
-        $routeProvider.otherwise('/test');
+        $routeProvider.otherwise('/years');
 
     }]);
 

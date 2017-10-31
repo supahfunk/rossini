@@ -13,7 +13,6 @@
         function updateParallax() {
             $timeout(function() {
                 motion.update();
-                console.log(motion);
             });
         }
 
