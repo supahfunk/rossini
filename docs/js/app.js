@@ -813,17 +813,16 @@
                 // Obtain the *screen-adjusted* normalized device rotation
                 // as Quaternion, Rotation Matrix and Euler Angles objects
                 // from our FULLTILT.DeviceOrientation object
-                var quaternion = device.getScreenAdjustedQuaternion();
-                var matrix = device.getScreenAdjustedMatrix();
-                var euler = device.getScreenAdjustedEuler();
-
-                // Do something with our quaternion, matrix, euler objects...
-                console.debug(quaternion);
-                console.debug(matrix);
-                console.debug(euler);
+                // var quaternion = device.getScreenAdjustedQuaternion();
+                // var matrix = device.getScreenAdjustedMatrix();
+                var e = device.getScreenAdjustedEuler();
+                var x = (e.alpha) / 90;
+                var y = (e.beta - 90) / 90;
+                var z = (e.gamma) / 90;
+                // console.log('onDeviceOrientation', x, y, z);
+                set(x, y, z);
             }
         }
-
 
         function onDeviceOrientation(e) {
             var x = (e.alpha) / 90;
@@ -841,15 +840,17 @@
             set(x, y, z);
         }
 
+        // world (compass), game (non compass)
+
         if (window.DeviceOrientationEvent) {
-            var orientation = FULLTILT.getDeviceOrientation({ 'type': 'world' }).then(function(controller) {
+            var orientation = FULLTILT.getDeviceOrientation({ 'type': 'game' }).then(function(controller) {
                 service.device = controller;
             }).catch(function(error) {
                 console.log('MotionService.getDeviceOrientation', error);
             });
             // window.addEventListener("deviceorientation", onDeviceOrientation, true);
         } else if (window.DeviceMotionEvent) {
-            var motion = FULLTILT.getDeviceMotion({ 'type': 'world' }).then(function(controller) {
+            var motion = FULLTILT.getDeviceMotion({ 'type': 'game' }).then(function(controller) {
                 service.device = controller;
             }).catch(function(error) {
                 console.log('MotionService.getDeviceOrientation', error);
