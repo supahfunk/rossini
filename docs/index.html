@@ -253,11 +253,10 @@
                 <div class="tunnel-slick" slick-tunnel="stepper.steps">
                     <div id="tunnel-{{item.id}}" class="tunnel-slick__item" data-from="1832" data-to="false" data-bg="light" ng-repeat="item in stepper.steps track by $index">
                         <div class="tunnel-slick__intro" ng-if="$first">
-                            
+
                             <div class="intro-box">
                                 <div class="big-title">
-                                    Please turn<br />
-                                    your volume up
+                                    Please turn<br /> your volume up
                                 </div>
                                 <div class="img">
                                     <img src="img/intro.png" alt="" />
@@ -274,7 +273,7 @@
                                         <button ng-click="stepper.navStep(1)" type="button" class="inline-btn">Start experience</button>
                                     </div>
                                 </div>
-                                
+
                             </div>
                         </div>
                         <div class="tunnel-slick__header" ng-if="!$first">
@@ -318,6 +317,12 @@
             </footer>
             <!-- /Footer -->
         </div>
+    </script>
+
+    <script type="text/ng-template" id="partials/test.html">
+        <div><b>motion.x</b> <span ng-bind="motion.x"></span></div>
+        <div><b>motion.y</b> <span ng-bind="motion.y"></span></div>
+        <div><b>motion.z</b> <span ng-bind="motion.z"></span></div>
     </script>
 
     <!-- SVG Sprite -->

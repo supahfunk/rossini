@@ -31,26 +31,29 @@
         $locationProvider.html5Mode(false);
         $locationProvider.hashPrefix('');
 
-        $routeProvider.when('/years/', {
+        $routeProvider.when('/test', {
+            templateUrl: function() {
+                return 'partials/test.html';
+            },
+            controller: 'TestCtrl',
+
+        }).when('/years', {
             templateUrl: function() {
                 return 'partials/years.html';
             },
             controller: 'YearsCtrl',
-            controllerAs: 'yearsCtrl',
 
         }).when('/years/:yearsKey', {
             templateUrl: function() {
                 return 'partials/years.html';
             },
             controller: 'YearsCtrl',
-            controllerAs: 'yearsCtrl',
 
         }).when('/years/:yearsKey/detail', {
             templateUrl: function() {
                 return 'partials/years.html';
             },
             controller: 'YearsCtrl',
-            controllerAs: 'yearsCtrl',
 
         });
 
@@ -551,6 +554,35 @@
 
     var app = angular.module('app');
 
+    app.controller('TestCtrl', ['$scope', '$route', '$routeParams', '$ngSilentLocation', 'MotionService', '$timeout', function($scope, $route, $routeParams, $ngSilentLocation, MotionService, $timeout) {
+
+        var motion = MotionService;
+        motion.init();
+
+        function updateParallax() {
+            $timeout(function() {
+                motion.update();
+                console.log(motion);
+            });
+        }
+
+        function loop() {
+            updateParallax();
+            requestAnimationFrame(loop);
+        }
+
+        $scope.motion = motion;
+
+    }]);
+
+}());
+/* global angular */
+
+(function() {
+    "use strict";
+
+    var app = angular.module('app');
+
     app.controller('YearsCtrl', ['$scope', '$route', '$routeParams', '$ngSilentLocation', 'SceneOptions', 'StepperService', 'AnalyserService', 'DatGui', '$timeout', function($scope, $route, $routeParams, $ngSilentLocation, SceneOptions, StepperService, AnalyserService, DatGui, $timeout) {
 
         var scene = {
@@ -863,6 +895,25 @@
                 // console.log('onDeviceOrientation', x, y, z);
                 set(x, y, z);
             }
+            console.log('MotionService.update', device);
+        }
+
+        function addListeners() {
+            if (window.DeviceOrientationEvent) {
+                var orientation = FULLTILT.getDeviceOrientation({ 'type': 'game' }).then(function(controller) {
+                    service.device = controller;
+                }).catch(function(error) {
+                    console.log('MotionService.getDeviceOrientation', error);
+                });
+                // window.addEventListener("deviceorientation", onDeviceOrientation, true);
+            } else if (window.DeviceMotionEvent) {
+                var motion = FULLTILT.getDeviceMotion({ 'type': 'game' }).then(function(controller) {
+                    service.device = controller;
+                }).catch(function(error) {
+                    console.log('MotionService.getDeviceMotion', error);
+                });
+                // window.addEventListener('devicemotion', onDeviceMotion, true);
+            }
         }
 
         function onDeviceOrientation(e) {
@@ -881,28 +932,9 @@
             set(x, y, z);
         }
 
-        function addListeners() {
-            // world (compass), game (non compass)
-            if (window.DeviceOrientationEvent) {
-                var orientation = FULLTILT.getDeviceOrientation({ 'type': 'game' }).then(function(controller) {
-                    service.device = controller;
-                }).catch(function(error) {
-                    console.log('MotionService.getDeviceOrientation', error);
-                });
-                // window.addEventListener("deviceorientation", onDeviceOrientation, true);
-            } else if (window.DeviceMotionEvent) {
-                var motion = FULLTILT.getDeviceMotion({ 'type': 'game' }).then(function(controller) {
-                    service.device = controller;
-                }).catch(function(error) {
-                    console.log('MotionService.getDeviceOrientation', error);
-                });
-                // window.addEventListener('devicemotion', onDeviceMotion, true);
-            }
-        }
-
         function init() {
-            console.log('MotionService.init');
             addListeners();
+            console.log('MotionService.init');
         }
 
     }]);

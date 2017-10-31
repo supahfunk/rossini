@@ -11,26 +11,29 @@
         $locationProvider.html5Mode(false);
         $locationProvider.hashPrefix('');
 
-        $routeProvider.when('/years/', {
+        $routeProvider.when('/test', {
+            templateUrl: function() {
+                return 'partials/test.html';
+            },
+            controller: 'TestCtrl',
+
+        }).when('/years', {
             templateUrl: function() {
                 return 'partials/years.html';
             },
             controller: 'YearsCtrl',
-            controllerAs: 'yearsCtrl',
 
         }).when('/years/:yearsKey', {
             templateUrl: function() {
                 return 'partials/years.html';
             },
             controller: 'YearsCtrl',
-            controllerAs: 'yearsCtrl',
 
         }).when('/years/:yearsKey/detail', {
             templateUrl: function() {
                 return 'partials/years.html';
             },
             controller: 'YearsCtrl',
-            controllerAs: 'yearsCtrl',
 
         });
 
