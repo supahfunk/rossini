@@ -43,21 +43,21 @@
         function onPlay() {
             $timeout(function() {
                 service.playing = true;
-                console.log('AnalyserService.onPlay', service);
+                // console.log('AnalyserService.onPlay', service);
             });
         }
 
         function onPause() {
             $timeout(function() {
                 service.playing = false;
-                console.log('AnalyserService.onPause', service);
+                // console.log('AnalyserService.onPause', service);
             });
         }
 
         function onEnded() {
             $timeout(function() {
                 service.playing = false;
-                console.log('AnalyserService.onEnded', service);
+                // console.log('AnalyserService.onEnded', service);
             });
         }
 
@@ -86,7 +86,7 @@
         }
 
         function isActive() {
-            console.log('isActive', service.active, isPlaying());
+            // console.log('isActive', service.active, isPlaying());
             return service.active && isPlaying();
         }
 

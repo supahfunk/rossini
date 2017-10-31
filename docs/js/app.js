@@ -3,7 +3,7 @@
 (function() {
     "use strict";
 
-    var app = angular.module('app', ['ngRoute', 'ngSanitize', 'jsonFormatter']);
+    var app = angular.module('app', ['ngSilent', 'ngRoute', 'ngSanitize', 'jsonFormatter']);
 
 }());
 /* global angular */
@@ -25,11 +25,36 @@
 
     var app = angular.module('app');
 
-    app.config(['$locationProvider', function($locationProvider) {
+    app.config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
 
         // HTML5 MODE url writing method (false: #/anchor/use, true: /html5/url/use)
-        $locationProvider.html5Mode(true);
+        $locationProvider.html5Mode(false);
         $locationProvider.hashPrefix('');
+
+        $routeProvider.when('/years/', {
+            templateUrl: function() {
+                return 'partials/years.html';
+            },
+            controller: 'YearsCtrl',
+            controllerAs: 'yearsCtrl',
+
+        }).when('/years/:yearsKey', {
+            templateUrl: function() {
+                return 'partials/years.html';
+            },
+            controller: 'YearsCtrl',
+            controllerAs: 'yearsCtrl',
+
+        }).when('/years/:yearsKey/detail', {
+            templateUrl: function() {
+                return 'partials/years.html';
+            },
+            controller: 'YearsCtrl',
+            controllerAs: 'yearsCtrl',
+
+        });
+
+        $routeProvider.otherwise('/years');
 
     }]);
 
@@ -214,7 +239,7 @@
 
     var app = angular.module('app');
 
-    app.directive('slickTunnel', ['StepperService', 'SceneOptions', function(StepperService, SceneOptions) {
+    app.directive('slickTunnel', ['$timeout', 'StepperService', 'SceneOptions', function($timeout, StepperService, SceneOptions) {
         return {
             restrict: 'A',
             link: function(scope, element, attributes) {
@@ -238,7 +263,8 @@
                         infinite: false,
                         draggable: false,
                         asNavFor: options.useBackground ? '.tunnel-bg' : null,
-                        cssEase: 'cubic-bezier(0.7, 0, 0.3, 1)'
+                        cssEase: 'cubic-bezier(0.7, 0, 0.3, 1)',
+                        initialSlide: stepper.current,
                     });
                 }
 
@@ -270,8 +296,10 @@
 
                 function onInit() {
                     // console.log('onInit');
-                    showLetters();
-                    scope.$root.$broadcast('onSlickInit', { current: 0 });
+                    $timeout(function() {
+                        showLetters();
+                    }, 1000);
+                    scope.$root.$broadcast('onSlickInit');
                 }
 
                 function onBeforeChange(event, slick, currentSlide, nextSlide) {
@@ -522,7 +550,7 @@
 
     var app = angular.module('app');
 
-    app.controller('RootCtrl', ['$scope', 'SceneOptions', 'StepperService', 'AnalyserService', 'DatGui', '$timeout', function($scope, SceneOptions, StepperService, AnalyserService, DatGui, $timeout) {
+    app.controller('YearsCtrl', ['$scope', '$route', '$routeParams', '$ngSilentLocation', 'SceneOptions', 'StepperService', 'AnalyserService', 'DatGui', '$timeout', function($scope, $route, $routeParams, $ngSilentLocation, SceneOptions, StepperService, AnalyserService, DatGui, $timeout) {
 
         var scene = {
             objects: {},
@@ -534,28 +562,41 @@
         var options = scene.options;
         var stepper = scene.stepper;
 
-        stepper.init().then(function() {
+        stepper.init($routeParams.yearsKey).then(function() {
             $scope.scene = scene;
             $scope.stepper = stepper;
             $scope.audio = AnalyserService;
+            if ($route.current.$$route.originalPath.indexOf('/detail') !== -1) {
+                $timeout(function() {
+                    openDetail();
+                });
+            }
             var gui = new DatGui();
         });
 
         var detail = {};
 
-        $scope.openDetail = function() {
-            $.get(stepper.step.url, function(data) {
-                $timeout(function() {
-                    detail.active = true;
-                    detail.html = data;
-                });
-            });
+        function openDetail() {
+            $ngSilentLocation.silent(stepper.step.detailUrl);
+            detail.active = true;
             return false;
-        };
+        }
+
+        function closeDetail() {
+            $ngSilentLocation.silent(stepper.step.url);
+            detail.active = false;
+            return false;
+        }
 
         $scope.detail = detail;
+        $scope.openDetail = openDetail;
+        $scope.closeDetail = closeDetail;
 
-        console.log('RootCtrl', SceneOptions);
+        $scope.$on('onStepChanged', function() {
+            $ngSilentLocation.silent(stepper.step.url);
+        });
+
+        // console.log('YearsCtrl', $route, $routeParams);
 
     }]);
 
@@ -605,21 +646,21 @@
         function onPlay() {
             $timeout(function() {
                 service.playing = true;
-                console.log('AnalyserService.onPlay', service);
+                // console.log('AnalyserService.onPlay', service);
             });
         }
 
         function onPause() {
             $timeout(function() {
                 service.playing = false;
-                console.log('AnalyserService.onPause', service);
+                // console.log('AnalyserService.onPause', service);
             });
         }
 
         function onEnded() {
             $timeout(function() {
                 service.playing = false;
-                console.log('AnalyserService.onEnded', service);
+                // console.log('AnalyserService.onEnded', service);
             });
         }
 
@@ -648,7 +689,7 @@
         }
 
         function isActive() {
-            console.log('isActive', service.active, isPlaying());
+            // console.log('isActive', service.active, isPlaying());
             return service.active && isPlaying();
         }
 
@@ -833,17 +874,27 @@
             return items;
         }
 
-        function init() {
+        function init(yearsKey) {
             var deferred = $q.defer();
             $http.get('json/rossini.js').then(function(response) {
                 // var items = response.data;
+                var index = 0;
                 var items = getItems();
-                angular.forEach(items, function(item) {
+                angular.forEach(items, function(item, i) {
+                    item.years.key = String(i + 1); // String(item.years.to ? item.years.from + '-' + item.years.to : item.years.from); // da riattivare !!!
+                    item.url = '/years/' + item.years.key;
+                    item.detailUrl = item.url + '/detail';
+                    // console.log('stepper.init', item.years.key, yearsKey);
+                    if (item.years.key === yearsKey) {
+                        index = i;
+                    }
                     item.titleTrusted = $sce.trustAsHtml(item.title);
                     item.circle.position = new THREE.Vector3().copy(item.circle.position);
                     steps.push(item);
                 });
-                setStep(0);
+                values.pow = index / steps.length;
+                stepper.current = current = index;
+                setStep(index);
                 // console.log('StepperService.load', steps);
                 deferred.resolve(steps);
 
@@ -1489,7 +1540,7 @@
                         l.material.uniforms.visibility.value= params.animateVisibility ? (time/3000) % 1.0 : 1.0;
                         
                         if (iterator === 60 && g === 2 && l === 0) {
-                            console.log('vertices', geometry.vertices.map(function(v) { return v.x + ',' + v.y; }));
+                            // console.log('vertices', geometry.vertices.map(function(v) { return v.x + ',' + v.y; }));
                         }
                         */
                     }
@@ -1785,8 +1836,8 @@
             overLines: 0x3353a4,
         },
         camera: {
-            cameraHeight: 0,
-            targetHeight: 5,
+            cameraHeight: -10,
+            targetHeight: 30,
         },
         ribbon: {
             steps: 12,

@@ -28,269 +28,271 @@
     <link href="css/app.min.css" rel="stylesheet" />
 </head>
 
-<body ng-controller="RootCtrl" ng-class="{ 'light-bg' : stepper.step.contrast == 'light-bg', 'dark-bg': stepper.step.contrast == 'dark-bg', 'detail-active dark-bg': detail.active }">
+<body>
 
-    <div class="wrapper" ng-cloak>
+    <ng-view ng-cloak></ng-view>
 
-        <!-- Nav -->
-        <nav class="nav">
-            <div class="main-nav">
-                <div class="main-nav__scroll" scrollbar>
-                    <img src="img/200Rossini150.svg" class="logo" />
-                    <ul>
-                        <li>
-                            <a href="#">Passione, Genio e Silenzio</a>
-                            <ul>
-                                <li>
-                                    <a href="#">Il giovane Gioacchino</a>
-                                    <div class="main-nav__sub-nav">
-                                        <a href="#">
-                                            <img src="img/rossini-1.jpg" />
-                                            <div class="paragraph-name"><span>L'inganno felice</span></div>
-                                        </a>
-                                        <a href="#">
-                                            <img src="img/rossini-2.jpg" />
-                                            <div class="paragraph-name"><span>Venezia</span></div>
-                                        </a>
-                                        <a href="#">
-                                            <img src="img/rossini-3.jpg" />
-                                            <div class="paragraph-name"><span>Licenze romane</span></div>
-                                        </a>
-                                    </div>
-                                </li>
-                                <li>
-                                    <a href="#">Il folgorante debutto</a>
-                                    <div class="main-nav__sub-nav">
-                                        <a href="#">
-                                            <img src="img/rossini-2.jpg" />
-                                            <div class="paragraph-name"><span>Venezia</span></div>
-                                        </a>
-                                        <a href="#">
-                                            <img src="img/rossini-3.jpg" />
-                                            <div class="paragraph-name"><span>Licenze romane</span></div>
-                                        </a>
-                                        <a href="#">
-                                            <img src="img/rossini-1.jpg" />
-                                            <div class="paragraph-name"><span>L'inganno felice</span></div>
-                                        </a>
-                                    </div>
-                                </li>
-                                <li>
-                                    <a href="#">La frenesia della produzione</a>
-                                    <div class="main-nav__sub-nav">
-                                        <a href="#">
-                                            <img src="img/rossini-3.jpg" />
-                                            <div class="paragraph-name"><span>Licenze romane</span></div>
-                                        </a>
-                                        <a href="#">
-                                            <img src="img/rossini-2.jpg" />
-                                            <div class="paragraph-name"><span>Venezia</span></div>
-                                        </a>
+    <script type="text/ng-template" id="partials/years.html">
+        <div class="wrapper" ng-class="{ 'light-bg' : stepper.step.contrast == 'light-bg', 'dark-bg': stepper.step.contrast == 'dark-bg', 'detail-active dark-bg': detail.active }">
+            <!-- Nav -->
+            <nav class="nav">
+                <div class="main-nav">
+                    <div class="main-nav__scroll" scrollbar>
+                        <img src="img/200Rossini150.svg" class="logo" />
+                        <ul>
+                            <li>
+                                <a href="#">Passione, Genio e Silenzio</a>
+                                <ul>
+                                    <li>
+                                        <a href="#">Il giovane Gioacchino</a>
+                                        <div class="main-nav__sub-nav">
+                                            <a href="#">
+                                                <img src="img/rossini-1.jpg" />
+                                                <div class="paragraph-name"><span>L'inganno felice</span></div>
+                                            </a>
+                                            <a href="#">
+                                                <img src="img/rossini-2.jpg" />
+                                                <div class="paragraph-name"><span>Venezia</span></div>
+                                            </a>
+                                            <a href="#">
+                                                <img src="img/rossini-3.jpg" />
+                                                <div class="paragraph-name"><span>Licenze romane</span></div>
+                                            </a>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a href="#">Il folgorante debutto</a>
+                                        <div class="main-nav__sub-nav">
+                                            <a href="#">
+                                                <img src="img/rossini-2.jpg" />
+                                                <div class="paragraph-name"><span>Venezia</span></div>
+                                            </a>
+                                            <a href="#">
+                                                <img src="img/rossini-3.jpg" />
+                                                <div class="paragraph-name"><span>Licenze romane</span></div>
+                                            </a>
+                                            <a href="#">
+                                                <img src="img/rossini-1.jpg" />
+                                                <div class="paragraph-name"><span>L'inganno felice</span></div>
+                                            </a>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a href="#">La frenesia della produzione</a>
+                                        <div class="main-nav__sub-nav">
+                                            <a href="#">
+                                                <img src="img/rossini-3.jpg" />
+                                                <div class="paragraph-name"><span>Licenze romane</span></div>
+                                            </a>
+                                            <a href="#">
+                                                <img src="img/rossini-2.jpg" />
+                                                <div class="paragraph-name"><span>Venezia</span></div>
+                                            </a>
 
-                                        <a href="#">
-                                            <img src="img/rossini-1.jpg" />
-                                            <div class="paragraph-name"><span>L'inganno felice</span></div>
-                                        </a>
-                                    </div>
-                                </li>
-                                <li>
-                                    <a href="#">Sulle strade di Parigi</a>
-                                    <div class="main-nav__sub-nav">
-                                        <a href="#">
-                                            <img src="img/rossini-2.jpg" />
-                                            <div class="paragraph-name"><span>Venezia</span></div>
-                                        </a>
-                                        <a href="#">
-                                            <img src="img/rossini-1.jpg" />
-                                            <div class="paragraph-name"><span>L'inganno felice</span></div>
-                                        </a>
-                                        <a href="#">
-                                            <img src="img/rossini-3.jpg" />
-                                            <div class="paragraph-name"><span>Licenze romane</span></div>
-                                        </a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">Celebrazioni</a>
-                        </li>
-                        <li>
-                            <a href="#">Progetti Speciali</a>
-                            <ul>
-                                <li>
-                                    <a href="#">Progetto 1</a>
-                                </li>
-                                <li>
-                                    <a href="#">Progetto 2</a>
-                                </li>
-                                <li>
-                                    <a href="#">Progetto 3</a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">Comitato e Partner</a>
-                        </li>
-                        <li>
-                            <a href="#">Cultura ed Istruzione</a>
-                        </li>
-                        <li>
-                            <a href="#">Contatti</a>
-                        </li>
-                    </ul>
-                    <div class="extra-mobile">
-                        © Comitato Nazionale Celebrazioni Centenari Rossiniani 2017
-                        <a href="#">Privacy</a>
-                    </div>
-                    <div class="socials">
-                        <a href="#">
-                            <svg class="ico-facebook">
-                                <use xlink:href="#ico-facebook"></use>
-                            </svg>
-                        </a>
-                        <a href="#">
-                            <svg class="ico-instagram">
-                                <use xlink:href="#ico-instagram"></use>
-                            </svg>
-                        </a>
-                        <a href="#">
-                            <svg class="ico-twitter">
-                                <use xlink:href="#ico-twitter"></use>
-                            </svg>
-                        </a>
-                    </div>
-
-                </div>
-            </div>
-            <div class="sub-nav">
-                <a href="#">
-                    <img src="img/rossini-1.jpg" />
-                    <div class="paragraph-name"><span>L'inganno felice</span></div>
-                </a>
-                <a href="#">
-                    <img src="img/rossini-2.jpg" />
-                    <div class="paragraph-name"><span>Venezia</span></div>
-                </a>
-                <a href="#">
-                    <img src="img/rossini-3.jpg" />
-                    <div class="paragraph-name"><span>Licenze romane</span></div>
-                </a>
-            </div>
-        </nav>
-        <!-- /Nav -->
-
-        <!-- Tunnel Background -->
-        <div class="tunnel-bg" slick-backgrounds="stepper.steps" ng-if="scene.options.useBackground">
-            <div class="item" ng-repeat="item in stepper.steps track by $index">
-                <img data-lazy="{{item.background}}" />
-            </div>
-        </div>
-        <!-- /Tunnel Background -->
-
-        <!-- Tunnel Gradient -->
-        <div class="tunnel-gradient"></div>
-        <!-- /Tunnel Gradient -->
-
-        <!-- Nav Toggle -->
-        <button class="nav-toggle"><span></span> Menu</button>
-        <!-- /Nav Toggle -->
-
-        <!-- Breadcrumb -->
-        <div class="breadcrumb">
-            <div class="breadcrumb__chapter" ng-bind="stepper.step.chapter"></div>
-            <div class="breadcrumb__paragraph" ng-bind="stepper.step.paragraph"></div>
-        </div>
-        <!-- /Breadcrumb -->
-
-        <!-- Sound Info -->
-        <div class="sound-info">
-            <button class="sound-toggle" ng-class="{ active: audio.isActive() }" ng-click="audio.toggle()">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </button>
-            <div class="sound-name" ng-if="stepper.step">
-                <div class="sound-title" ng-bind="stepper.step.audio.title"></div>
-                <div class="sound-author" ng-bind="stepper.step.audio.orchestra"></div>
-            </div>
-        </div>
-        <!-- /Sound Info -->
-
-        <!-- Tunnel Year -->
-        <div class="tunnel-year one-year" years-from="stepper.step.years.from" years-to="stepper.step.years.to" ng-if="stepper.step">
-            <div class="tunnel-year__from">1817</div>
-            <div class="tunnel-year__to">1817</div>
-        </div>
-        <!-- /Tunnel Year -->
-
-        <!-- Three JS -->
-        <section id="scene" ng-if="scene">
-            <div scene="scene"></div>
-        </section>
-        <!-- /Three JS -->
-
-        <!-- Tunnel Nav -->
-        <div class="tunnel-nav" ng-if="scene">
-            <button type="button" id="tunnel-prev" ng-click="stepper.previous()">prev</button>
-            <button type="button" id="tunnel-next" ng-click="stepper.next()">next</button>
-            <span ng-bind="stepper.current">-</span>
-            <span ng-bind="stepper.steps.length">-</span>
-        </div>
-        <!-- /Tunnel Nav -->
-
-        <!-- Tunnel -->
-        <div class="tunnel">
-            <div class="tunnel-slick" slick-tunnel="stepper.steps">
-                <div id="tunnel-{{item.id}}" class="tunnel-slick__item" data-from="1832" data-to="false" data-bg="light" ng-repeat="item in stepper.steps track by $index">
-                    <div class="tunnel-slick__header" ng-if="$first">
-                        <div class="big-title h1 splitted-text">Sono la prima</div>
-                        <div class="cta">
-                            <a href="#" class="inline-btn">Start experience</a>
+                                            <a href="#">
+                                                <img src="img/rossini-1.jpg" />
+                                                <div class="paragraph-name"><span>L'inganno felice</span></div>
+                                            </a>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a href="#">Sulle strade di Parigi</a>
+                                        <div class="main-nav__sub-nav">
+                                            <a href="#">
+                                                <img src="img/rossini-2.jpg" />
+                                                <div class="paragraph-name"><span>Venezia</span></div>
+                                            </a>
+                                            <a href="#">
+                                                <img src="img/rossini-1.jpg" />
+                                                <div class="paragraph-name"><span>L'inganno felice</span></div>
+                                            </a>
+                                            <a href="#">
+                                                <img src="img/rossini-3.jpg" />
+                                                <div class="paragraph-name"><span>Licenze romane</span></div>
+                                            </a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Celebrazioni</a>
+                            </li>
+                            <li>
+                                <a href="#">Progetti Speciali</a>
+                                <ul>
+                                    <li>
+                                        <a href="#">Progetto 1</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Progetto 2</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Progetto 3</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Comitato e Partner</a>
+                            </li>
+                            <li>
+                                <a href="#">Cultura ed Istruzione</a>
+                            </li>
+                            <li>
+                                <a href="#">Contatti</a>
+                            </li>
+                        </ul>
+                        <div class="extra-mobile">
+                            © Comitato Nazionale Celebrazioni Centenari Rossiniani 2017
+                            <a href="#">Privacy</a>
                         </div>
-                    </div>
-                    <div class="tunnel-slick__header" ng-if="!$first">
-                        <div class="big-title h1 splitted-text" split-text ng-bind-html="item.titleTrusted">-</div>
-                        <div class="cta" ng-if="item.title">
-                            <a href="#" ng-href="{{stepper.step.url}}" ng-click="openDetail()" class="inline-btn">View more</a>
+                        <div class="socials">
+                            <a href="#">
+                                <svg class="ico-facebook">
+                                        <use xlink:href="#ico-facebook"></use>
+                                    </svg>
+                            </a>
+                            <a href="#">
+                                <svg class="ico-instagram">
+                                        <use xlink:href="#ico-instagram"></use>
+                                    </svg>
+                            </a>
+                            <a href="#">
+                                <svg class="ico-twitter">
+                                    <use xlink:href="#ico-twitter"></use>
+                                </svg>
+                            </a>
                         </div>
+
                     </div>
                 </div>
-            </div>
-            <div class="tunnel-nav"></div>
-        </div>
-        <!-- /Tunnel -->
+                <div class="sub-nav">
+                    <a href="#">
+                        <img src="img/rossini-1.jpg" />
+                        <div class="paragraph-name"><span>L'inganno felice</span></div>
+                    </a>
+                    <a href="#">
+                        <img src="img/rossini-2.jpg" />
+                        <div class="paragraph-name"><span>Venezia</span></div>
+                    </a>
+                    <a href="#">
+                        <img src="img/rossini-3.jpg" />
+                        <div class="paragraph-name"><span>Licenze romane</span></div>
+                    </a>
+                </div>
+            </nav>
+            <!-- /Nav -->
 
-        <!-- Detail -->
-        <div class="detail" ng-class="{ active: detail.active }">
-            <div class="detail__container">
-                <div class="detail__wrap">
-                    <div class="detail__scroll" scrollbar>
-                        <div class="detail__content" ng-bind-html="detail.html">
+            <!-- Tunnel Background -->
+            <div class="tunnel-bg" slick-backgrounds="stepper.steps" ng-if="scene.options.useBackground">
+                <div class="item" ng-repeat="item in stepper.steps track by $index">
+                    <img data-lazy="{{item.background}}" />
+                </div>
+            </div>
+            <!-- /Tunnel Background -->
+
+            <!-- Tunnel Gradient -->
+            <div class="tunnel-gradient"></div>
+            <!-- /Tunnel Gradient -->
+
+            <!-- Nav Toggle -->
+            <button class="nav-toggle"><span></span> Menu</button>
+            <!-- /Nav Toggle -->
+
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <div class="breadcrumb__chapter" ng-bind="stepper.step.chapter"></div>
+                <div class="breadcrumb__paragraph" ng-bind="stepper.step.paragraph"></div>
+            </div>
+            <!-- /Breadcrumb -->
+
+            <!-- Sound Info -->
+            <div class="sound-info">
+                <button class="sound-toggle" ng-class="{ active: audio.isActive() }" ng-click="audio.toggle()">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                <div class="sound-name" ng-if="stepper.step">
+                    <div class="sound-title" ng-bind="stepper.step.audio.title"></div>
+                    <div class="sound-author" ng-bind="stepper.step.audio.orchestra"></div>
+                </div>
+            </div>
+            <!-- /Sound Info -->
+
+            <!-- Tunnel Year -->
+            <div class="tunnel-year one-year" years-from="stepper.step.years.from" years-to="stepper.step.years.to" ng-if="stepper.step">
+                <div class="tunnel-year__from">1817</div>
+                <div class="tunnel-year__to">1817</div>
+            </div>
+            <!-- /Tunnel Year -->
+
+            <!-- Three JS -->
+            <section id="scene" ng-if="scene">
+                <div scene="scene"></div>
+            </section>
+            <!-- /Three JS -->
+
+            <!-- Tunnel Nav -->
+            <div class="tunnel-nav" ng-if="scene">
+                <button type="button" id="tunnel-prev" ng-click="stepper.previous()">prev</button>
+                <button type="button" id="tunnel-next" ng-click="stepper.next()">next</button>
+                <span ng-bind="stepper.current">-</span>
+                <span ng-bind="stepper.steps.length">-</span>
+            </div>
+            <!-- /Tunnel Nav -->
+
+            <!-- Tunnel -->
+            <div class="tunnel">
+                <div class="tunnel-slick" slick-tunnel="stepper.steps">
+                    <div id="tunnel-{{item.id}}" class="tunnel-slick__item" data-from="1832" data-to="false" data-bg="light" ng-repeat="item in stepper.steps track by $index">
+                        <div class="tunnel-slick__header" ng-if="$first">
+                            <div class="big-title h1 splitted-text">Sono la prima</div>
+                            <div class="cta">
+                                <a href="#" class="inline-btn">Start experience</a>
+                            </div>
+                        </div>
+                        <div class="tunnel-slick__header" ng-if="!$first">
+                            <div class="big-title h1 splitted-text" split-text ng-bind-html="item.titleTrusted">-</div>
+                            <div class="cta" ng-if="item.title">
+                                <button type="button" ng-click="openDetail()" class="inline-btn">View more</button>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="tunnel-nav"></div>
             </div>
-            <button ng-click="detail.active = false" class="detail__close">
-                <svg class="ico">
-                    <use xlink:href="#close"></use>
-                </svg>
-                <span>Ritorno</span>
-            </button>
-        </div>
-        <!-- /Detail -->
+            <!-- /Tunnel -->
 
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="footer__copy">© Comitato Nazionale Celebrazioni Centenari Rossiniani 2017</div>
-            <div class="footer__copy--mobile"><a href="#">Credits</a></div>
-            <div class="logo-fondazione-rossini">
-                <img src="img/200Rossini150.svg" class="dark-logo" alt="Fondazione Rossini" />
-                <img src="img/200Rossini150-light.svg" class="light-logo" alt="Fondazione Rossini" />
+            <!-- Detail -->
+            <div class="detail" ng-class="{ active: detail.active }">
+                <div class="detail__container">
+                    <div class="detail__wrap">
+                        <div class="detail__scroll" scrollbar>
+                            <div class="detail__content" ng-include="'partials/it/step-1.html'"></div>
+                        </div>
+                    </div>
+                </div>
+                <button class="detail__close" ng-click="closeDetail()">
+                    <svg class="ico">
+                        <use xlink:href="#close"></use>
+                    </svg>
+                    <span>Ritorno</span>
+                </button>
             </div>
-        </footer>
-        <!-- /Footer -->
-    </div>
+            <!-- /Detail -->
+
+            <!-- Footer -->
+            <footer class="footer">
+                <div class="footer__copy">© Comitato Nazionale Celebrazioni Centenari Rossiniani 2017</div>
+                <div class="footer__copy--mobile"><a href="#">Credits</a></div>
+                <div class="logo-fondazione-rossini">
+                    <img src="img/200Rossini150.svg" class="dark-logo" alt="Fondazione Rossini" />
+                    <img src="img/200Rossini150-light.svg" class="light-logo" alt="Fondazione Rossini" />
+                </div>
+            </footer>
+            <!-- /Footer -->
+        </div>
+    </script>
 
     <!-- SVG Sprite -->
     <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" display="none" id="svg-sprite">
@@ -314,6 +316,7 @@
     <script src="js/vendors.min.js" type="text/javascript"></script>
     <script src="js/main.js" type="text/javascript"></script>
     <script src="js/app.js" type="text/javascript"></script>
+
 </body>
 
 </html>

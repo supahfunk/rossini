@@ -29,8 +29,8 @@
             overLines: 0x3353a4,
         },
         camera: {
-            cameraHeight: 0,
-            targetHeight: 5,
+            cameraHeight: -10,
+            targetHeight: 30,
         },
         ribbon: {
             steps: 12,

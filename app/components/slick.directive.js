@@ -5,7 +5,7 @@
 
     var app = angular.module('app');
 
-    app.directive('slickTunnel', ['StepperService', 'SceneOptions', function(StepperService, SceneOptions) {
+    app.directive('slickTunnel', ['$timeout', 'StepperService', 'SceneOptions', function($timeout, StepperService, SceneOptions) {
         return {
             restrict: 'A',
             link: function(scope, element, attributes) {
@@ -29,7 +29,8 @@
                         infinite: false,
                         draggable: false,
                         asNavFor: options.useBackground ? '.tunnel-bg' : null,
-                        cssEase: 'cubic-bezier(0.7, 0, 0.3, 1)'
+                        cssEase: 'cubic-bezier(0.7, 0, 0.3, 1)',
+                        initialSlide: stepper.current,
                     });
                 }
 
@@ -61,8 +62,10 @@
 
                 function onInit() {
                     // console.log('onInit');
-                    showLetters();
-                    scope.$root.$broadcast('onSlickInit', { current: 0 });
+                    $timeout(function() {
+                        showLetters();
+                    }, 1000);
+                    scope.$root.$broadcast('onSlickInit');
                 }
 
                 function onBeforeChange(event, slick, currentSlide, nextSlide) {

@@ -487,7 +487,7 @@
                         l.material.uniforms.visibility.value= params.animateVisibility ? (time/3000) % 1.0 : 1.0;
                         
                         if (iterator === 60 && g === 2 && l === 0) {
-                            console.log('vertices', geometry.vertices.map(function(v) { return v.x + ',' + v.y; }));
+                            // console.log('vertices', geometry.vertices.map(function(v) { return v.x + ',' + v.y; }));
                         }
                         */
                     }
