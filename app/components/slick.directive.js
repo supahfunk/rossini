@@ -71,7 +71,7 @@
                 function onBeforeChange(event, slick, currentSlide, nextSlide) {
                     stepper.slicking = true;
                     hideLetters();
-                    // console.log('onBeforeChange');
+                    // console.log('onBeforeChange');               
                     scope.$root.$broadcast('onSlickBeforeChange', { current: nextSlide, previouse: currentSlide });
                 }
 

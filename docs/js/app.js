@@ -305,7 +305,7 @@
                 function onBeforeChange(event, slick, currentSlide, nextSlide) {
                     stepper.slicking = true;
                     hideLetters();
-                    // console.log('onBeforeChange');
+                    // console.log('onBeforeChange');               
                     scope.$root.$broadcast('onSlickBeforeChange', { current: nextSlide, previouse: currentSlide });
                 }
 
@@ -894,7 +894,7 @@
                 });
                 values.pow = index / steps.length;
                 stepper.current = current = index;
-                setStep(index);
+                navStep(index);
                 // console.log('StepperService.load', steps);
                 deferred.resolve(steps);
 
@@ -985,10 +985,11 @@
         });
 
         $rootScope.$on('onSlickBeforeChange', function($scope, slick) {
-            setStep(slick.current);
+            navStep(slick.current);
         });
 
         function setStep(index) {
+            console.log('setStep');
             $timeout(function() {
                 var previous = stepper.current || 0;
                 stepper.current = current = index;
@@ -1024,7 +1025,7 @@
             }
             current--;
             current = Math.max(0, current);
-            setStep(current);
+            navStep(current);
             $rootScope.$broadcast('onGoStep', current);
         }
 
@@ -1034,14 +1035,29 @@
             }
             current++;
             current = Math.min(steps.length - 1, current);
-            setStep(current);
+            navStep(current);
             $rootScope.$broadcast('onGoStep', current);
+        }
+
+        function navStep(index) {
+            console.log('cambio pagina');
+            setStep(index);
+            $rootScope.$broadcast('onGoStep', index);
+
+            $timeout(function() {
+                var $active = $('.tunnel-nav__step.active'),
+                    position = $active.position().top,
+                    width = $active.width() + 16;
+
+                $('.tunnel-nav__follower').css({ width: width + 'px', '-webkit-transform': 'translateY(' + position + 'px)', '-moz-transform': 'translateY(' + position + 'px)', '-ms-transform': 'translateY(' + position + 'px)', 'transform': 'translateY(' + position + 'px)' });
+            });
         }
 
         this.init = init;
         this.values = values;
         this.duration = duration;
         this.steps = steps;
+        this.navStep = navStep;
         this.getCurrentStep = getCurrentStep;
         this.getStepAtIndex = getStepAtIndex;
         this.current = current;

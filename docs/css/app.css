@@ -827,6 +827,8 @@ Slick
     background: transparent;
     color: transparent;
     top: 50%;
+    -webkit-transform: translate(0, -50%);
+    -ms-transform: translate(0, -50%);
     transform: translate(0, -50%);
     padding: 0;
     border: none;
@@ -949,8 +951,8 @@ Tunnel Gradient
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 25%;
-    background: linear-gradient(to top, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0)); }
+    height: 100%;
+    background: url(../img/gradient.png) repeat-x center bottom; }
   .detail-active .tunnel-gradient {
     opacity: 0; }
 
@@ -1028,6 +1030,47 @@ Tunnel Nav
   top: 50%;
   transform: translateY(-50%);
   transition: opacity 0.8s cubic-bezier(0.19, 1, 0.22, 1); }
+  @media (max-width: 768px) {
+    .tunnel-nav {
+      display: none; } }
+  .tunnel-nav__step {
+    text-align: right;
+    color: #3353a4;
+    opacity: .5;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    padding: 1px 0;
+    float: right;
+    clear: right; }
+    .tunnel-nav__step.active {
+      opacity: 1; }
+    .dark-bg .tunnel-nav__step {
+      color: #fff; }
+  .tunnel-nav__follower {
+    position: absolute;
+    z-index: 1;
+    top: 1px;
+    right: -8px;
+    height: 19px;
+    width: 42px;
+    border: 1px solid #3353a4;
+    opacity: .7;
+    transition: color 0.5s cubic-bezier(0.19, 1, 0.22, 1), transform 1.1s cubic-bezier(0.19, 1, 0.22, 1), width 1.1s cubic-bezier(0.19, 1, 0.22, 1); }
+    .tunnel-nav__follower:before {
+      content: '';
+      position: absolute;
+      z-index: 1;
+      right: -25px;
+      top: 8px;
+      width: 25px;
+      height: 0;
+      border-top: 1px solid #3353a4;
+      opacity: .7; }
+    .dark-bg .tunnel-nav__follower {
+      border-color: #fff; }
+      .dark-bg .tunnel-nav__follower:before {
+        border-top-color: #fff; }
 
 /*--------------------------------------------------
 Tunnel Slick
@@ -1129,7 +1172,10 @@ Detail
         padding: 0; } }
   .detail__wrap {
     height: 100vh;
-    padding-top: 10vw; }
+    padding-top: 105px; }
+    @media (max-width: 1280px) {
+      .detail__wrap {
+        padding-top: 65px; } }
   .detail__scroll {
     position: relative;
     z-index: 1;
@@ -1143,8 +1189,11 @@ Detail
       .detail__scroll {
         padding: 0;
         margin: 80px 0 0;
-        height: calc(100vh - 100px);
+        height: calc(100vh - 200px);
         border: none; } }
+    @media (max-width: 575px) {
+      .detail__scroll {
+        margin: 60px 0 0; } }
     .detail__scroll .scrollbar-track {
       background: rgba(0, 0, 0, 0.5); }
       .detail__scroll .scrollbar-track.show {
@@ -1178,6 +1227,9 @@ Detail
     @media (max-width: 768px) {
       .detail__content {
         padding: 30px 0 50px; } }
+    @media (max-width: 575px) {
+      .detail__content {
+        padding-top: 10px; } }
   .detail__subtitle {
     flex: 0 0 100%;
     width: 100%;
@@ -1354,7 +1406,16 @@ Detail
 
 .detail-active .tunnel-year {
   color: rgba(255, 255, 255, 0.05);
-  transform: translateY(-50%); }
+  transform: translateY(-54%) scale(0.4); }
+  @media (max-width: 1440px) {
+    .detail-active .tunnel-year {
+      transform: translateY(-58%) scale(0.6); } }
+  @media (max-width: 1280px) {
+    .detail-active .tunnel-year {
+      transform: translateY(-75%) scale(0.6); } }
+  @media (max-width: 1024px) {
+    .detail-active .tunnel-year {
+      transform: translateY(-32%) scale(0.8); } }
   @media (max-width: 575px) {
     .detail-active .tunnel-year {
       transform: none; } }
@@ -1442,3 +1503,4 @@ Footer
         opacity: 0; }
       .dark-bg .footer .logo-fondazione-rossini img.light-logo {
         opacity: 1; }
+
