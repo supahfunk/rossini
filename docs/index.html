@@ -232,10 +232,14 @@
 
         <!-- Tunnel Nav -->
         <div class="tunnel-nav" ng-if="scene">
+            <!--
             <button type="button" id="tunnel-prev" ng-click="stepper.previous()">prev</button>
             <button type="button" id="tunnel-next" ng-click="stepper.next()">next</button>
             <span ng-bind="stepper.current">-</span>
             <span ng-bind="stepper.steps.length">-</span>
+            -->
+            <div class="tunnel-nav__follower"></div>
+            <div ng-repeat="item in stepper.steps track by $index" ng-click="stepper.navStep($index)" ng-bind="item.years.from + (item.years.to ? ' - ' + item.years.to : '')" ng-class="{active : stepper.current == $index}" class="tunnel-nav__step"></div>
         </div>
         <!-- /Tunnel Nav -->
 
