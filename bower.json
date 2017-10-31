@@ -30,6 +30,7 @@
     "jquery-easing": "*",
     "smooth-scrollbar": "^8.2.0",
     "angular-sanitize": "^1.6.6",
-    "ngSilent": "*"
+    "ngSilent": "*",
+    "fulltilt": "^0.5.3"
   }
 }

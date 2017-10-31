@@ -618,8 +618,6 @@
         var analyser, audio, audioUrl;
 
         var audioContext = (window.AudioContext || window.webkitAudioContext);
-        var analyserContext = new audioContext();
-        analyser = analyserContext.createAnalyser();
 
         audio = new Audio();
         audio.addEventListener('canplay', onCanPlay);
@@ -633,13 +631,17 @@
             // console.log('AnalyserService.onCanPlay');
             if (!source) {
                 var bufferLength;
-                source = analyserContext.createMediaElementSource(audio);
-                source.smoothingTimeConstant = 0.85;
-                source.connect(analyser);
-                source.connect(analyserContext.destination);
-                analyser.fftSize = options.audio.bands * 2;
-                bufferLength = analyser.frequencyBinCount;
-                service.data = new Uint8Array(bufferLength);
+                var ctx = new audioContext();
+                if (ctx) {
+                    analyser = ctx.createAnalyser();
+                    source = ctx.createMediaElementSource(audio);
+                    source.smoothingTimeConstant = 0.85;
+                    source.connect(analyser);
+                    source.connect(ctx.destination);
+                    analyser.fftSize = options.audio.bands * 2;
+                    bufferLength = analyser.frequencyBinCount;
+                    service.data = new Uint8Array(bufferLength);
+                }
             }
             // return service.data;
         }
@@ -725,10 +727,10 @@
             if (!options.device.ios || service.unlocked) {
                 deferred.resolve();
             } else {
-                source = doUnlock();
+                var o = doUnlock();
                 // by checking the play state after some time, we know if we're really unlocked
                 $timeout(function() {
-                    if ((source.playbackState === source.PLAYING_STATE || source.playbackState === source.FINISHED_STATE)) {
+                    if (o && (o.playbackState === o.PLAYING_STATE || o.playbackState === o.FINISHED_STATE)) {
                         service.unlocked = true;
                         deferred.resolve();
                     }
@@ -740,21 +742,21 @@
 
         function doUnlock() {
             // create empty buffer
+            var o = null;
             var ctx = new audioContext();
-            var source = ctx.createBufferSource();
-            var buffer = ctx.createBuffer(1, 1, 22050);
-            source.buffer = buffer;
-
-            // connect to output (your speakers)
-            source.connect(ctx.destination);
-
-            // play the file
-            if (source.noteOn) {
-                source.noteOn(0);
+            if (ctx) {
+                o = ctx.createBufferSource();
+                var buffer = ctx.createBuffer(1, 1, 22050);
+                o.buffer = buffer;
+                // connect to output (your speakers)
+                o.connect(ctx.destination);
+                // play the file
+                if (o.noteOn) {
+                    o.noteOn(0);
+                }
+                console.log('AudioAnalyser.doUnlock');
             }
-
-            console.log('AudioAnalyser.doUnlock');
-            return source;
+            return o;
         }
 
         window.addEventListener('touchstart', unlock, false);
@@ -777,6 +779,83 @@
         this.unlock = unlock;
         this.isPlaying = isPlaying;
         this.isActive = isActive;
+
+    }]);
+
+}());
+/* global angular */
+
+(function() {
+    "use strict";
+
+    var app = angular.module('app');
+
+    app.service('MotionService', ['$rootScope', function($rootScope) {
+
+        var service = this;
+
+        service.x = 0;
+        service.y = 0;
+        service.z = 0;
+
+        service.update = update;
+
+        function set(x, y, z) {
+            service.x = x;
+            service.y = y;
+            service.z = z;
+            $rootScope.$broadcast('onDeviceMotion', service);
+        }
+
+        function update() {
+            var device = service.device;
+            if (device) {
+                // Obtain the *screen-adjusted* normalized device rotation
+                // as Quaternion, Rotation Matrix and Euler Angles objects
+                // from our FULLTILT.DeviceOrientation object
+                var quaternion = device.getScreenAdjustedQuaternion();
+                var matrix = device.getScreenAdjustedMatrix();
+                var euler = device.getScreenAdjustedEuler();
+
+                // Do something with our quaternion, matrix, euler objects...
+                console.debug(quaternion);
+                console.debug(matrix);
+                console.debug(euler);
+            }
+        }
+
+
+        function onDeviceOrientation(e) {
+            var x = (e.alpha) / 90;
+            var y = (e.beta - 90) / 90;
+            var z = (e.gamma) / 90;
+            // console.log('onDeviceOrientation', x, y, z);
+            set(x, y, z);
+        }
+
+        function onDeviceMotion(e) {
+            var x = (e.acceleration.x) / 1;
+            var y = (e.acceleration.y) / 1;
+            var z = (e.acceleration.z) / 1;
+            // console.log('onDeviceMotion', x, y, z);
+            set(x, y, z);
+        }
+
+        if (window.DeviceOrientationEvent) {
+            var orientation = FULLTILT.getDeviceOrientation({ 'type': 'world' }).then(function(controller) {
+                service.device = controller;
+            }).catch(function(error) {
+                console.log('MotionService.getDeviceOrientation', error);
+            });
+            // window.addEventListener("deviceorientation", onDeviceOrientation, true);
+        } else if (window.DeviceMotionEvent) {
+            var motion = FULLTILT.getDeviceMotion({ 'type': 'world' }).then(function(controller) {
+                service.device = controller;
+            }).catch(function(error) {
+                console.log('MotionService.getDeviceOrientation', error);
+            });
+            // window.addEventListener('devicemotion', onDeviceMotion, true);
+        }
 
     }]);
 
@@ -909,7 +988,7 @@
             stepper.values.lines.copy(new THREE.Color(step.colors.lines));
             stepper.values.overLines.copy(new THREE.Color(step.colors.overLines));
             // setTweens(0.250);
-            console.log('StepperService.onOptionsChanged', index);
+            // console.log('StepperService.onOptionsChanged', index);
             setBackground(index);
         });
 
@@ -918,7 +997,7 @@
         });
 
         function setStep(index) {
-            console.log('StepperService.setStep', index);
+            // console.log('StepperService.setStep', index);
             $timeout(function() {
                 var previous = stepper.current || 0;
                 stepper.current = current = index;
@@ -1043,7 +1122,7 @@
                 var step = stepper.getStepAtIndex(index);
                 var color = new THREE.Color(step.colors.background).getHexString();
                 $('.tunnel-gradient').css('background-color', '#' + color);
-                console.log('StepperService.setBackground', index, color, step.contrast);
+                // console.log('StepperService.setBackground', index, color, step.contrast);
             }
         }
 
@@ -1054,7 +1133,7 @@
             var b = parseInt(color.b * 255);
             var pow = r * 0.299 + g * 0.587 + b * 0.114;
             var contrast = (pow > 186) ? 'light-bg' : 'dark-bg';
-            console.log('StepperService.getContrast', color.getHexString(), pow, contrast);
+            // console.log('StepperService.getContrast', color.getHexString(), pow, contrast);
             return contrast;
         }
 
@@ -1079,7 +1158,7 @@
 
     var app = angular.module('app');
 
-    app.directive('scene', ['SceneOptions', 'StepperService', 'AnalyserService', function(SceneOptions, StepperService, AnalyserService) {
+    app.directive('scene', ['SceneOptions', 'StepperService', 'AnalyserService', 'MotionService', function(SceneOptions, StepperService, AnalyserService, MotionService) {
         return {
             restrict: 'A',
             scope: {
@@ -1125,12 +1204,48 @@
                 });
 
                 var mouse = { x: 0, y: 0 };
-                // var mousePos = { x: 0, y: 0 };
+                // var mouseDown = { x: 0, y: 0 };
                 var parallax = { x: 0, y: 0, i: 0 };
+                var motion = MotionService;
+                var translate = { x: 0, y: 0 };
+                var friction = 1 / 12;
 
                 function updateParallax() {
-                    parallax.x = (mouse.x * 20) + Math.cos(parallax.i / 100) * 10;
-                    parallax.y = (mouse.y * 20) + Math.sin(parallax.i / 100) * 10;
+
+                    if (options.device.mobile) {
+                        motion.update();
+                        parallax.x = (motion.x * 20);
+                        parallax.y = (motion.y * 20);
+                    } else {
+                        parallax.x = (mouse.x * 20);
+                        parallax.y = (mouse.y * 20);
+                    }
+
+                    var x = parallax.x / 4;
+                    var y = parallax.y / 4;
+
+                    translate.x += (x - translate.x) * friction;
+                    translate.y += (y - translate.y) * friction;
+
+                    if ($('.detail-active').length == 0) {
+                        var translateYear = 'translate(' + (translate.x * -4) + 'px, ' + (translate.y * -2) + 'px)';
+                        $('.tunnel-year').css({
+                            '-webit-transform': translateYear,
+                            '-moz-transform': translateYear,
+                            'transform': translateYear
+                        });
+                    }
+
+                    var translateSlick = 'translate(' + translate.x + 'px, ' + translate.y + 'px)';
+                    $('.tunnel-slick .slick-active .tunnel-slick__item').css({
+                        '-webit-transform': translateSlick,
+                        '-moz-transform': translateSlick,
+                        'transform': translateSlick
+                    });
+
+                    parallax.x += Math.cos(parallax.i / 100) * 10;
+                    parallax.y += Math.sin(parallax.i / 100) * 10;
+
                     parallax.i++;
                 }
 
@@ -1276,8 +1391,8 @@
                         // target.add(tangent);
                         camera.position.copy(position);
                         camera.target.copy(target);
-                        camera.position.x += (position.x + parallax.x - camera.position.x) / 12;
-                        camera.position.y += (position.y + parallax.y - camera.position.y) / 12;
+                        camera.position.x += (position.x + parallax.x - camera.position.x) * friction;
+                        camera.position.y += (position.y + parallax.y - camera.position.y) * friction;
                         camera.lookAt(camera.target);
                     }
 
@@ -1611,8 +1726,8 @@
                             dummy.position.copy(dummyMobilePosition);
                         }
 
-                        dummy.rotation.x += ((parallax.y * 0.00625) - dummy.rotation.x) / 12;
-                        dummy.rotation.y += ((parallax.x * 0.01250) - dummy.rotation.y) / 12;
+                        dummy.rotation.x += ((parallax.y * 0.00625) - dummy.rotation.x) * friction;
+                        dummy.rotation.y += ((parallax.x * 0.01250) - dummy.rotation.y) * friction;
 
                         var position = objects.ribbon.cameraSpline.getPointAt((index + 0.1) / stepper.steps.length);
                         // var tangent = objects.ribbon.cameraSpline.getTangent(index + 0.1 / stepper.steps.length).normalize().multiplyScalar(300);
@@ -1700,18 +1815,18 @@
                     function handleTouchStart(event) {
                         if (event.touches.length > 1) {
                             event.preventDefault();
-                            mousePos = { x: event.touches[0].pageX, y: event.touches[0].pageY };
+                            mouseDown = { x: event.touches[0].pageX, y: event.touches[0].pageY };
                         }
                     }
 
                     function handleTouchEnd(event) {
-                        mousePos = { x: windowHalfX, y: windowHalfY };
+                        mouseDown = { x: windowHalfX, y: windowHalfY };
                     }
 
                     function handleTouchMove(event) {
                         if (event.touches.length == 1) {
                             event.preventDefault();
-                            mousePos = { x: event.touches[0].pageX, y: event.touches[0].pageY };
+                            mouseDown = { x: event.touches[0].pageX, y: event.touches[0].pageY };
                         }
                     }
                     */

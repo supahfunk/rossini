@@ -126,7 +126,7 @@
             stepper.values.lines.copy(new THREE.Color(step.colors.lines));
             stepper.values.overLines.copy(new THREE.Color(step.colors.overLines));
             // setTweens(0.250);
-            console.log('StepperService.onOptionsChanged', index);
+            // console.log('StepperService.onOptionsChanged', index);
             setBackground(index);
         });
 
@@ -135,7 +135,7 @@
         });
 
         function setStep(index) {
-            console.log('StepperService.setStep', index);
+            // console.log('StepperService.setStep', index);
             $timeout(function() {
                 var previous = stepper.current || 0;
                 stepper.current = current = index;
@@ -260,7 +260,7 @@
                 var step = stepper.getStepAtIndex(index);
                 var color = new THREE.Color(step.colors.background).getHexString();
                 $('.tunnel-gradient').css('background-color', '#' + color);
-                console.log('StepperService.setBackground', index, color, step.contrast);
+                // console.log('StepperService.setBackground', index, color, step.contrast);
             }
         }
 
@@ -271,7 +271,7 @@
             var b = parseInt(color.b * 255);
             var pow = r * 0.299 + g * 0.587 + b * 0.114;
             var contrast = (pow > 186) ? 'light-bg' : 'dark-bg';
-            console.log('StepperService.getContrast', color.getHexString(), pow, contrast);
+            // console.log('StepperService.getContrast', color.getHexString(), pow, contrast);
             return contrast;
         }
 
