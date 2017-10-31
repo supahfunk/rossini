@@ -126,27 +126,37 @@
 
         function addListeners() {
             if (window.DeviceOrientationEvent) {
+                /*
                 var orientation = FULLTILT.getDeviceOrientation({ 'type': 'world' }).then(function(controller) {
                     service.device = controller;
                 }).catch(function(error) {
                     console.log('MotionService.getDeviceOrientation', error);
                 });
-                // window.addEventListener("deviceorientation", onDeviceOrientation, true);
-            } else if (window.DeviceMotionEvent) {
+                */
+                window.addEventListener("deviceorientation", onDeviceOrientation, true);
+            }
+            /*
+            if (window.DeviceMotionEvent) {
                 var motion = FULLTILT.getDeviceMotion({ 'type': 'world' }).then(function(controller) {
                     service.device = controller;
                 }).catch(function(error) {
                     console.log('MotionService.getDeviceMotion', error);
                 });
-                // window.addEventListener('devicemotion', onDeviceMotion, true);
-            }
+                window.addEventListener('devicemotion', onDeviceMotion, true);
+            }    
+            */
         }
 
         function onDeviceOrientation(e) {
-            var x = (e.alpha) / 90;
-            var y = (e.beta - 90) / 90;
-            var z = (e.gamma) / 90;
-            // console.log('onDeviceOrientation', x, y, z);
+            var x = e.beta;
+            var y = e.gamma;
+            var z = 0;
+
+            x = Math.min(x, 30) - 10;
+            x /= 30;
+            y /= 30;
+            z /= 30;
+
             set(x, y, z);
         }
 
