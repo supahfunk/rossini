@@ -262,7 +262,7 @@
                         draggable: false,
                         asNavFor: options.useBackground ? '.tunnel-bg' : null,
                         cssEase: 'cubic-bezier(0.7, 0, 0.3, 1)',
-                        initialSlide: stepper.current,
+                        initialSlide: stepper.current
                     });
                 }
 
