@@ -226,7 +226,6 @@ Tunnel Year
     pointer-events: none;
     line-height: 1;
     transition: all 1.4s $bezier;
-    transform: translate(0, -50%);
     opacity: 1;
 
     [data-step="0"] & {
@@ -254,12 +253,12 @@ Tunnel Year
         top: 48px;
     }
 
-    & > div {
+    &__wrap > div {
         display: inline-block;
         transition: all 1.4s $bezier;
     }
 
-    &__to {
+    .to {
         &:before {
             content: '-';
             display: inline-block;
@@ -290,7 +289,7 @@ Tunnel Year
         top: 48px;
     }
 
-    .tunnel-year__from {
+    .from {
         transform: translate(50%) scale(1.2);
         text-indent: 50px;
 
@@ -299,7 +298,7 @@ Tunnel Year
         }
     }
 
-    .tunnel-year__to {
+    .to {
         opacity: 0;
         transform: scale(0);
 

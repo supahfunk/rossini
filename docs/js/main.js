@@ -172,8 +172,8 @@ ChangeYear
 --------------------------------------------------*/
 function changeYear(from, to) {
     var $year = $('.tunnel-year'),
-        $from = $('.tunnel-year__from'),
-        $to = $('.tunnel-year__to'),
+        $from = $('.from', $year),
+        $to = $('.to', $year),
         time = 2.5,
         delay = 0.1,
         easing = Power1.ease,
@@ -319,7 +319,7 @@ function mouseMove() {
 
         if ($('.detail-active').length == 0) {
             translateYear = 'translate(' + x / 2 + 'px, ' + y / 2 + 'px)';
-            $('.tunnel-year').css({
+            $('.tunnel-year__wrap').css({
                 '-webit-transform': translateYear,
                 '-moz-transform': translateYear,
                 'transform': translateYear

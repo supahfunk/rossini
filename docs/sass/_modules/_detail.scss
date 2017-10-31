@@ -35,7 +35,7 @@ Detail
         height: 100vh;
         padding-top: 105px;
 
-        @include md {
+        @include sm {
             padding-top: 65px;
         }
     }
@@ -358,11 +358,11 @@ Detail
             transform: translateY(-58%) scale(.6);
         }
 
-        @include md {
-            transform: translateY(-75%) scale(.6);
+        @include sm {
+            transform: translateY(-80%) scale(.8);
         }
 
-        @include sm {
+        @include xs {
             transform: translateY(-32%) scale(.8);
         }
 
@@ -370,9 +370,16 @@ Detail
             transform: none;
         }
 
-        &__to {
+        .to {
             &:before {
                 color: rgba(255,255,255, 0.05);
+            }
+        }
+
+        &.one-year {
+            .from {
+                transform: translate(50%, -18%) scale(1.2);
+                text-indent: 20px;
             }
         }
     }
