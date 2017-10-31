@@ -31,9 +31,9 @@
                 // var quaternion = device.getScreenAdjustedQuaternion();
                 // var matrix = device.getScreenAdjustedMatrix();
                 var e = device.getScreenAdjustedEuler();
-                var x = (e.alpha) / 90;
-                var y = (e.beta - 90) / 90;
-                var z = (e.gamma) / 90;
+                var x = e.alpha / 90;
+                var y = e.beta / 90;
+                var z = e.gamma / 90;
                 // console.log('onDeviceOrientation', x, y, z);
                 set(x, y, z);
             }
