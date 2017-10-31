@@ -320,9 +320,10 @@
     </script>
 
     <script type="text/ng-template" id="partials/test.html">
-        <div><b>motion.x</b> <span ng-bind="motion.x"></span></div>
-        <div><b>motion.y</b> <span ng-bind="motion.y"></span></div>
-        <div><b>motion.z</b> <span ng-bind="motion.z"></span></div>
+        <div><b>motion.x</b> <span ng-bind="motion.x | number : 2"></span></div>
+        <div><b>motion.y</b> <span ng-bind="motion.y | number : 2"></span></div>
+        <div><b>motion.z</b> <span ng-bind="motion.z | number : 2"></span></div>
+        <div><b>motion.compass</b> <span ng-bind="motion.compass | number : 2"></span></div>
     </script>
 
     <!-- SVG Sprite -->

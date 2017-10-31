@@ -53,13 +53,16 @@
         service.x = 0;
         service.y = 0;
         service.z = 0;
+        service.compass = 0;
+
         service.update = throttle(update, 100);
         service.init = init;
 
-        function set(x, y, z) {
+        function set(x, y, z, degree) {
             service.x = x;
             service.y = y;
             service.z = z;
+            service.compass = degree;
             $rootScope.$broadcast('onDeviceMotion', service);
         }
 
@@ -76,21 +79,61 @@
                 var y = (e.beta - 90) / 90;
                 var z = e.gamma / 90;
                 // console.log('onDeviceOrientation', x, y, z);
-                set(x, y, z);
+
+                var direction = Math.round(e.alpha);
+                var tiltFB = Math.round(e.beta);
+                var tiltLR = Math.round(e.gamma);
+
+                //update longitude
+                if (tiltFB < 0) {
+                    tiltFB = tiltFB * -1;
+                }
+                var latitude = (tiltFB) - (180 / 2);
+
+                var alphaRad = e.alpha * (Math.PI / 180);
+                var betaRad = e.beta * (Math.PI / 180);
+                var gammaRad = e.gamma * (Math.PI / 180);
+
+                var cA = Math.cos(alphaRad);
+                var sA = Math.sin(alphaRad);
+                var cB = Math.cos(betaRad);
+                var sB = Math.sin(betaRad);
+                var cG = Math.cos(gammaRad);
+                var sG = Math.sin(gammaRad);
+
+                //Calculate A, B, C rotation components
+                var rA = -cA * sG - sA * sB * cG;
+                var rB = -sA * sG + cA * sB * cG;
+                var rC = -cB * cG;
+
+                //Calculate compass heading
+                var compassHeading = Math.atan(rA / rB);
+
+                //Convert from half unit circle to whole unit circle
+                if (rB < 0) {
+                    compassHeading += Math.PI;
+                } else if (rA < 0) {
+                    compassHeading += 2 * Math.PI;
+                }
+
+                //Convert radians to degrees
+                compassHeading *= 180 / Math.PI;
+
+                set(x, y, z, compassHeading);
             }
             console.log('MotionService.update', device);
         }
 
         function addListeners() {
             if (window.DeviceOrientationEvent) {
-                var orientation = FULLTILT.getDeviceOrientation({ 'type': 'game' }).then(function(controller) {
+                var orientation = FULLTILT.getDeviceOrientation({ 'type': 'world' }).then(function(controller) {
                     service.device = controller;
                 }).catch(function(error) {
                     console.log('MotionService.getDeviceOrientation', error);
                 });
                 // window.addEventListener("deviceorientation", onDeviceOrientation, true);
             } else if (window.DeviceMotionEvent) {
-                var motion = FULLTILT.getDeviceMotion({ 'type': 'game' }).then(function(controller) {
+                var motion = FULLTILT.getDeviceMotion({ 'type': 'world' }).then(function(controller) {
                     service.device = controller;
                 }).catch(function(error) {
                     console.log('MotionService.getDeviceMotion', error);
