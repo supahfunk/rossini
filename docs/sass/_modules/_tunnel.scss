@@ -226,6 +226,14 @@ Tunnel Year
     pointer-events: none;
     line-height: 1;
     transition: all 1.4s $bezier;
+    transform: translate(0, -50%);
+    opacity: 1;
+
+    [data-step="0"] & {
+        transform: translate(0, -100%);
+        opacity: 0;
+        pointer-events: none;
+    }
 
     @include lg {
     }
@@ -309,10 +317,21 @@ Tunnel Nav
 .tunnel-nav {
     position: fixed;
     z-index: 100;
-    right: 30px;
+    right: 50px;
     top: 50%;
-    transform: translateY(-50%);
-    transition: opacity .8s $bezier;
+    transform: translate(0, -50%);
+    transition: all .8s $bezier;
+    opacity: 1;
+
+    [data-step="0"] & {
+        transform: translate(100%, -50%);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    @include md {
+        right: 30px;
+    }
 
     @include xs {
         display: none;
@@ -353,9 +372,9 @@ Tunnel Nav
             content: '';
             position: absolute;
             z-index: 1;
-            right: -25px;
+            right: -50px;
             top: 8px;
-            width: 25px;
+            width: 50px;
             height: 0;
             border-top: 1px solid $violet;
             opacity: .7;
@@ -443,6 +462,16 @@ Tunnel Slick
             height: auto;
             margin-bottom: 30px;
         }
+    }
+}
+
+/* Tunnel 0 */
+#tunnel-0 {
+
+    .tunnel-slick__intro {
+        left: 45%;
+        top: 45%;
+        color: $black-tit;
     }
 }
 

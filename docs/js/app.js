@@ -306,7 +306,7 @@
                     stepper.slicking = true;
                     hideLetters();
                     // console.log('onBeforeChange');               
-                    scope.$root.$broadcast('onSlickBeforeChange', { current: nextSlide, previouse: currentSlide });
+                    scope.$root.$broadcast('onSlickBeforeChange', { current: nextSlide, previous: currentSlide });
                 }
 
                 function onAfterChange(event, slick, currentSlide) {
@@ -324,6 +324,9 @@
                         if (e.deltaX > 0 || e.deltaY < 0) {
                             element.slick('slickNext');
                         } else if (e.deltaX < 0 || e.deltaY > 0) {
+                            if (stepper.current == 1) {
+                                return;
+                            }
                             element.slick('slickPrev');
                         }
                     }
@@ -766,7 +769,7 @@
             audio.volume = options.audio.volume;
         });
 
-        this.active = true;
+        this.active = false;
         this.data = null;
         this.audio = audio;
         this.update = update;

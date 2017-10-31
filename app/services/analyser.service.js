@@ -163,7 +163,7 @@
             audio.volume = options.audio.volume;
         });
 
-        this.active = true;
+        this.active = false;
         this.data = null;
         this.audio = audio;
         this.update = update;

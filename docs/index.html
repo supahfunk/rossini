@@ -33,7 +33,8 @@
     <ng-view ng-cloak></ng-view>
 
     <script type="text/ng-template" id="partials/years.html">
-        <div class="wrapper" ng-class="{ 'light-bg' : stepper.step.contrast == 'light-bg', 'dark-bg': stepper.step.contrast == 'dark-bg', 'detail-active dark-bg': detail.active }">
+        <div class="wrapper" ng-class="{ 'light-bg' : stepper.step.contrast == 'light-bg', 'dark-bg': stepper.step.contrast == 'dark-bg', 'detail-active dark-bg': detail.active }" data-step="{{stepper.current}}">
+            
             <!-- Nav -->
             <nav class="nav">
                 <div class="main-nav">
@@ -241,7 +242,7 @@
             <span ng-bind="stepper.steps.length">-</span>
             -->
                 <div class="tunnel-nav__follower"></div>
-                <div ng-repeat="item in stepper.steps track by $index" ng-click="stepper.navStep($index)" ng-bind="item.years.from + (item.years.to ? ' - ' + item.years.to : '')" ng-class="{active : stepper.current == $index}" class="tunnel-nav__step"></div>
+                <div ng-repeat="item in stepper.steps track by $index" ng-click="stepper.navStep($index)" ng-bind="item.years.from + (item.years.to ? ' - ' + item.years.to : '')" ng-class="{active : stepper.current == $index}" class="tunnel-nav__step" ng-if="$index"></div>
             </div>
             <!-- /Tunnel Nav -->
 
@@ -249,10 +250,27 @@
             <div class="tunnel">
                 <div class="tunnel-slick" slick-tunnel="stepper.steps">
                     <div id="tunnel-{{item.id}}" class="tunnel-slick__item" data-from="1832" data-to="false" data-bg="light" ng-repeat="item in stepper.steps track by $index">
-                        <div class="tunnel-slick__header" ng-if="$first">
-                            <div class="big-title h1 splitted-text">Sono la prima</div>
-                            <div class="cta">
-                                <a href="#" class="inline-btn">Start experience</a>
+                        <div class="tunnel-slick__intro" ng-if="$first">
+                            <div class="big-title">
+                                Please turn on your sound
+                            </div>
+                            <div class="intro-box">
+                                <div class="img">
+                                    <img src="img/intro.png" alt="" />
+                                </div>
+                                <div class="text">
+                                    <img src="img/200Rossini150.svg" />
+                                    <p>
+                                        Celebriamo il talento di Gioacchino Rossini, compositore e musicista
+                                        di immenso valore per la capacità di innovare il linguaggio musicale.
+                                    </p>
+                                    <p>
+                                        Collega le cuffie ed immergini nelle atmopsfere di capolavori immortali.
+                                    </p>
+                                </div>
+                                <div class="cta" ng-if="item.title">
+                                    <button type="button" class="inline-btn">View more</button>
+                                </div>
                             </div>
                         </div>
                         <div class="tunnel-slick__header" ng-if="!$first">

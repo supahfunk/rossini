@@ -976,7 +976,13 @@ Tunnel Year
   top: 75px;
   pointer-events: none;
   line-height: 1;
-  transition: all 1.4s cubic-bezier(0.19, 1, 0.22, 1); }
+  transition: all 1.4s cubic-bezier(0.19, 1, 0.22, 1);
+  transform: translate(0, -50%);
+  opacity: 1; }
+  [data-step="0"] .tunnel-year {
+    transform: translate(0, -100%);
+    opacity: 0;
+    pointer-events: none; }
   @media (max-width: 1024px) {
     .tunnel-year {
       font-size: 15vw; } }
@@ -1029,10 +1035,18 @@ Tunnel Nav
 .tunnel-nav {
   position: fixed;
   z-index: 100;
-  right: 30px;
+  right: 50px;
   top: 50%;
-  transform: translateY(-50%);
-  transition: opacity 0.8s cubic-bezier(0.19, 1, 0.22, 1); }
+  transform: translate(0, -50%);
+  transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+  opacity: 1; }
+  [data-step="0"] .tunnel-nav {
+    transform: translate(100%, -50%);
+    opacity: 0;
+    pointer-events: none; }
+  @media (max-width: 1280px) {
+    .tunnel-nav {
+      right: 30px; } }
   @media (max-width: 768px) {
     .tunnel-nav {
       display: none; } }
@@ -1064,9 +1078,9 @@ Tunnel Nav
       content: '';
       position: absolute;
       z-index: 1;
-      right: -25px;
+      right: -50px;
       top: 8px;
-      width: 25px;
+      width: 50px;
       height: 0;
       border-top: 1px solid #3353a4;
       opacity: .7; }
@@ -1129,6 +1143,12 @@ Tunnel Slick
     height: auto;
     margin-bottom: 30px; }
 
+/* Tunnel 0 */
+#tunnel-0 .tunnel-slick__intro {
+  left: 45%;
+  top: 45%;
+  color: #2b2e34; }
+
 /* Tunnel 1 */
 #tunnel-1 .tunnel-slick__header {
   left: 45%;
@@ -1182,12 +1202,13 @@ Detail
   .detail__scroll {
     position: relative;
     z-index: 1;
-    height: calc(100vh - 15vw);
+    height: calc(100vh - 180px);
     padding: 0 100px 0 50px;
     border-top: 1px solid #fff; }
     @media (max-width: 1280px) {
       .detail__scroll {
-        padding: 0 40px 0 20px; } }
+        padding: 0 40px 0 20px;
+        height: calc(100vh - 160px); } }
     @media (max-width: 768px) {
       .detail__scroll {
         padding: 0;
