@@ -966,11 +966,12 @@
         }
 
         function onDeviceOrientation(e) {
-            var x = e.beta;
-            var y = e.gamma;
+            var y = e.beta;
+            var x = e.gamma;
             var z = 0;
 
-            x = Math.min(x, 30) - 10;
+            y = Math.min(y, 30) - 10;
+
             x /= 30;
             y /= 30;
             z /= 30;
