@@ -269,7 +269,7 @@
         <div class="detail" ng-class="{ active: detail.active }">
             <div class="detail__container">
                 <div class="detail__wrap">
-                    <div class="detail__scroll" scrollbar>
+                    <div class="detail__scroll" scrollbar ng-if="detail.active">
                         <div class="detail__content" ng-bind-html="detail.html">
                         </div>
                     </div>

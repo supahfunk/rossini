@@ -1030,6 +1030,9 @@ Tunnel Nav
   top: 50%;
   transform: translateY(-50%);
   transition: opacity 0.8s cubic-bezier(0.19, 1, 0.22, 1); }
+  @media (max-width: 768px) {
+    .tunnel-nav {
+      display: none; } }
   .tunnel-nav__step {
     text-align: right;
     color: #3353a4;
@@ -1169,7 +1172,10 @@ Detail
         padding: 0; } }
   .detail__wrap {
     height: 100vh;
-    padding-top: 10vw; }
+    padding-top: 105px; }
+    @media (max-width: 1280px) {
+      .detail__wrap {
+        padding-top: 65px; } }
   .detail__scroll {
     position: relative;
     z-index: 1;
@@ -1183,8 +1189,11 @@ Detail
       .detail__scroll {
         padding: 0;
         margin: 80px 0 0;
-        height: calc(100vh - 100px);
+        height: calc(100vh - 200px);
         border: none; } }
+    @media (max-width: 575px) {
+      .detail__scroll {
+        margin: 60px 0 0; } }
     .detail__scroll .scrollbar-track {
       background: rgba(0, 0, 0, 0.5); }
       .detail__scroll .scrollbar-track.show {
@@ -1218,6 +1227,9 @@ Detail
     @media (max-width: 768px) {
       .detail__content {
         padding: 30px 0 50px; } }
+    @media (max-width: 575px) {
+      .detail__content {
+        padding-top: 10px; } }
   .detail__subtitle {
     flex: 0 0 100%;
     width: 100%;
@@ -1394,7 +1406,16 @@ Detail
 
 .detail-active .tunnel-year {
   color: rgba(255, 255, 255, 0.05);
-  transform: translateY(-50%); }
+  transform: translateY(-54%) scale(0.4); }
+  @media (max-width: 1440px) {
+    .detail-active .tunnel-year {
+      transform: translateY(-58%) scale(0.6); } }
+  @media (max-width: 1280px) {
+    .detail-active .tunnel-year {
+      transform: translateY(-75%) scale(0.6); } }
+  @media (max-width: 1024px) {
+    .detail-active .tunnel-year {
+      transform: translateY(-32%) scale(0.8); } }
   @media (max-width: 575px) {
     .detail-active .tunnel-year {
       transform: none; } }

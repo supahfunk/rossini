@@ -314,6 +314,10 @@ Tunnel Nav
     transform: translateY(-50%);
     transition: opacity .8s $bezier;
 
+    @include xs {
+        display: none;
+    }
+
     &__step {
         text-align: right;
         color: $violet;
