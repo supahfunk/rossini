@@ -815,6 +815,191 @@
 
     }]);
 
+    var AudioManager = function() {
+        function AudioManager(ctx) {
+            var manager = this;
+            manager.ctx = ctx;
+            manager.buffers = {};
+            manager.sounds = {};
+        }
+
+        AudioManager.prototype = {
+            add: function(sound) {
+                var path = sound.path;
+                var manager = this;
+                var xhr = new XMLHttpRequest();
+                xhr.responseType = "arraybuffer";
+                xhr.open("GET", path, true);
+                xhr.onload = function() {
+                    // Asynchronously decode the audio file data in xhr.response
+                    manager.ctx.decodeAudioData(xhr.response, function(buffer) {
+                        if (!buffer) {
+                            console.log('AudioManager.decodeAudioData.error', path);
+                            return;
+                        }
+                        console.log('AudioManager.decodeAudioData', path);
+                        manager.buffers[path] = buffer;
+                        if (sound.shouldPlay) {
+                            sound.play();
+                        }
+                    });
+                };
+                xhr.onerror = function(error) {
+                    console.log('AudioManager.xhr.onerror', error);
+                };
+                xhr.send();
+            },
+            stop: function(sound) {
+                var path = sound.path;
+                var manager = this;
+                if (manager.sounds.hasOwnProperty(path)) {
+                    for (var p in manager.sounds[path]) {
+                        if (manager.sounds[path].hasOwnProperty(p)) {
+                            manager.sounds[path][p].noteOff(0);
+                        }
+                    }
+                }
+            }
+        };
+
+        var _instance;
+
+        function getInstance() {
+            if (_instance) {
+                return _instance;
+            } else {
+                var _ctx = getAudioContext();
+                if (_ctx) {
+                    _instance = new AudioManager(_ctx);
+                }
+            }
+            return _instance;
+        }
+
+        var _ctx;
+
+        function getAudioContext() {
+            if (_ctx) {
+                return _ctx;
+            } else {
+                try {
+                    var _AudioContext = window.AudioContext || window.webkitAudioContext;
+                    _ctx = new _AudioContext();
+                } catch (e) {
+                    console.log("No Web Audio API support");
+                    _ctx = null;
+                }
+            }
+            return _ctx;
+        }
+
+        AudioManager.getInstance = getInstance;
+        AudioManager.getAudioContext = getAudioContext;
+
+        return AudioManager;
+    }();
+
+    var AudioSound = function() {
+
+        function AudioSound(path, options) {
+            var defaultOptions = {
+                volume: 85,
+                loop: false,
+            };
+            if (options) {
+                angular.extend(defaultOptions, options);
+            }
+            var manager = AudioManager.getInstance();
+            var sound = this;
+            sound.path = path;
+            sound.options = defaultOptions;
+            sound.manager = manager;
+            sound.setVolume(defaultOptions.volume);
+            manager.add(sound);
+        }
+
+        AudioSound.translateVolume = function(volume, inverse) {
+            return inverse ? volume * 100 : volume / 100;
+        };
+
+        AudioSound.prototype = {
+            play: function() {
+                var sound = this;
+                var path = sound.path;
+                var manager = sound.manager;
+                var buffer = manager.buffers[path];
+                // Only play if it's loaded yet
+                if (typeof buffer !== "undefined") {
+                    var source = sound.getSource(buffer);
+                    source.loop = sound.options.loop;
+                    if (source.start) {
+                        source.start(0); // (0, 2, 1);
+                    } else {
+                        source.noteOn(0); // (0, 2, 1);
+                    }
+                    // source.noteOn(0);
+                    if (!manager.sounds.hasOwnProperty(path)) {
+                        manager.sounds[path] = [];
+                    }
+                    manager.sounds[path].push(source);
+                    sound.shouldPlay = false;
+                } else {
+                    sound.shouldPlay = true;
+                }
+                console.log('AudioSound.play', path);
+            },
+            stop: function() {
+                var sound = this;
+                sound.manager.stop(sound);
+            },
+            getVolume: function() {
+                return AudioSound.translateVolume(this.volume, true);
+            },
+            // Expect to receive in range 0-100
+            setVolume: function(volume) {
+                this.volume = AudioSound.translateVolume(volume);
+            },
+            getSource: function(buffer) {
+                var sound = this;
+                var ctx = sound.manager.ctx;
+                var source = ctx.createBufferSource();
+                var gainNode = ctx.createGain ? ctx.createGain() : ctx.createGainNode();
+                gainNode.gain.value = sound.volume;
+                source.buffer = buffer;
+                source.connect(gainNode);
+                gainNode.connect(ctx.destination);
+                return source;
+            }
+        };
+
+        return AudioSound;
+    }();
+
+    // USAGE
+    /*
+    var background = new AudioSound('audio/07-rossini-192-short.mp3', {
+        loop: true,
+    });
+    background.play();
+    setTimeout(function() {
+        background.stop();
+    }, 2 * 60 * 1000);
+    */
+
+    /*
+    var blastSound, smashSound, backgroundMusic;
+    blastSound = new AudioSound("blast.mp3");
+    smashSound = new AudioSound("smash.mp3");
+    backgroundMusic = new AudioSound("smooth-jazz.mp3", {loop: true});
+    backgroundMusic.play();
+    blastSound.play();
+    smashSound.play();
+    //Play background music for 30 seconds
+    setTimeout(function(){
+        backgroundMusic.stop();
+    }, 30 * 1000);
+    */
+
 }());
 /* global angular */
 
@@ -871,95 +1056,21 @@
         service.x = 0;
         service.y = 0;
         service.z = 0;
-        service.compass = 0;
-
-        service.update = throttle(update, 100);
         service.init = init;
 
-        function set(x, y, z, degree) {
+        function set(x, y, z) {
             service.x = x;
             service.y = y;
             service.z = z;
-            service.compass = degree;
             $rootScope.$broadcast('onDeviceMotion', service);
-        }
-
-        function update() {
-            var device = service.device;
-            if (device) {
-                // Obtain the *screen-adjusted* normalized device rotation
-                // as Quaternion, Rotation Matrix and Euler Angles objects
-                // from our FULLTILT.DeviceOrientation object
-                // var quaternion = device.getScreenAdjustedQuaternion();
-                // var matrix = device.getScreenAdjustedMatrix();
-                var e = device.getScreenAdjustedEuler();
-                var x = e.alpha / 90;
-                var y = (e.beta - 90) / 90;
-                var z = e.gamma / 90;
-                // console.log('onDeviceOrientation', x, y, z);
-
-                var direction = Math.round(e.alpha);
-                var tiltFB = Math.round(e.beta);
-                var tiltLR = Math.round(e.gamma);
-
-                //update longitude
-                if (tiltFB < 0) {
-                    tiltFB = tiltFB * -1;
-                }
-                var latitude = (tiltFB) - (180 / 2);
-
-                var alphaRad = e.alpha * (Math.PI / 180);
-                var betaRad = e.beta * (Math.PI / 180);
-                var gammaRad = e.gamma * (Math.PI / 180);
-
-                var cA = Math.cos(alphaRad);
-                var sA = Math.sin(alphaRad);
-                var cB = Math.cos(betaRad);
-                var sB = Math.sin(betaRad);
-                var cG = Math.cos(gammaRad);
-                var sG = Math.sin(gammaRad);
-
-                //Calculate A, B, C rotation components
-                var rA = -cA * sG - sA * sB * cG;
-                var rB = -sA * sG + cA * sB * cG;
-                var rC = -cB * cG;
-
-                //Calculate compass heading
-                var compassHeading = Math.atan(rA / rB);
-
-                //Convert from half unit circle to whole unit circle
-                if (rB < 0) {
-                    compassHeading += Math.PI;
-                } else if (rA < 0) {
-                    compassHeading += 2 * Math.PI;
-                }
-
-                //Convert radians to degrees
-                compassHeading *= 180 / Math.PI;
-
-                set(x, y, z, compassHeading);
-            }
-            console.log('MotionService.update', device);
         }
 
         function addListeners() {
             if (window.DeviceOrientationEvent) {
-                /*
-                var orientation = FULLTILT.getDeviceOrientation({ 'type': 'world' }).then(function(controller) {
-                    service.device = controller;
-                }).catch(function(error) {
-                    console.log('MotionService.getDeviceOrientation', error);
-                });
-                */
                 window.addEventListener("deviceorientation", onDeviceOrientation, true);
             }
             /*
             if (window.DeviceMotionEvent) {
-                var motion = FULLTILT.getDeviceMotion({ 'type': 'world' }).then(function(controller) {
-                    service.device = controller;
-                }).catch(function(error) {
-                    console.log('MotionService.getDeviceMotion', error);
-                });
                 window.addEventListener('devicemotion', onDeviceMotion, true);
             }    
             */
@@ -1183,10 +1294,12 @@
             setStep(index);
             $rootScope.$broadcast('onGoStep', index);
             $timeout(function() {
-                var $active = $('.tunnel-nav__step.active'),
-                    position = $active.position().top,
-                    width = $active.width() + 16;
-                $('.tunnel-nav__follower').css({ width: width + 'px', '-webkit-transform': 'translateY(' + position + 'px)', '-moz-transform': 'translateY(' + position + 'px)', '-ms-transform': 'translateY(' + position + 'px)', 'transform': 'translateY(' + position + 'px)' });
+                var element = $('.tunnel-nav__step.active');
+                if (element.length) {
+                    var position = element.position().top;
+                    var width = element.width() + 16;
+                    $('.tunnel-nav__follower').css({ width: width + 'px', '-webkit-transform': 'translateY(' + position + 'px)', '-moz-transform': 'translateY(' + position + 'px)', '-ms-transform': 'translateY(' + position + 'px)', 'transform': 'translateY(' + position + 'px)' });
+                }
             });
         }
 

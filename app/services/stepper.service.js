@@ -186,10 +186,12 @@
             setStep(index);
             $rootScope.$broadcast('onGoStep', index);
             $timeout(function() {
-                var $active = $('.tunnel-nav__step.active'),
-                    position = $active.position().top,
-                    width = $active.width() + 16;
-                $('.tunnel-nav__follower').css({ width: width + 'px', '-webkit-transform': 'translateY(' + position + 'px)', '-moz-transform': 'translateY(' + position + 'px)', '-ms-transform': 'translateY(' + position + 'px)', 'transform': 'translateY(' + position + 'px)' });
+                var element = $('.tunnel-nav__step.active');
+                if (element.length) {
+                    var position = element.position().top;
+                    var width = element.width() + 16;
+                    $('.tunnel-nav__follower').css({ width: width + 'px', '-webkit-transform': 'translateY(' + position + 'px)', '-moz-transform': 'translateY(' + position + 'px)', '-ms-transform': 'translateY(' + position + 'px)', 'transform': 'translateY(' + position + 'px)' });
+                }
             });
         }
 
