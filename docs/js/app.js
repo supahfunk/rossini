@@ -790,6 +790,47 @@
 
     var app = angular.module('app');
 
+    var getNow = Date.now || function() {
+        return new Date().getTime();
+    };
+
+    function throttle(callback, wait, options) {
+        // Returns a function, that, when invoked, will only be triggered at most once
+        // during a given window of time. Normally, the throttled function will run
+        // as much as it can, without ever going more than once per `wait` duration;
+        // but if you'd like to disable the execution on the leading edge, pass
+        // `{leading: false}`. To disable execution on the trailing edge, ditto.
+        var context, args, result;
+        var timeout = null;
+        var previous = 0;
+        if (!options) options = {};
+        var later = function() {
+            previous = options.leading === false ? 0 : getNow();
+            timeout = null;
+            result = callback.apply(context, args);
+            if (!timeout) context = args = null;
+        };
+        return function() {
+            var now = getNow();
+            if (!previous && options.leading === false) previous = now;
+            var remaining = wait - (now - previous);
+            context = this;
+            args = arguments;
+            if (remaining <= 0 || remaining > wait) {
+                if (timeout) {
+                    clearTimeout(timeout);
+                    timeout = null;
+                }
+                previous = now;
+                result = callback.apply(context, args);
+                if (!timeout) context = args = null;
+            } else if (!timeout && options.trailing !== false) {
+                timeout = setTimeout(later, remaining);
+            }
+            return result;
+        };
+    }
+
     app.service('MotionService', ['$rootScope', function($rootScope) {
 
         var service = this;
@@ -797,8 +838,8 @@
         service.x = 0;
         service.y = 0;
         service.z = 0;
-
-        service.update = update;
+        service.update = throttle(update, 100);
+        service.init = init;
 
         function set(x, y, z) {
             service.x = x;
@@ -816,9 +857,9 @@
                 // var quaternion = device.getScreenAdjustedQuaternion();
                 // var matrix = device.getScreenAdjustedMatrix();
                 var e = device.getScreenAdjustedEuler();
-                var x = (e.alpha) / 90;
-                var y = (e.beta - 90) / 90;
-                var z = (e.gamma) / 90;
+                var x = e.alpha / 90;
+                var y = e.beta / 90;
+                var z = e.gamma / 90;
                 // console.log('onDeviceOrientation', x, y, z);
                 set(x, y, z);
             }
@@ -840,22 +881,28 @@
             set(x, y, z);
         }
 
-        // world (compass), game (non compass)
+        function addListeners() {
+            // world (compass), game (non compass)
+            if (window.DeviceOrientationEvent) {
+                var orientation = FULLTILT.getDeviceOrientation({ 'type': 'game' }).then(function(controller) {
+                    service.device = controller;
+                }).catch(function(error) {
+                    console.log('MotionService.getDeviceOrientation', error);
+                });
+                // window.addEventListener("deviceorientation", onDeviceOrientation, true);
+            } else if (window.DeviceMotionEvent) {
+                var motion = FULLTILT.getDeviceMotion({ 'type': 'game' }).then(function(controller) {
+                    service.device = controller;
+                }).catch(function(error) {
+                    console.log('MotionService.getDeviceOrientation', error);
+                });
+                // window.addEventListener('devicemotion', onDeviceMotion, true);
+            }
+        }
 
-        if (window.DeviceOrientationEvent) {
-            var orientation = FULLTILT.getDeviceOrientation({ 'type': 'game' }).then(function(controller) {
-                service.device = controller;
-            }).catch(function(error) {
-                console.log('MotionService.getDeviceOrientation', error);
-            });
-            // window.addEventListener("deviceorientation", onDeviceOrientation, true);
-        } else if (window.DeviceMotionEvent) {
-            var motion = FULLTILT.getDeviceMotion({ 'type': 'game' }).then(function(controller) {
-                service.device = controller;
-            }).catch(function(error) {
-                console.log('MotionService.getDeviceOrientation', error);
-            });
-            // window.addEventListener('devicemotion', onDeviceMotion, true);
+        function init() {
+            console.log('MotionService.init');
+            addListeners();
         }
 
     }]);
@@ -1207,12 +1254,14 @@
                 var mouse = { x: 0, y: 0 };
                 // var mouseDown = { x: 0, y: 0 };
                 var parallax = { x: 0, y: 0, i: 0 };
-                var motion = MotionService;
                 var translate = { x: 0, y: 0 };
                 var friction = 1 / 12;
+                var motion = MotionService;
+                if (options.device.mobile) {
+                    motion.init();
+                }
 
                 function updateParallax() {
-
                     if (options.device.mobile) {
                         motion.update();
                         parallax.x = (motion.x * 20);
@@ -1246,7 +1295,6 @@
 
                     parallax.x += Math.cos(parallax.i / 100) * 10;
                     parallax.y += Math.sin(parallax.i / 100) * 10;
-
                     parallax.i++;
                 }
 

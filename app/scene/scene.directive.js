@@ -53,12 +53,14 @@
                 var mouse = { x: 0, y: 0 };
                 // var mouseDown = { x: 0, y: 0 };
                 var parallax = { x: 0, y: 0, i: 0 };
-                var motion = MotionService;
                 var translate = { x: 0, y: 0 };
                 var friction = 1 / 12;
+                var motion = MotionService;
+                if (options.device.mobile) {
+                    motion.init();
+                }
 
                 function updateParallax() {
-
                     if (options.device.mobile) {
                         motion.update();
                         parallax.x = (motion.x * 20);
@@ -92,7 +94,6 @@
 
                     parallax.x += Math.cos(parallax.i / 100) * 10;
                     parallax.y += Math.sin(parallax.i / 100) * 10;
-
                     parallax.i++;
                 }
 
