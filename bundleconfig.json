@@ -45,6 +45,7 @@
             "app/components/years.directive.js",
             "app/controllers/years.controller.js",
             "app/services/analyser.service.js",
+            "app/services/motion.service.js",
             "app/services/stepper.service.js",
             "app/scene/scene.directive.js",
             "app/scene/scene.options.js"

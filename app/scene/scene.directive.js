@@ -5,7 +5,7 @@
 
     var app = angular.module('app');
 
-    app.directive('scene', ['SceneOptions', 'StepperService', 'AnalyserService', function(SceneOptions, StepperService, AnalyserService) {
+    app.directive('scene', ['SceneOptions', 'StepperService', 'AnalyserService', 'MotionService', function(SceneOptions, StepperService, AnalyserService, MotionService) {
         return {
             restrict: 'A',
             scope: {
@@ -51,12 +51,47 @@
                 });
 
                 var mouse = { x: 0, y: 0 };
-                // var mousePos = { x: 0, y: 0 };
+                // var mouseDown = { x: 0, y: 0 };
                 var parallax = { x: 0, y: 0, i: 0 };
+                var motion = MotionService;
+                var translate = { x: 0, y: 0 };
+                var friction = 1 / 12;
 
                 function updateParallax() {
-                    parallax.x = (mouse.x * 20) + Math.cos(parallax.i / 100) * 10;
-                    parallax.y = (mouse.y * 20) + Math.sin(parallax.i / 100) * 10;
+
+                    if (options.device.mobile) {
+                        parallax.x = (motion.x * 20);
+                        parallax.y = (motion.y * 20);
+                    } else {
+                        parallax.x = (mouse.x * 20);
+                        parallax.y = (mouse.y * 20);
+                    }
+
+                    var x = parallax.x / 4;
+                    var y = parallax.y / 4;
+
+                    translate.x += (x - translate.x) * friction;
+                    translate.y += (y - translate.y) * friction;
+
+                    if ($('.detail-active').length == 0) {
+                        var translateYear = 'translate(' + (translate.x * -4) + 'px, ' + (translate.y * -2) + 'px)';
+                        $('.tunnel-year').css({
+                            '-webit-transform': translateYear,
+                            '-moz-transform': translateYear,
+                            'transform': translateYear
+                        });
+                    }
+
+                    var translateSlick = 'translate(' + translate.x + 'px, ' + translate.y + 'px)';
+                    $('.tunnel-slick .slick-active .tunnel-slick__item').css({
+                        '-webit-transform': translateSlick,
+                        '-moz-transform': translateSlick,
+                        'transform': translateSlick
+                    });
+
+                    parallax.x += Math.cos(parallax.i / 100) * 10;
+                    parallax.y += Math.sin(parallax.i / 100) * 10;
+
                     parallax.i++;
                 }
 
@@ -202,8 +237,8 @@
                         // target.add(tangent);
                         camera.position.copy(position);
                         camera.target.copy(target);
-                        camera.position.x += (position.x + parallax.x - camera.position.x) / 12;
-                        camera.position.y += (position.y + parallax.y - camera.position.y) / 12;
+                        camera.position.x += (position.x + parallax.x - camera.position.x) * friction;
+                        camera.position.y += (position.y + parallax.y - camera.position.y) * friction;
                         camera.lookAt(camera.target);
                     }
 
@@ -537,8 +572,8 @@
                             dummy.position.copy(dummyMobilePosition);
                         }
 
-                        dummy.rotation.x += ((parallax.y * 0.00625) - dummy.rotation.x) / 12;
-                        dummy.rotation.y += ((parallax.x * 0.01250) - dummy.rotation.y) / 12;
+                        dummy.rotation.x += ((parallax.y * 0.00625) - dummy.rotation.x) * friction;
+                        dummy.rotation.y += ((parallax.x * 0.01250) - dummy.rotation.y) * friction;
 
                         var position = objects.ribbon.cameraSpline.getPointAt((index + 0.1) / stepper.steps.length);
                         // var tangent = objects.ribbon.cameraSpline.getTangent(index + 0.1 / stepper.steps.length).normalize().multiplyScalar(300);
@@ -626,18 +661,18 @@
                     function handleTouchStart(event) {
                         if (event.touches.length > 1) {
                             event.preventDefault();
-                            mousePos = { x: event.touches[0].pageX, y: event.touches[0].pageY };
+                            mouseDown = { x: event.touches[0].pageX, y: event.touches[0].pageY };
                         }
                     }
 
                     function handleTouchEnd(event) {
-                        mousePos = { x: windowHalfX, y: windowHalfY };
+                        mouseDown = { x: windowHalfX, y: windowHalfY };
                     }
 
                     function handleTouchMove(event) {
                         if (event.touches.length == 1) {
                             event.preventDefault();
-                            mousePos = { x: event.touches[0].pageX, y: event.touches[0].pageY };
+                            mouseDown = { x: event.touches[0].pageX, y: event.touches[0].pageY };
                         }
                     }
                     */
