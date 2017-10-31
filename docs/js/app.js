@@ -876,32 +876,44 @@
 
         function init(yearsKey) {
             var deferred = $q.defer();
-            $http.get('json/rossini.js').then(function(response) {
-                // var items = response.data;
-                var index = 0;
-                var items = getItems();
+            var index = 0;
+            if (steps.length) {
                 angular.forEach(items, function(item, i) {
-                    item.years.key = String(i + 1); // String(item.years.to ? item.years.from + '-' + item.years.to : item.years.from); // da riattivare !!!
-                    item.url = '/years/' + item.years.key;
-                    item.detailUrl = item.url + '/detail';
-                    // console.log('stepper.init', item.years.key, yearsKey);
                     if (item.years.key === yearsKey) {
                         index = i;
                     }
-                    item.titleTrusted = $sce.trustAsHtml(item.title);
-                    item.circle.position = new THREE.Vector3().copy(item.circle.position);
-                    steps.push(item);
                 });
                 values.pow = index / steps.length;
                 stepper.current = current = index;
                 navStep(index);
-                // console.log('StepperService.load', steps);
                 deferred.resolve(steps);
+            } else {
+                $http.get('json/rossini.js').then(function(response) {
+                    // var items = response.data;
+                    var items = getItems();
+                    angular.forEach(items, function(item, i) {
+                        item.years.key = String(i + 1); // String(item.years.to ? item.years.from + '-' + item.years.to : item.years.from); // da riattivare !!!
+                        item.url = '/years/' + item.years.key;
+                        item.detailUrl = item.url + '/detail';
+                        // console.log('stepper.init', item.years.key, yearsKey);
+                        if (item.years.key === yearsKey) {
+                            index = i;
+                        }
+                        item.titleTrusted = $sce.trustAsHtml(item.title);
+                        item.circle.position = new THREE.Vector3().copy(item.circle.position);
+                        steps.push(item);
+                    });
+                    values.pow = index / steps.length;
+                    stepper.current = current = index;
+                    navStep(index);
+                    // console.log('StepperService.load', steps);
+                    deferred.resolve(steps);
 
-            }, function(error) {
-                deferred.reject(error);
+                }, function(error) {
+                    deferred.reject(error);
 
-            });
+                });
+            }
             return deferred.promise;
         }
 
