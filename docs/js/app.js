@@ -312,7 +312,7 @@
                 function onAfterChange(event, slick, currentSlide) {
                     stepper.slicking = false;
                     showLetters();
-                    // console.log('onAfterChange');
+                    console.log('onAfterChange');
                     scope.$root.$broadcast('onSlickAfterChange', { current: currentSlide });
                 }
 
