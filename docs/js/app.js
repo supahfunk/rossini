@@ -1148,7 +1148,7 @@
 
                     var ratio = width / height;
                     var fov = 30;
-                    var near = 0.001;
+                    var near = 1;
                     var far = 20000;
 
                     scene = new THREE.Scene();
@@ -1267,7 +1267,7 @@
                         var position = cameraSpline.getPointAt(cpow);
                         position.y += stepper.values.cameraHeight;
 
-                        object.material.uniforms.visibility.value = Math.min(1.0, stepper.values.pow + s);
+                        // object.material.uniforms.visibility.value = Math.min(1.0, stepper.values.pow + s); // riattivare?
                         // object.material.uniforms.lineWidth.value = 5;
 
                         var target = cameraSpline.getPointAt(tpow);
