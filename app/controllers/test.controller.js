@@ -22,6 +22,8 @@
             requestAnimationFrame(loop);
         }
 
+        loop();
+
         $scope.motion = motion;
 
     }]);
