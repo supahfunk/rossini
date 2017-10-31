@@ -798,12 +798,32 @@
         service.y = 0;
         service.z = 0;
 
+        service.update = update;
+
         function set(x, y, z) {
             service.x = x;
             service.y = y;
             service.z = z;
             $rootScope.$broadcast('onDeviceMotion', service);
         }
+
+        function update() {
+            var device = service.device;
+            if (device) {
+                // Obtain the *screen-adjusted* normalized device rotation
+                // as Quaternion, Rotation Matrix and Euler Angles objects
+                // from our FULLTILT.DeviceOrientation object
+                var quaternion = device.getScreenAdjustedQuaternion();
+                var matrix = device.getScreenAdjustedMatrix();
+                var euler = device.getScreenAdjustedEuler();
+
+                // Do something with our quaternion, matrix, euler objects...
+                console.debug(quaternion);
+                console.debug(matrix);
+                console.debug(euler);
+            }
+        }
+
 
         function onDeviceOrientation(e) {
             var x = (e.alpha) / 90;
@@ -822,11 +842,19 @@
         }
 
         if (window.DeviceOrientationEvent) {
-            window.addEventListener("deviceorientation", onDeviceOrientation, true);
-
+            var orientation = FULLTILT.getDeviceOrientation({ 'type': 'world' }).then(function(controller) {
+                service.device = controller;
+            }).catch(function(error) {
+                console.log('MotionService.getDeviceOrientation', error);
+            });
+            // window.addEventListener("deviceorientation", onDeviceOrientation, true);
         } else if (window.DeviceMotionEvent) {
-            window.addEventListener('devicemotion', onDeviceMotion, true);
-
+            var motion = FULLTILT.getDeviceMotion({ 'type': 'world' }).then(function(controller) {
+                service.device = controller;
+            }).catch(function(error) {
+                console.log('MotionService.getDeviceOrientation', error);
+            });
+            // window.addEventListener('devicemotion', onDeviceMotion, true);
         }
 
     }]);
@@ -1185,6 +1213,7 @@
                 function updateParallax() {
 
                     if (options.device.mobile) {
+                        motion.update();
                         parallax.x = (motion.x * 20);
                         parallax.y = (motion.y * 20);
                     } else {

@@ -60,6 +60,7 @@
                 function updateParallax() {
 
                     if (options.device.mobile) {
+                        motion.update();
                         parallax.x = (motion.x * 20);
                         parallax.y = (motion.y * 20);
                     } else {

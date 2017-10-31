@@ -26,6 +26,7 @@
             "bower_components/jquery-easing/jquery.easing.js",
             "bower_components/jquery-mousewheel/jquery.mousewheel.js",
             "bower_components/slick-carousel/slick/slick.js",
+            "bower_components/fulltilt/dist/fulltilt.js",
             "bower_components/smooth-scrollbar/dist/smooth-scrollbar.js"
         ],
         "outputFileName": "docs/js/vendors.js",
