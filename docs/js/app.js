@@ -618,8 +618,6 @@
         var analyser, audio, audioUrl;
 
         var audioContext = (window.AudioContext || window.webkitAudioContext);
-        var analyserContext = new audioContext();
-        analyser = analyserContext.createAnalyser();
 
         audio = new Audio();
         audio.addEventListener('canplay', onCanPlay);
@@ -633,13 +631,17 @@
             // console.log('AnalyserService.onCanPlay');
             if (!source) {
                 var bufferLength;
-                source = analyserContext.createMediaElementSource(audio);
-                source.smoothingTimeConstant = 0.85;
-                source.connect(analyser);
-                source.connect(analyserContext.destination);
-                analyser.fftSize = options.audio.bands * 2;
-                bufferLength = analyser.frequencyBinCount;
-                service.data = new Uint8Array(bufferLength);
+                var ctx = new audioContext();
+                if (ctx) {
+                    analyser = ctx.createAnalyser();
+                    source = ctx.createMediaElementSource(audio);
+                    source.smoothingTimeConstant = 0.85;
+                    source.connect(analyser);
+                    source.connect(ctx.destination);
+                    analyser.fftSize = options.audio.bands * 2;
+                    bufferLength = analyser.frequencyBinCount;
+                    service.data = new Uint8Array(bufferLength);
+                }
             }
             // return service.data;
         }
@@ -725,10 +727,10 @@
             if (!options.device.ios || service.unlocked) {
                 deferred.resolve();
             } else {
-                source = doUnlock();
+                var o = doUnlock();
                 // by checking the play state after some time, we know if we're really unlocked
                 $timeout(function() {
-                    if ((source.playbackState === source.PLAYING_STATE || source.playbackState === source.FINISHED_STATE)) {
+                    if (o && (o.playbackState === o.PLAYING_STATE || o.playbackState === o.FINISHED_STATE)) {
                         service.unlocked = true;
                         deferred.resolve();
                     }
@@ -740,21 +742,21 @@
 
         function doUnlock() {
             // create empty buffer
+            var o = null;
             var ctx = new audioContext();
-            var source = ctx.createBufferSource();
-            var buffer = ctx.createBuffer(1, 1, 22050);
-            source.buffer = buffer;
-
-            // connect to output (your speakers)
-            source.connect(ctx.destination);
-
-            // play the file
-            if (source.noteOn) {
-                source.noteOn(0);
+            if (ctx) {
+                o = ctx.createBufferSource();
+                var buffer = ctx.createBuffer(1, 1, 22050);
+                o.buffer = buffer;
+                // connect to output (your speakers)
+                o.connect(ctx.destination);
+                // play the file
+                if (o.noteOn) {
+                    o.noteOn(0);
+                }
+                console.log('AudioAnalyser.doUnlock');
             }
-
-            console.log('AudioAnalyser.doUnlock');
-            return source;
+            return o;
         }
 
         window.addEventListener('touchstart', unlock, false);
