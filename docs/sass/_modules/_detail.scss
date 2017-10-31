@@ -43,12 +43,13 @@ Detail
     &__scroll {
         position: relative;
         z-index: 1;
-        height: calc(100vh - 15vw);
+        height: calc(100vh - 180px);
         padding: 0 100px 0 50px;
         border-top: 1px solid #fff;
 
         @include md {
             padding: 0 40px 0 20px;
+            height: calc(100vh - 160px);
         }
 
         @include xs {

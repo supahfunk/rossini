@@ -317,16 +317,20 @@ function mouseMove() {
         x += (lFollowX - x) * friction;
         y += (lFollowY - y) * friction;
 
-        $('.tunnel-bg .slick-active img').css({
-            '-webit-transform': 'translate(' + x / 5 + 'px, ' + y / 5 + 'px)',
-            '-moz-transform': 'translate(' + x / 5 + 'px, ' + y / 5 + 'px)',
-            'transform': 'translate(' + x / 5 + 'px, ' + y / 5 + 'px)'
-        });
+        if ($('.detail-active').length == 0) {
+            translateYear = 'translate(' + x / 2 + 'px, ' + y / 2 + 'px)';
+        $('.tunnel-year').css({
+            '-webit-transform': translateYear,
+            '-moz-transform': translateYear,
+            'transform': translateYear
+            });
+        }
 
+        translateSlick = 'translate(' + -x + 'px, ' + -y * 3 + 'px)';
         $('.tunnel-slick .slick-active .tunnel-slick__item').css({
-            '-webit-transform': 'translate(' + -x + 'px, ' + -y * 3 + 'px)',
-            '-moz-transform': 'translate(' + -x + 'px, ' + -y * 3 + 'px)',
-            'transform': 'translate(' + -x + 'px, ' + -y * 3 + 'px)'
+            '-webit-transform': translateSlick,
+            '-moz-transform': translateSlick,
+            'transform': translateSlick
         });
 
         window.requestAnimationFrame(animate);
