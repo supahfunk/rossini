@@ -612,7 +612,14 @@ Breadcrumb
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
-  line-height: 1.3; }
+  line-height: 1.3;
+  transition: all 1.1s cubic-bezier(0.19, 1, 0.22, 1);
+  pointer-events: all;
+  opacity: 1; }
+  [data-step="0"] .breadcrumb {
+    opacity: 0;
+    transform: translate(-50%, -100%);
+    pointer-events: none; }
   @media (max-width: 1024px) {
     .breadcrumb {
       display: none; } }
@@ -1058,6 +1065,8 @@ Tunnel Nav
     padding: 1px 0;
     float: right;
     clear: right; }
+    .tunnel-nav__step:hover {
+      opacity: .9; }
     .tunnel-nav__step.active {
       opacity: 1; }
     .dark-bg .tunnel-nav__step {
@@ -1142,16 +1151,119 @@ Tunnel Slick
     margin-bottom: 30px; }
 
 /* Tunnel 0 */
-#tunnel-0 .tunnel-slick__intro {
-  left: 45%;
-  top: 45%;
-  color: #2b2e34; }
+.tunnel-slick__intro {
+  position: relative;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden; }
+  .tunnel-slick__intro .intro-box {
+    position: absolute;
+    z-index: 10;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    width: 900px;
+    display: flex;
+    align-items: center; }
+    @media (max-width: 768px) {
+      .tunnel-slick__intro .intro-box {
+        transform: translate(-50%, -40%);
+        width: 100vw;
+        padding: 0 30px; } }
+    @media (max-width: 575px) {
+      .tunnel-slick__intro .intro-box {
+        position: relative;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        display: block;
+        transform: none;
+        padding-top: 70px; } }
+    .tunnel-slick__intro .intro-box .big-title {
+      position: absolute;
+      z-index: -1;
+      left: 50%;
+      transform: translate(-50%, -90%);
+      font-family: Didot, serif;
+      font-weight: bold;
+      font-size: 4vw;
+      line-height: 0.9;
+      color: #b2954d;
+      opacity: .6;
+      text-align: center;
+      font-size: 10vw;
+      width: 100vw; }
+      @media (max-width: 1440px) {
+        .tunnel-slick__intro .intro-box .big-title {
+          transform: translate(-50%, -100%); } }
+      @media (max-width: 1280px) {
+        .tunnel-slick__intro .intro-box .big-title {
+          transform: translate(-50%, -110%); } }
+      @media (max-width: 1024px) {
+        .tunnel-slick__intro .intro-box .big-title {
+          transform: translate(-50%, -120%); } }
+      @media (max-width: 768px) {
+        .tunnel-slick__intro .intro-box .big-title {
+          transform: translate(-50%, -170%); } }
+      @media (max-width: 575px) {
+        .tunnel-slick__intro .intro-box .big-title {
+          position: static;
+          transform: none;
+          width: 100%; } }
+    .tunnel-slick__intro .intro-box .img {
+      position: relative;
+      z-index: 1;
+      flex: 0 0 auto;
+      margin-right: 60px; }
+      @media (max-width: 1280px) {
+        .tunnel-slick__intro .intro-box .img {
+          width: 300px; } }
+      @media (max-width: 1024px) {
+        .tunnel-slick__intro .intro-box .img {
+          margin-right: 30px; } }
+      @media (max-width: 575px) {
+        .tunnel-slick__intro .intro-box .img {
+          width: 50%;
+          margin: 10px auto 30px;
+          text-align: center; } }
+      .tunnel-slick__intro .intro-box .img img {
+        max-width: 100%;
+        height: auto; }
+    .tunnel-slick__intro .intro-box .text {
+      position: relative;
+      z-index: 1;
+      max-width: 600px;
+      font-size: 14px; }
+      @media (max-width: 1024px) {
+        .tunnel-slick__intro .intro-box .text {
+          max-width: 500px; } }
+      @media (max-width: 575px) {
+        .tunnel-slick__intro .intro-box .text {
+          margin-top: -20px;
+          text-align: center; } }
+      .tunnel-slick__intro .intro-box .text img {
+        width: 300px;
+        height: auto;
+        margin-bottom: 20px; }
+        @media (max-width: 575px) {
+          .tunnel-slick__intro .intro-box .text img {
+            width: 250px;
+            display: block;
+            margin: 0 auto 10px; } }
+      .tunnel-slick__intro .intro-box .text p {
+        margin-bottom: 20px; }
+    .tunnel-slick__intro .intro-box .cta {
+      opacity: 1;
+      margin-top: 0;
+      transform: none; }
 
 /* Tunnel 1 */
 #tunnel-1 .tunnel-slick__header {
   left: 45%;
-  top: 45%;
-  color: #2b2e34; }
+  top: 45%; }
 
 /* Tunnel 2 */
 #tunnel-2 .tunnel-slick__header {
@@ -1161,8 +1273,7 @@ Tunnel Slick
 /* Tunnel 3 */
 #tunnel-3 .tunnel-slick__header {
   left: 60%;
-  top: 40%;
-  color: #fff; }
+  top: 40%; }
 
 /*--------------------------------------------------
 Detail

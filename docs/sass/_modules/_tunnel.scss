@@ -348,6 +348,10 @@ Tunnel Nav
         float: right;
         clear: right;
 
+        &:hover {
+            opacity: .9;
+        }
+
         &.active {
             opacity: 1;
         }
@@ -466,12 +470,144 @@ Tunnel Slick
 }
 
 /* Tunnel 0 */
-#tunnel-0 {
+.tunnel-slick__intro {
+    position: relative;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
 
-    .tunnel-slick__intro {
-        left: 45%;
-        top: 45%;
-        color: $black-tit;
+
+    .intro-box {
+        position: absolute;
+        z-index: 10;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -30%);
+        width: 900px;
+        display: flex;
+        align-items: center;
+
+        @include xs {
+            transform: translate(-50%, -40%);
+            width: 100vw;
+            padding: 0 30px;
+        }
+
+        @include xxs {
+            position: relative;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            display: block;
+            transform: none;
+            padding-top: 70px;
+        }
+
+
+        .big-title {
+            position: absolute;
+            z-index: -1;
+            left: 50%;
+            transform: translate(-50%, -90%);
+            font-family: Didot, serif;
+            font-weight: bold;
+            font-size: 4vw;
+            line-height: 0.9;
+            color: $gold;
+            opacity: .6;
+            text-align: center;
+            font-size: 10vw;
+            width: 100vw;
+
+            @include lg {
+                transform: translate(-50%, -100%);
+            }
+
+            @include md {
+                transform: translate(-50%, -110%);
+            }
+
+            @include sm {
+                transform: translate(-50%, -120%);
+            }
+
+            @include xs {
+                transform: translate(-50%, -170%);
+            }
+
+            @include xxs {
+                position: static;
+                transform: none;
+                width: 100%;
+            }
+        }
+
+        .img {
+            position: relative;
+            z-index: 1;
+            flex: 0 0 auto;
+            margin-right: 60px;
+
+            @include md {
+                width: 300px;
+            }
+
+            @include sm {
+                margin-right: 30px;
+            }
+
+            @include xxs {
+                width: 50%;
+                margin: 10px auto 30px;
+                text-align: center;
+            }
+
+            img {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+
+        .text {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            font-size: 14px;
+
+            @include sm {
+                max-width: 500px;
+            }
+
+            @include xxs {
+                margin-top: -20px;
+                text-align: center;
+            }
+
+            img {
+                width: 300px;
+                height: auto;
+                margin-bottom: 20px;
+
+                @include xxs {
+                    width: 250px;
+                    display: block;
+                    margin: 0 auto 10px;
+                }
+            }
+
+            p {
+                margin-bottom: 20px;
+            }
+        }
+
+        .cta {
+            opacity: 1;
+            margin-top: 0;
+            transform: none;
+        }
     }
 }
 
@@ -481,7 +617,6 @@ Tunnel Slick
     .tunnel-slick__header {
         left: 45%;
         top: 45%;
-        color: $black-tit;
     }
 }
 
@@ -500,6 +635,5 @@ Tunnel Slick
     .tunnel-slick__header {
         left: 60%;
         top: 40%;
-        color: #fff;
     }
 }

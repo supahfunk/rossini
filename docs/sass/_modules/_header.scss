@@ -95,6 +95,15 @@ Breadcrumb
     transform: translateX(-50%);
     text-align: center;
     line-height: 1.3;
+    transition: all 1.1s $bezier;
+    pointer-events: all;
+    opacity: 1;
+
+    [data-step="0"] & {
+        opacity: 0;
+        transform: translate(-50%, -100%);
+        pointer-events: none;
+    }
 
     @include sm {
         display: none;

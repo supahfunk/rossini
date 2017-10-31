@@ -251,10 +251,12 @@
                 <div class="tunnel-slick" slick-tunnel="stepper.steps">
                     <div id="tunnel-{{item.id}}" class="tunnel-slick__item" data-from="1832" data-to="false" data-bg="light" ng-repeat="item in stepper.steps track by $index">
                         <div class="tunnel-slick__intro" ng-if="$first">
-                            <div class="big-title">
-                                Please turn on your sound
-                            </div>
+                            
                             <div class="intro-box">
+                                <div class="big-title">
+                                    Please turn<br />
+                                    your volume up
+                                </div>
                                 <div class="img">
                                     <img src="img/intro.png" alt="" />
                                 </div>
@@ -266,10 +268,11 @@
                                     <p>
                                         Collega le cuffie ed immergini nelle atmopsfere di capolavori immortali.
                                     </p>
+                                    <div class="cta" ng-if="item.title">
+                                        <button ng-click="stepper.navStep(1)" type="button" class="inline-btn">Start experience</button>
+                                    </div>
                                 </div>
-                                <div class="cta" ng-if="item.title">
-                                    <button type="button" class="inline-btn">View more</button>
-                                </div>
+                                
                             </div>
                         </div>
                         <div class="tunnel-slick__header" ng-if="!$first">
