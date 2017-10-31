@@ -76,7 +76,7 @@
 
                     if ($('.detail-active').length == 0) {
                         var translateYear = 'translate(' + (translate.x * -4) + 'px, ' + (translate.y * -2) + 'px)';
-                        $('.tunnel-year').css({
+                        $('.tunnel-year__wrap').css({
                             '-webit-transform': translateYear,
                             '-moz-transform': translateYear,
                             'transform': translateYear

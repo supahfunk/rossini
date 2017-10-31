@@ -1,4 +1,4 @@
-/*--------------------------------------------------
+﻿/*--------------------------------------------------
 Reset
 --------------------------------------------------*/
 html {
@@ -837,6 +837,8 @@ Slick
     background: transparent;
     color: transparent;
     top: 50%;
+    -webkit-transform: translate(0, -50%);
+    -ms-transform: translate(0, -50%);
     transform: translate(0, -50%);
     padding: 0;
     border: none;
@@ -982,7 +984,6 @@ Tunnel Year
   pointer-events: none;
   line-height: 1;
   transition: all 1.4s cubic-bezier(0.19, 1, 0.22, 1);
-  transform: translate(0, -50%);
   opacity: 1; }
   [data-step="0"] .tunnel-year {
     transform: translate(0, -100%);
@@ -998,10 +999,10 @@ Tunnel Year
   @media (max-width: 575px) {
     .tunnel-year {
       top: 48px; } }
-  .tunnel-year > div {
+  .tunnel-year__wrap > div {
     display: inline-block;
     transition: all 1.4s cubic-bezier(0.19, 1, 0.22, 1); }
-  .tunnel-year__to:before {
+  .tunnel-year .to:before {
     content: '-';
     display: inline-block;
     color: rgba(178, 149, 77, 0.45);
@@ -1010,7 +1011,7 @@ Tunnel Year
     text-indent: 28px;
     font-size: 80%; }
     @media (max-width: 768px) {
-      .tunnel-year__to:before {
+      .tunnel-year .to:before {
         margin: 0 0 0 -40px; } }
 
 .one-year {
@@ -1021,16 +1022,16 @@ Tunnel Year
   @media (max-width: 575px) {
     .one-year {
       top: 48px; } }
-  .one-year .tunnel-year__from {
+  .one-year .from {
     transform: translate(50%) scale(1.2);
     text-indent: 50px; }
     @media (max-width: 768px) {
-      .one-year .tunnel-year__from {
+      .one-year .from {
         text-indent: 0; } }
-  .one-year .tunnel-year__to {
+  .one-year .to {
     opacity: 0;
     transform: scale(0); }
-    .one-year .tunnel-year__to:before {
+    .one-year .to:before {
       font-size: 80%;
       text-indent: 0; }
 
@@ -1305,7 +1306,7 @@ Detail
   .detail__wrap {
     height: 100vh;
     padding-top: 105px; }
-    @media (max-width: 1280px) {
+    @media (max-width: 1024px) {
       .detail__wrap {
         padding-top: 65px; } }
   .detail__scroll {
@@ -1543,17 +1544,20 @@ Detail
   @media (max-width: 1440px) {
     .detail-active .tunnel-year {
       transform: translateY(-58%) scale(0.6); } }
-  @media (max-width: 1280px) {
-    .detail-active .tunnel-year {
-      transform: translateY(-75%) scale(0.6); } }
   @media (max-width: 1024px) {
+    .detail-active .tunnel-year {
+      transform: translateY(-80%) scale(0.8); } }
+  @media (max-width: 768px) {
     .detail-active .tunnel-year {
       transform: translateY(-32%) scale(0.8); } }
   @media (max-width: 575px) {
     .detail-active .tunnel-year {
       transform: none; } }
-  .detail-active .tunnel-year__to:before {
+  .detail-active .tunnel-year .to:before {
     color: rgba(255, 255, 255, 0.05); }
+  .detail-active .tunnel-year.one-year .from {
+    transform: translate(50%, -18%) scale(1.2);
+    text-indent: 20px; }
 
 .detail-active .detail {
   background: #1E3160; }
@@ -1636,3 +1640,4 @@ Footer
         opacity: 0; }
       .dark-bg .footer .logo-fondazione-rossini img.light-logo {
         opacity: 1; }
+

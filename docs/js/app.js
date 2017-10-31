@@ -816,9 +816,9 @@
                 // var quaternion = device.getScreenAdjustedQuaternion();
                 // var matrix = device.getScreenAdjustedMatrix();
                 var e = device.getScreenAdjustedEuler();
-                var x = (e.alpha) / 90;
-                var y = (e.beta - 90) / 90;
-                var z = (e.gamma) / 90;
+                var x = e.alpha / 90;
+                var y = e.beta / 90;
+                var z = e.gamma / 90;
                 // console.log('onDeviceOrientation', x, y, z);
                 set(x, y, z);
             }
@@ -1230,7 +1230,7 @@
 
                     if ($('.detail-active').length == 0) {
                         var translateYear = 'translate(' + (translate.x * -4) + 'px, ' + (translate.y * -2) + 'px)';
-                        $('.tunnel-year').css({
+                        $('.tunnel-year__wrap').css({
                             '-webit-transform': translateYear,
                             '-moz-transform': translateYear,
                             'transform': translateYear
