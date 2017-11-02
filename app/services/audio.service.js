@@ -100,7 +100,7 @@
                 if (buffer) {
                     deferred.resolve(buffer);
                 } else {
-                    AudioSound.load(this).then(function(buffer) {
+                    AudioSound.load(path).then(function(buffer) {
                         deferred.resolve(buffer);
                     }, function(error) {
                         deferred.reject(error);
@@ -189,20 +189,25 @@
             }
         };
 
-        function load(sound) {
+        function load(path, onprogress) {
             var deferred = $q.defer();
+            var progress = {
+                path: path,
+                loaded: 0,
+                total: 1,
+            };
             var xhr = new XMLHttpRequest();
             xhr.responseType = "arraybuffer";
-            xhr.open("GET", sound.path, true);
+            xhr.open("GET", path, true);
             xhr.onload = function() {
                 ctx.decodeAudioData(xhr.response, function(buffer) {
                     if (!buffer) {
-                        console.log('AudioSound.load.decodeAudioData.error', sound.path);
+                        console.log('AudioSound.load.decodeAudioData.error', path);
                         deferred.reject('AudioSound.load.decodeAudioData.error');
                         return;
                     }
-                    // console.log('AudioSound.decodeAudioData', sound.path);
-                    buffers[sound.path] = buffer;
+                    // console.log('AudioSound.decodeAudioData', path);
+                    buffers[path] = buffer;
                     deferred.resolve(buffer);
                 });
             };
@@ -210,6 +215,27 @@
                 console.log('AudioManager.xhr.onerror', error);
                 deferred.reject(error);
             };
+            if (onprogress) {
+                xhr.onprogress = function(e) {
+                    progress.loaded = e.loaded;
+                    progress.total = e.total;
+                    progress.progress = e.loaded / e.total;
+                    onprogress(progress);
+                };
+                /*
+                xhr.onloadstart = function(e) {
+                    progress.loaded = 0;
+                    progress.total = 1;
+                    progress.progress = 0;
+                    onprogress(progress);
+                };
+                xhr.onloadend = function(e) {
+                    progress.loaded = progress.total;
+                    progress.progress = 1;
+                    onprogress(progress);
+                };
+                */
+            }
             xhr.send();
             return deferred.promise;
         }
@@ -282,6 +308,40 @@
             return sound.playing;
         }
 
+        function preload(items, onprogress) {
+            var deferred = $q.defer();
+            var paths = {};
+            var progress = {
+                loaded: 0,
+                total: 0,
+            };
+
+            function _onprogress(progress) {
+                paths[progress.path] = progress;
+                var p = 0;
+                angular.forEach(paths, function(item) {
+                    progress.loaded += item.loaded;
+                    progress.total += item.total;
+                });
+                progress.progress = progress.loaded / progress.total;
+                onprogress(progress);
+            }
+            $q.all(
+                items.map(function(path) {
+                    return AudioSound.load(path, _onprogress);
+                })
+            ).then(function() {
+                progress.loaded = progress.total;
+                progress.progress = 1;
+                onprogress(progress);
+                deferred.resolve();
+            }, function(error) {
+                console.log('AudioSound.preload.error', error);
+                deferred.reject(error);
+            });
+            return deferred.promise;
+        }
+
         $rootScope.$on('onStepChanged', function($scope) {
             setStep();
         });
@@ -299,6 +359,8 @@
         this.toggle = toggle;
         this.isPlaying = isPlaying;
         this.isActive = isActive;
+        this.preload = preload;
 
     }]);
+
 }());

@@ -13,7 +13,6 @@
                 to: '=yearsTo',
             },
             link: function(scope, element, attributes) {
-
                 function onChangeYears() {
                     // console.log('onChangeYears', scope.from, scope.to);
 
@@ -47,7 +46,6 @@
                         onChangeYears();
                     }
                 });
-
             }
         };
     }]);

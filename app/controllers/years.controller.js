@@ -26,8 +26,28 @@
                     openDetail();
                 });
             }
+
+            preloadAudio();
+
             var gui = new DatGui();
         });
+
+        function preloadAudio() {
+            var paths = [];
+            stepper.steps.filter(function(item) {
+                if (item.audio && paths.indexOf(item.audio.url) == -1) {
+                    paths.push(item.audio.url);
+                }
+            });
+            console.log('preload', paths);
+
+            function onprogress(item) {
+                // console.log('onprogress', item);
+            }
+            AudioService.preload(paths, onprogress).then(function() {
+                console.log('preloadAudio.complete');
+            });
+        }
 
         var detail = {};
 

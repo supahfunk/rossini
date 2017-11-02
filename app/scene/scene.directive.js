@@ -61,6 +61,8 @@
                     motion.init();
                 }
 
+                var shadowMaterial = getShadowMaterial();
+
                 function updateParallax() {
                     if (options.device.mobile) {
                         // motion.update();
@@ -257,47 +259,58 @@
                     };
                 }
 
-                var shadow = new THREE.TextureLoader().load('img/shadow.png');
-                shadow.wrapS = THREE.RepeatWrapping;
-                shadow.wrapT = THREE.RepeatWrapping;
-                shadow.repeat.set(1, 1);
-
-                var shadowMaterial = new THREE.MeshBasicMaterial({
-                    color: 0xffffff,
-                    map: shadow,
-                    transparent: true,
-                });
-
-                function getObjectCircles(index) {
-
-                    var noiseMap1 = getPerlinNoise(options.circle.points, options.circle.lines);
-                    var noiseMap2 = getPerlinNoise(options.circle.points, options.circle.lines);
-
-                    var geometry, object, circles = [];
-
-                    var ln = options.circle.lines,
-                        pn = options.circle.points;
-
+                function getCanvasMaterial(index, size) {
+                    size = size || 512;
+                    var half = size / 2;
+                    var canvas = document.createElement('canvas');
+                    canvas.width = size;
+                    canvas.height = size;
+                    var context = canvas.getContext('2d');
+                    context.beginPath();
+                    context.arc(half, half, half - 1, 0, Math.PI * 2);
+                    context.clip();
+                    var material = new THREE.MeshBasicMaterial({
+                        color: 0xffffff,
+                        map: new THREE.Texture(canvas),
+                        transparent: true,
+                    });
                     var step = stepper.getStepAtIndex(index);
+                    var img = new Image();
+                    img.onload = function() {
+                        context.drawImage(img, 0, 0, size, size);
+                        material.map.needsUpdate = true;
+                    };
+                    img.src = step.circle.texture;
+                    return material;
+                }
 
-                    var texture = new THREE.TextureLoader().load(step.circle.texture);
+                function getShadowMaterial() {
+                    var texture = new THREE.TextureLoader().load('img/shadow.png');
                     texture.wrapS = THREE.RepeatWrapping;
                     texture.wrapT = THREE.RepeatWrapping;
                     texture.repeat.set(1, 1);
-
-                    var resolution = new THREE.Vector2(window.innerWidth, window.innerHeight);
-
                     var material = new THREE.MeshBasicMaterial({
                         color: 0xffffff,
                         map: texture,
                         transparent: true,
                     });
+                    return material;
+                }
 
+                function getObjectCircles(index) {
+                    var noiseMap1 = getPerlinNoise(options.circle.points, options.circle.lines);
+                    var noiseMap2 = getPerlinNoise(options.circle.points, options.circle.lines);
+                    var geometry, object, circles = [];
+                    var ln = options.circle.lines;
+                    var pn = options.circle.points;
+                    var step = stepper.getStepAtIndex(index);
+                    var resolution = new THREE.Vector2(window.innerWidth, window.innerHeight);
+
+                    var material = getCanvasMaterial(index);
                     var material1 = new THREE.LineBasicMaterial({
                         color: stepper.values.lines,
                         transparent: true,
                     });
-
                     var material2 = new THREE.LineBasicMaterial({
                         color: stepper.values.overLines,
                         transparent: true,

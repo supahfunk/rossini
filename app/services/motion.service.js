@@ -97,7 +97,7 @@
 
         function init() {
             addListeners();
-            console.log('MotionService.init');
+            // console.log('MotionService.init');
         }
 
     }]);

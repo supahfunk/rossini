@@ -130,7 +130,7 @@
                     }
                 });
             }
-            console.log('AudioAnalyser.unlock');
+            // console.log('AudioAnalyser.unlock');
             return deferred.promise;
         }
 
@@ -148,7 +148,7 @@
                 if (o.noteOn) {
                     o.noteOn(0);
                 }
-                console.log('AudioAnalyser.doUnlock');
+                // console.log('AudioAnalyser.doUnlock');
             }
             return o;
         }

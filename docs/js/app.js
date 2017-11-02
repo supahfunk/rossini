@@ -507,7 +507,6 @@
                 to: '=yearsTo',
             },
             link: function(scope, element, attributes) {
-
                 function onChangeYears() {
                     // console.log('onChangeYears', scope.from, scope.to);
 
@@ -541,7 +540,6 @@
                         onChangeYears();
                     }
                 });
-
             }
         };
     }]);
@@ -605,8 +603,28 @@
                     openDetail();
                 });
             }
+
+            preloadAudio();
+
             var gui = new DatGui();
         });
+
+        function preloadAudio() {
+            var paths = [];
+            stepper.steps.filter(function(item) {
+                if (item.audio && paths.indexOf(item.audio.url) == -1) {
+                    paths.push(item.audio.url);
+                }
+            });
+            console.log('preload', paths);
+
+            function onprogress(item) {
+                // console.log('onprogress', item);
+            }
+            AudioService.preload(paths, onprogress).then(function() {
+                console.log('preloadAudio.complete');
+            });
+        }
 
         var detail = {};
 
@@ -737,7 +755,7 @@
                 if (buffer) {
                     deferred.resolve(buffer);
                 } else {
-                    AudioSound.load(this).then(function(buffer) {
+                    AudioSound.load(path).then(function(buffer) {
                         deferred.resolve(buffer);
                     }, function(error) {
                         deferred.reject(error);
@@ -826,20 +844,25 @@
             }
         };
 
-        function load(sound) {
+        function load(path, onprogress) {
             var deferred = $q.defer();
+            var progress = {
+                path: path,
+                loaded: 0,
+                total: 1,
+            };
             var xhr = new XMLHttpRequest();
             xhr.responseType = "arraybuffer";
-            xhr.open("GET", sound.path, true);
+            xhr.open("GET", path, true);
             xhr.onload = function() {
                 ctx.decodeAudioData(xhr.response, function(buffer) {
                     if (!buffer) {
-                        console.log('AudioSound.load.decodeAudioData.error', sound.path);
+                        console.log('AudioSound.load.decodeAudioData.error', path);
                         deferred.reject('AudioSound.load.decodeAudioData.error');
                         return;
                     }
-                    // console.log('AudioSound.decodeAudioData', sound.path);
-                    buffers[sound.path] = buffer;
+                    // console.log('AudioSound.decodeAudioData', path);
+                    buffers[path] = buffer;
                     deferred.resolve(buffer);
                 });
             };
@@ -847,6 +870,27 @@
                 console.log('AudioManager.xhr.onerror', error);
                 deferred.reject(error);
             };
+            if (onprogress) {
+                xhr.onprogress = function(e) {
+                    progress.loaded = e.loaded;
+                    progress.total = e.total;
+                    progress.progress = e.loaded / e.total;
+                    onprogress(progress);
+                };
+                /*
+                xhr.onloadstart = function(e) {
+                    progress.loaded = 0;
+                    progress.total = 1;
+                    progress.progress = 0;
+                    onprogress(progress);
+                };
+                xhr.onloadend = function(e) {
+                    progress.loaded = progress.total;
+                    progress.progress = 1;
+                    onprogress(progress);
+                };
+                */
+            }
             xhr.send();
             return deferred.promise;
         }
@@ -919,6 +963,40 @@
             return sound.playing;
         }
 
+        function preload(items, onprogress) {
+            var deferred = $q.defer();
+            var paths = {};
+            var progress = {
+                loaded: 0,
+                total: 0,
+            };
+
+            function _onprogress(progress) {
+                paths[progress.path] = progress;
+                var p = 0;
+                angular.forEach(paths, function(item) {
+                    progress.loaded += item.loaded;
+                    progress.total += item.total;
+                });
+                progress.progress = progress.loaded / progress.total;
+                onprogress(progress);
+            }
+            $q.all(
+                items.map(function(path) {
+                    return AudioSound.load(path, _onprogress);
+                })
+            ).then(function() {
+                progress.loaded = progress.total;
+                progress.progress = 1;
+                onprogress(progress);
+                deferred.resolve();
+            }, function(error) {
+                console.log('AudioSound.preload.error', error);
+                deferred.reject(error);
+            });
+            return deferred.promise;
+        }
+
         $rootScope.$on('onStepChanged', function($scope) {
             setStep();
         });
@@ -936,8 +1014,10 @@
         this.toggle = toggle;
         this.isPlaying = isPlaying;
         this.isActive = isActive;
+        this.preload = preload;
 
     }]);
+
 }());
 /* global angular */
 
@@ -1038,7 +1118,7 @@
 
         function init() {
             addListeners();
-            console.log('MotionService.init');
+            // console.log('MotionService.init');
         }
 
     }]);
@@ -1088,7 +1168,7 @@
                     var items = response.data;
                     // var items = getItems();
                     angular.forEach(items, function(item, i) {
-                        console.log(item);
+                        // console.log(item);
                         item.years.key = String(item.years.to ? item.years.from + '-' + item.years.to : item.years.from); // da riattivare !!!
                         item.url = '/years/' + item.years.key;
                         item.detailUrl = item.url + '/detail';
@@ -1401,6 +1481,8 @@
                     motion.init();
                 }
 
+                var shadowMaterial = getShadowMaterial();
+
                 function updateParallax() {
                     if (options.device.mobile) {
                         // motion.update();
@@ -1597,47 +1679,58 @@
                     };
                 }
 
-                var shadow = new THREE.TextureLoader().load('img/shadow.png');
-                shadow.wrapS = THREE.RepeatWrapping;
-                shadow.wrapT = THREE.RepeatWrapping;
-                shadow.repeat.set(1, 1);
-
-                var shadowMaterial = new THREE.MeshBasicMaterial({
-                    color: 0xffffff,
-                    map: shadow,
-                    transparent: true,
-                });
-
-                function getObjectCircles(index) {
-
-                    var noiseMap1 = getPerlinNoise(options.circle.points, options.circle.lines);
-                    var noiseMap2 = getPerlinNoise(options.circle.points, options.circle.lines);
-
-                    var geometry, object, circles = [];
-
-                    var ln = options.circle.lines,
-                        pn = options.circle.points;
-
+                function getCanvasMaterial(index, size) {
+                    size = size || 512;
+                    var half = size / 2;
+                    var canvas = document.createElement('canvas');
+                    canvas.width = size;
+                    canvas.height = size;
+                    var context = canvas.getContext('2d');
+                    context.beginPath();
+                    context.arc(half, half, half - 1, 0, Math.PI * 2);
+                    context.clip();
+                    var material = new THREE.MeshBasicMaterial({
+                        color: 0xffffff,
+                        map: new THREE.Texture(canvas),
+                        transparent: true,
+                    });
                     var step = stepper.getStepAtIndex(index);
+                    var img = new Image();
+                    img.onload = function() {
+                        context.drawImage(img, 0, 0, size, size);
+                        material.map.needsUpdate = true;
+                    };
+                    img.src = step.circle.texture;
+                    return material;
+                }
 
-                    var texture = new THREE.TextureLoader().load(step.circle.texture);
+                function getShadowMaterial() {
+                    var texture = new THREE.TextureLoader().load('img/shadow.png');
                     texture.wrapS = THREE.RepeatWrapping;
                     texture.wrapT = THREE.RepeatWrapping;
                     texture.repeat.set(1, 1);
-
-                    var resolution = new THREE.Vector2(window.innerWidth, window.innerHeight);
-
                     var material = new THREE.MeshBasicMaterial({
                         color: 0xffffff,
                         map: texture,
                         transparent: true,
                     });
+                    return material;
+                }
 
+                function getObjectCircles(index) {
+                    var noiseMap1 = getPerlinNoise(options.circle.points, options.circle.lines);
+                    var noiseMap2 = getPerlinNoise(options.circle.points, options.circle.lines);
+                    var geometry, object, circles = [];
+                    var ln = options.circle.lines;
+                    var pn = options.circle.points;
+                    var step = stepper.getStepAtIndex(index);
+                    var resolution = new THREE.Vector2(window.innerWidth, window.innerHeight);
+
+                    var material = getCanvasMaterial(index);
                     var material1 = new THREE.LineBasicMaterial({
                         color: stepper.values.lines,
                         transparent: true,
                     });
-
                     var material2 = new THREE.LineBasicMaterial({
                         color: stepper.values.overLines,
                         transparent: true,
