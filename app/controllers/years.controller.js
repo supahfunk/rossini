@@ -5,7 +5,7 @@
 
     var app = angular.module('app');
 
-    app.controller('YearsCtrl', ['$scope', '$route', '$routeParams', '$ngSilentLocation', 'SceneOptions', 'StepperService', 'AnalyserService', 'DatGui', '$timeout', function($scope, $route, $routeParams, $ngSilentLocation, SceneOptions, StepperService, AnalyserService, DatGui, $timeout) {
+    app.controller('YearsCtrl', ['$scope', '$route', '$routeParams', '$ngSilentLocation', 'SceneOptions', 'StepperService', 'AudioService', 'DatGui', '$timeout', function($scope, $route, $routeParams, $ngSilentLocation, SceneOptions, StepperService, AudioService, DatGui, $timeout) {
 
         var scene = {
             objects: {},
@@ -20,7 +20,7 @@
         stepper.init($routeParams.yearsKey).then(function() {
             $scope.scene = scene;
             $scope.stepper = stepper;
-            $scope.audio = AnalyserService;
+            $scope.audio = AudioService;
             if ($route.current.$$route.originalPath.indexOf('/detail') !== -1) {
                 $timeout(function() {
                     openDetail();

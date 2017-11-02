@@ -584,7 +584,7 @@
 
     var app = angular.module('app');
 
-    app.controller('YearsCtrl', ['$scope', '$route', '$routeParams', '$ngSilentLocation', 'SceneOptions', 'StepperService', 'AnalyserService', 'DatGui', '$timeout', function($scope, $route, $routeParams, $ngSilentLocation, SceneOptions, StepperService, AnalyserService, DatGui, $timeout) {
+    app.controller('YearsCtrl', ['$scope', '$route', '$routeParams', '$ngSilentLocation', 'SceneOptions', 'StepperService', 'AudioService', 'DatGui', '$timeout', function($scope, $route, $routeParams, $ngSilentLocation, SceneOptions, StepperService, AudioService, DatGui, $timeout) {
 
         var scene = {
             objects: {},
@@ -599,7 +599,7 @@
         stepper.init($routeParams.yearsKey).then(function() {
             $scope.scene = scene;
             $scope.stepper = stepper;
-            $scope.audio = AnalyserService;
+            $scope.audio = AudioService;
             if ($route.current.$$route.originalPath.indexOf('/detail') !== -1) {
                 $timeout(function() {
                     openDetail();
@@ -642,415 +642,95 @@
 
     var app = angular.module('app');
 
-    app.service('AnalyserService', ['$rootScope', '$timeout', '$q', '$http', 'SceneOptions', 'StepperService', function($rootScope, $timeout, $q, $http, SceneOptions, StepperService) {
+    app.factory('AudioSound', ['$q', 'SceneOptions', function($q, SceneOptions) {
 
-        var service = this;
-        var options = SceneOptions;
-        var stepper = StepperService;
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
-        var analyser, audio, audioUrl;
-
-        var audioContext = (window.AudioContext || window.webkitAudioContext);
-
-        audio = new Audio();
-        audio.addEventListener('canplay', onCanPlay);
-        audio.addEventListener('play', onPlay);
-        audio.addEventListener('pause', onPause);
-        audio.addEventListener('ended', onEnded);
-
-        var source = null;
-
-        function onCanPlay() {
-            // console.log('AnalyserService.onCanPlay');
-            if (!source) {
-                var ctx = new audioContext();
-                if (ctx) {
-                    analyser = ctx.createAnalyser();
-                    source = ctx.createMediaElementSource(audio); // !!!!! html to audio
-                    source.smoothingTimeConstant = 0.85;
-                    source.connect(analyser);
-                    source.connect(ctx.destination);
-                    analyser.fftSize = options.audio.bands * 2;
-                    service.data = new Uint8Array(analyser.frequencyBinCount);
-                }
-            }
-            // return service.data;
-        }
-
-        function onPlay() {
-            $timeout(function() {
-                service.playing = true;
-                // console.log('AnalyserService.onPlay', service);
-            });
-        }
-
-        function onPause() {
-            $timeout(function() {
-                service.playing = false;
-                // console.log('AnalyserService.onPause', service);
-            });
-        }
-
-        function onEnded() {
-            $timeout(function() {
-                service.playing = false;
-                // console.log('AnalyserService.onEnded', service);
-            });
-        }
-
-        function setAudioUrl($audioUrl) {
-            if (audioUrl !== $audioUrl) {
-                audioUrl = $audioUrl;
-                if (audioUrl) {
-                    audio.src = $audioUrl;
-                    audio.volume = options.audio.volume;
-                    // console.log('AnalyserService.setAudioUrl', $audioUrl);
-                    play();
-                }
-            }
-        }
-
-        function play() {
-            if (service.active && audioUrl && !isPlaying()) {
-                audio.play();
-            }
-        }
-
-        function pause() {
-            if (audioUrl && isPlaying()) {
-                audio.pause();
-            }
-        }
-
-        function isActive() {
-            // console.log('isActive', service.active, isPlaying());
-            return service.active && isPlaying();
-        }
-
-        function isPlaying() {
-            return !audio.paused && !audio.ended; //  && audio.currentTime > 0;
-        }
-
-        function toggle() {
-            service.active = !service.active;
-            if (service.active) {
-                play();
-            } else {
-                pause();
-            }
-        }
-
-        function setStep() {
-            var step = stepper.getCurrentStep();
-            setAudioUrl(step.audio ? step.audio.url : null);
-        }
-
-        function update() {
-            if (service.data) {
-                analyser.getByteFrequencyData(service.data);
-            }
-        }
-
-        service.unlocked = false;
-
-        function unlock() {
-            var deferred = $q.defer();
-            if (!options.device.ios || service.unlocked) {
-                deferred.resolve();
-            } else {
-                var o = doUnlock();
-                // by checking the play state after some time, we know if we're really unlocked
-                $timeout(function() {
-                    if (o && (o.playbackState === o.PLAYING_STATE || o.playbackState === o.FINISHED_STATE)) {
-                        service.unlocked = true;
-                        deferred.resolve();
-                    }
-                });
-            }
-            console.log('AudioAnalyser.unlock');
-            return deferred.promise;
-        }
-
-        function doUnlock() {
-            // create empty buffer
-            var o = null;
-            var ctx = new audioContext();
-            if (ctx) {
-                o = ctx.createBufferSource();
-                var buffer = ctx.createBuffer(1, 1, 22050);
-                o.buffer = buffer;
-                // connect to output (your speakers)
-                o.connect(ctx.destination);
-                // play the file
-                if (o.noteOn) {
-                    o.noteOn(0);
-                }
-                console.log('AudioAnalyser.doUnlock');
-            }
-            return o;
-        }
-
-        window.addEventListener('touchstart', unlock, false);
-
-        $rootScope.$on('onStepChanged', function($scope) {
-            setStep();
-        });
-
-        $rootScope.$on('onOptionsChanged', function($scope) {
-            audio.volume = options.audio.volume;
-        });
-
-        this.active = true;
-        this.data = null;
-        this.audio = audio;
-        this.update = update;
-        this.play = play;
-        this.pause = pause;
-        this.toggle = toggle;
-        this.unlock = unlock;
-        this.isPlaying = isPlaying;
-        this.isActive = isActive;
-
-    }]);
-
-    app.factory('AudioManager', [function() {
-        function AudioManager(ctx) {
-            var manager = this;
-            manager.ctx = ctx;
-            manager.buffers = {};
-            manager.sounds = {};
-        }
-
-        AudioManager.prototype = {
-            add: function(sound) {
-                var path = sound.path;
-                var manager = this;
-                var xhr = new XMLHttpRequest();
-                xhr.responseType = "arraybuffer";
-                xhr.open("GET", path, true);
-                xhr.onload = function() {
-                    // Asynchronously decode the audio file data in xhr.response
-                    manager.ctx.decodeAudioData(xhr.response, function(buffer) {
-                        if (!buffer) {
-                            console.log('AudioManager.decodeAudioData.error', path);
-                            return;
-                        }
-                        console.log('AudioManager.decodeAudioData', path);
-                        manager.buffers[path] = buffer;
-                        if (sound.shouldPlay) {
-                            sound.play();
-                        }
-                    });
-                };
-                xhr.onerror = function(error) {
-                    console.log('AudioManager.xhr.onerror', error);
-                };
-                xhr.send();
-            },
-            stop: function(sound) {
-                var path = sound.path;
-                var manager = this;
-                if (manager.sounds.hasOwnProperty(path)) {
-                    for (var p in manager.sounds[path]) {
-                        if (manager.sounds[path].hasOwnProperty(p)) {
-                            manager.sounds[path][p].noteOff(0);
-                        }
-                    }
-                }
-            }
-        };
-
-        var _instance;
-
-        function getInstance() {
-            if (_instance) {
-                return _instance;
-            } else {
-                var _ctx = getAudioContext();
-                if (_ctx) {
-                    _instance = new AudioManager(_ctx);
-                }
-            }
-            return _instance;
-        }
-
-        var _ctx;
-
-        function getAudioContext() {
-            if (_ctx) {
-                return _ctx;
-            } else {
-                try {
-                    var _AudioContext = window.AudioContext || window.webkitAudioContext;
-                    _ctx = new _AudioContext();
-                } catch (e) {
-                    console.log("No Web Audio API support");
-                    _ctx = null;
-                }
-            }
-            return _ctx;
-        }
-
-        AudioManager.getInstance = getInstance;
-        AudioManager.getAudioContext = getAudioContext;
-
-        return AudioManager;
-    }]);
-
-    app.factory('AudioSound', ['AudioManager', 'SceneOptions', function(AudioManager, SceneOptions) {
-        function AudioSound(path, options) {
-            var defaultOptions = {
-                volume: 85,
-                loop: false,
-            };
-            if (options) {
-                angular.extend(defaultOptions, options);
-            }
-            var manager = AudioManager.getInstance();
-            var sound = this;
-            sound.path = path;
-            sound.options = defaultOptions;
-            sound.manager = manager;
-            sound.setVolume(defaultOptions.volume);
-            manager.add(sound);
-            if (sound.options.analyser) {
-                var ctx = sound.manager.ctx;
-                var analyser = ctx.createAnalyser();
-                analyser.fftSize = SceneOptions.audio.bands * 2;
-                sound.data = new Uint8Array(analyser.frequencyBinCount);
-                sound.analyser = analyser;
-            }
-        }
-
-        AudioSound.translateVolume = function(volume, inverse) {
-            return inverse ? volume * 100 : volume / 100;
-        };
-
-        AudioSound.prototype = {
-            play: function() {
-                var sound = this;
-                var path = sound.path;
-                var manager = sound.manager;
-                var buffer = manager.buffers[path];
-                // Only play if it's loaded yet
-                if (typeof buffer !== "undefined") {
-                    var source = sound.getSource(buffer);
-                    source.loop = sound.options.loop;
-                    if (source.start) {
-                        source.start(0); // (0, 2, 1);
-                    } else {
-                        source.noteOn(0); // (0, 2, 1);
-                    }
-                    // source.noteOn(0);
-                    if (!manager.sounds.hasOwnProperty(path)) {
-                        manager.sounds[path] = [];
-                    }
-                    manager.sounds[path].push(source);
-                    sound.shouldPlay = false;
-                } else {
-                    sound.shouldPlay = true;
-                }
-                console.log('AudioSound.play', path);
-            },
-            stop: function() {
-                var sound = this;
-                sound.manager.stop(sound);
-            },
-            getVolume: function() {
-                return AudioSound.translateVolume(this.volume, true);
-            },
-            // Expect to receive in range 0-100
-            setVolume: function(volume) {
-                this.volume = AudioSound.translateVolume(volume);
-            },
-            getSource: function(buffer) {
-                var sound = this;
-                var ctx = sound.manager.ctx;
-                var source = ctx.createBufferSource();
-                var gainNode = ctx.createGain ? ctx.createGain() : ctx.createGainNode();
-                gainNode.gain.value = sound.volume;
-                source.buffer = buffer;
-                source.connect(gainNode);
-                if (sound.analyser) {
-                    source.connect(sound.analyser);
-                    // source.connect(ctx.destination);
-                }
-                gainNode.connect(ctx.destination);
-                return source;
-            },
-            update: function() {
-                var sound = this;
-                if (sound.analyser) {
-                    sound.analyser.getByteFrequencyData(sound.data);
-                }
-            }
-        };
-
-        return AudioSound;
-    }]);
-
-    app.factory('AudioSound', ['$q', function($q) {
-
-        function AudioSound(path, options) {
-            var defaultOptions = {
-                volume: 85,
-                loop: false,
-            };
-            if (options) {
-                angular.extend(defaultOptions, options);
-            }
-            // var manager = AudioManager.getInstance();
-            var sound = this;
-            sound.path = path;
-            sound.options = defaultOptions;
-            // sound.manager = manager;
-            sound.setVolume(defaultOptions.volume);
-            // manager.add(sound);
-            if (sound.options.analyser) {
-                var analyser = ctx.createAnalyser();
-                analyser.fftSize = 256 * 2;
-                sound.data = new Uint8Array(analyser.frequencyBinCount);
-                sound.analyser = analyser;
-            }
-        }
-
-        var _AudioContext = window.AudioContext || window.webkitAudioContext;
-        var ctx = new _AudioContext();
+        var ctx = new AudioContext();
         var buffers = {};
 
-        AudioSound.translateVolume = function(volume, inverse) {
-            return inverse ? volume * 100 : volume / 100;
-        };
-
-        AudioSound.load = function(sound) {
-            var deferred = $q.defer();
-            var path = sound.path;
-            var xhr = new XMLHttpRequest();
-            xhr.responseType = "arraybuffer";
-            xhr.open("GET", path, true);
-            xhr.onload = function() {
-                // Asynchronously decode the audio file data in xhr.response
-                ctx.decodeAudioData(xhr.response, function(buffer) {
-                    if (!buffer) {
-                        console.log('AudioSound.load.decodeAudioData.error', path);
-                        deferred.reject('AudioSound.load.decodeAudioData.error');
-                        return;
-                    }
-                    console.log('AudioSound.decodeAudioData', path);
-                    buffers[path] = buffer;
-                    deferred.resolve(buffer);
-                });
+        function AudioSound($options) {
+            var options = {
+                volume: 0.85,
+                loop: false,
             };
-            xhr.onerror = function(error) {
-                console.log('AudioManager.xhr.onerror', error);
-                deferred.reject(error);
-            };
-            xhr.send();
-            return deferred.promise;
-        };
+            if ($options) {
+                angular.extend(options, $options);
+            }
+            var sound = this;
+            sound.options = options;
+            sound.offset = options.offset || 0;
+            this.addAnalyserNode();
+            this.addGainNode();
+        }
 
         AudioSound.prototype = {
+            nodes: {},
+            addGainNode: function() {
+                var sound = this;
+                var node = ctx.createGain ? ctx.createGain() : ctx.createGainNode();
+                node.gain.value = sound.options.volume;
+                // node.connect(ctx.destination);
+                sound.nodes.gain = node;
+            },
+            addAnalyserNode: function() {
+                var sound = this;
+                if (sound.options.analyser) {
+                    var node = ctx.createAnalyser();
+                    node.fftSize = SceneOptions.audio.bands * 2;
+                    sound.data = new Uint8Array(node.frequencyBinCount);
+                    sound.nodes.analyser = node;
+                }
+            },
+            connectNodes: function() {
+                var sound = this;
+                var source = sound.source;
+                for (var p in sound.nodes) {
+                    var node = sound.nodes[p];
+                    source.connect(node);
+                    if (p === 'gain') {
+                        node.connect(ctx.destination);
+                    }
+                }
+                console.log('connectNodes', sound.nodes);
+            },
+            disconnect: function() {
+                var sound = this;
+                var source = sound.source;
+                if (source) {
+                    for (var p in sound.nodes) {
+                        var node = sound.nodes[p];
+                        if (p === 'gain') {
+                            node.disconnect(ctx.destination);
+                        }
+                        source.disconnect(sound.nodes[p]);
+                        console.log('AudioSound.disconnect', p);
+                    }
+                    // source.diconnect();
+                    sound.source = null;
+                }
+            },
+            updateBuffer: function() {
+                var deferred = $q.defer();
+                var sound = this;
+                var source = sound.source;
+                sound.getBuffer().then(function(buffer) {
+                    if (source) {
+                        source.buffer = buffer;
+                    } else {
+                        source = ctx.createBufferSource();
+                        source.buffer = buffer;
+                        sound.source = source;
+                        sound.connectNodes();
+                    }
+                    deferred.resolve(source);
+                }, function(error) {
+                    deferred.reject(error);
+                });
+                return deferred.promise;
+            },
             getBuffer: function() {
+                console.log('AudioSound.getBuffer');
                 var deferred = $q.defer();
                 var path = this.path;
                 var buffer = buffers[path];
@@ -1067,22 +747,17 @@
             },
             getSource: function() {
                 var deferred = $q.defer();
-                var source = this.source;
+                var sound = this;
+                var source = sound.source;
+                console.log('AudioSound.getSource', source);
                 if (source) {
                     deferred.resolve(source);
                 } else {
-                    var sound = this;
-                    this.getBuffer().then(function(buffer) {
+                    sound.getBuffer().then(function(buffer) {
                         var source = ctx.createBufferSource();
-                        var gainNode = ctx.createGain ? ctx.createGain() : ctx.createGainNode();
-                        gainNode.gain.value = sound.volume;
                         source.buffer = buffer;
-                        source.connect(gainNode);
-                        if (sound.analyser) {
-                            source.connect(sound.analyser);
-                            // source.connect(ctx.destination);
-                        }
-                        gainNode.connect(ctx.destination);
+                        sound.source = source;
+                        sound.connectNodes();
                         deferred.resolve(source);
                     }, function(error) {
                         deferred.reject(error);
@@ -1091,83 +766,178 @@
                 return deferred.promise;
             },
             play: function() {
-                var options = this.options;
-                this.getSource().then(function(source) {
-                    source.loop = options.loop;
-                    if (source.start) {
-                        source.start(0); // (0, 2, 1);
-                    } else {
-                        source.noteOn(0); // (0, 2, 1);
-                    }
-                });
+                var sound = this;
+                if (!sound.playing) {
+                    var options = sound.options;
+                    sound.getSource().then(function(source) {
+                        sound.startTime = ctx.currentTime;
+                        source.loop = options.loop;
+                        if (typeof source.start === 'function') {
+                            source.start(0, sound.offset); // when, offset, duration
+                        } else {
+                            source.noteOn(0, sound.offset); // when, offset, duration
+                        }
+                        sound.playing = true;
+                    });
+                }
+                // ctx.resume(); ???
                 console.log('AudioSound.play');
             },
             stop: function() {
-                this.getSource().then(function(source) {
-                    if (source.stop) {
-                        source.stop(0); // (0, 2, 1);
-                    } else {
-                        source.noteOff(0); // (0, 2, 1);
+                var sound = this;
+                if (sound.playing) {
+                    var source = sound.source;
+                    if (source) {
+                        sound.offset += sound.startTime ? (ctx.currentTime - sound.startTime) : 0;
+                        console.log(sound.offset);
+                        if (typeof source.stop === 'function') {
+                            source.stop(0); // when
+                        } else {
+                            source.noteOff(0); // when
+                        }
+                        sound.disconnect();
+                        sound.playing = false;
+                        console.log('AudioSound.stop');
+                        // ctx.suspend(); ???
                     }
-                });
-                console.log('AudioSound.stop');
-            },
-            getVolume: function() {
-                return AudioSound.translateVolume(this.volume, true);
-            },
-            // Expect to receive in range 0-100
-            setVolume: function(volume) {
-                this.volume = AudioSound.translateVolume(volume);
+                }
             },
             update: function() {
                 var sound = this;
-                if (sound.analyser) {
-                    sound.analyser.getByteFrequencyData(sound.data);
+                if (sound.nodes.analyser) {
+                    sound.nodes.analyser.getByteFrequencyData(sound.data);
+                }
+            },
+            setPath: function(path) {
+                var sound = this;
+                if (path && sound.path !== path) {
+                    sound.stop();
+                    sound.path = path;
+                    sound.offset = sound.options.offset || 0;
+                    console.log('AudioSound.setPath', path);
+                }
+            },
+            setVolume: function(volume) {
+                var sound = this;
+                if (volume !== sound.options.volume) {
+                    sound.options.volume = volume;
+                    sound.nodes.gain.gain.value = volume;
                 }
             }
         };
 
+        function load(sound) {
+            var deferred = $q.defer();
+            var xhr = new XMLHttpRequest();
+            xhr.responseType = "arraybuffer";
+            xhr.open("GET", sound.path, true);
+            xhr.onload = function() {
+                ctx.decodeAudioData(xhr.response, function(buffer) {
+                    if (!buffer) {
+                        console.log('AudioSound.load.decodeAudioData.error', sound.path);
+                        deferred.reject('AudioSound.load.decodeAudioData.error');
+                        return;
+                    }
+                    // console.log('AudioSound.decodeAudioData', sound.path);
+                    buffers[sound.path] = buffer;
+                    deferred.resolve(buffer);
+                });
+            };
+            xhr.onerror = function(error) {
+                console.log('AudioManager.xhr.onerror', error);
+                deferred.reject(error);
+            };
+            xhr.send();
+            return deferred.promise;
+        }
+
+        AudioSound.load = load;
+
         return AudioSound;
     }]);
 
-    /*
-    if (!source) {
-        var ctx = new audioContext();
-        if (ctx) {
-            source = ctx.createMediaElementSource(audio);
-            source.smoothingTimeConstant = 0.85;
-            analyser = ctx.createAnalyser();
-            analyser.fftSize = options.audio.bands * 2;
-            source.connect(analyser);
-            source.connect(ctx.destination);
-            var bufferLength = analyser.frequencyBinCount;
-            service.data = new Uint8Array(bufferLength);
+    app.service('AudioService', ['$rootScope', '$timeout', '$q', '$http', 'AudioSound', 'SceneOptions', 'StepperService', function($rootScope, $timeout, $q, $http, AudioSound, SceneOptions, StepperService) {
+
+        var service = this;
+        var options = SceneOptions;
+        var stepper = StepperService;
+        var sound = new AudioSound({
+            analyser: true,
+        });
+
+        function getData() {
+            return sound.data;
         }
-    }
-    */
 
-    // USAGE
+        function setStep() {
+            var step = stepper.getCurrentStep();
+            setPath(step.audio ? step.audio.url : null);
+        }
 
-    /*
-    setTimeout(function() {
-        background.stop();
-    }, 2 * 60 * 1000);
-    */
+        function setPath(path) {
+            sound.setPath(path);
+            play();
+        }
 
-    /*
-    var blastSound, smashSound, backgroundMusic;
-    blastSound = new AudioSound("blast.mp3");
-    smashSound = new AudioSound("smash.mp3");
-    backgroundMusic = new AudioSound("smooth-jazz.mp3", {loop: true});
-    backgroundMusic.play();
-    blastSound.play();
-    smashSound.play();
-    //Play background music for 30 seconds
-    setTimeout(function(){
-        backgroundMusic.stop();
-    }, 30 * 1000);
-    */
+        function setVolume(volume) {
+            sound.setVolume(volume);
+        }
 
+        function update() {
+            if (service.active && sound.playing) {
+                sound.setVolume(options.audio.volume);
+                sound.update();
+            }
+        }
+
+        function play() {
+            if (service.active && sound.path && !sound.playing) {
+                sound.play();
+            }
+        }
+
+        function pause() {
+            if (sound.playing) {
+                sound.stop();
+            }
+        }
+
+        function toggle() {
+            service.active = !service.active;
+            if (service.active) {
+                play();
+            } else {
+                pause();
+            }
+        }
+
+        function isActive() {
+            return service.active && sound.playing;
+        }
+
+        function isPlaying() {
+            return sound.playing;
+        }
+
+        $rootScope.$on('onStepChanged', function($scope) {
+            setStep();
+        });
+
+        $rootScope.$on('onOptionsChanged', function($scope) {
+            sound.setVolume(options.audio.volume);
+        });
+
+        this.active = true;
+        this.getData = getData;
+        this.setVolume = setVolume;
+        this.update = update;
+        this.play = play;
+        this.pause = pause;
+        this.toggle = toggle;
+        this.isPlaying = isPlaying;
+        this.isActive = isActive;
+
+    }]);
 }());
 /* global angular */
 
@@ -1574,7 +1344,7 @@
 
     var app = angular.module('app');
 
-    app.directive('scene', ['SceneOptions', 'StepperService', 'AudioSound', 'AnalyserService', 'MotionService', function(SceneOptions, StepperService, AudioSound, AnalyserService, MotionService) {
+    app.directive('scene', ['SceneOptions', 'StepperService', 'AudioService', 'MotionService', function(SceneOptions, StepperService, AudioService, MotionService) {
         return {
             restrict: 'A',
             scope: {
@@ -1589,13 +1359,7 @@
                 var objects = data.objects;
                 var options = SceneOptions;
                 var stepper = StepperService;
-                var analyser = AnalyserService;
-
-                var sound = new AudioSound('audio/07-rossini-192-short.mp3', {
-                    loop: false,
-                    analyze: true,
-                });
-                sound.play();
+                var audio = AudioService;
 
                 var stats, scene, camera, shadow, back, light, renderer, width, height, w2, h2;
                 var controls = null;
@@ -1623,6 +1387,7 @@
 
                 scope.$on('onOptionsChanged', function($scope) {
                     // optionsChanged
+                    // audio.setVolume(options.audio.volume);
                 });
 
                 var mouse = { x: 0, y: 0 };
@@ -2047,7 +1812,7 @@
                             noiseStrength = options.noiseStrength,
                             circularStrength = options.circularStrength,
                             noiseMap = g === 1 ? noiseMap1 : noiseMap2,
-                            data = analyser.data;
+                            data = audio.getData();
 
                         angular.forEach(vertices, function(v, i) {
                             var bands = options.audio.bands;
@@ -2178,15 +1943,14 @@
                     };
                 }
 
-                function render() {
-                    updateParallax();
-                    analyser.update();
-                    sound.update();
+                function update() {
                     /*
                     if (controls) {
                         controls.update();
                     }
                     */
+                    updateParallax();
+                    audio.update();
                     if (objects.ribbon) {
                         objects.ribbon.update();
                     }
@@ -2195,6 +1959,10 @@
                             circle.update();
                         }
                     });
+                }
+
+                function render() {
+                    update();
                     renderer.render(scene, camera);
                 }
 

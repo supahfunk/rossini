@@ -5,7 +5,7 @@
 
     var app = angular.module('app');
 
-    app.directive('scene', ['SceneOptions', 'StepperService', 'AudioSound', 'AnalyserService', 'MotionService', function(SceneOptions, StepperService, AudioSound, AnalyserService, MotionService) {
+    app.directive('scene', ['SceneOptions', 'StepperService', 'AudioService', 'MotionService', function(SceneOptions, StepperService, AudioService, MotionService) {
         return {
             restrict: 'A',
             scope: {
@@ -20,13 +20,7 @@
                 var objects = data.objects;
                 var options = SceneOptions;
                 var stepper = StepperService;
-                var analyser = AnalyserService;
-
-                var sound = new AudioSound('audio/07-rossini-192-short.mp3', {
-                    loop: false,
-                    analyze: true,
-                });
-                sound.play();
+                var audio = AudioService;
 
                 var stats, scene, camera, shadow, back, light, renderer, width, height, w2, h2;
                 var controls = null;
@@ -54,6 +48,7 @@
 
                 scope.$on('onOptionsChanged', function($scope) {
                     // optionsChanged
+                    // audio.setVolume(options.audio.volume);
                 });
 
                 var mouse = { x: 0, y: 0 };
@@ -478,7 +473,7 @@
                             noiseStrength = options.noiseStrength,
                             circularStrength = options.circularStrength,
                             noiseMap = g === 1 ? noiseMap1 : noiseMap2,
-                            data = analyser.data;
+                            data = audio.getData();
 
                         angular.forEach(vertices, function(v, i) {
                             var bands = options.audio.bands;
@@ -609,15 +604,14 @@
                     };
                 }
 
-                function render() {
-                    updateParallax();
-                    analyser.update();
-                    sound.update();
+                function update() {
                     /*
                     if (controls) {
                         controls.update();
                     }
                     */
+                    updateParallax();
+                    audio.update();
                     if (objects.ribbon) {
                         objects.ribbon.update();
                     }
@@ -626,6 +620,10 @@
                             circle.update();
                         }
                     });
+                }
+
+                function render() {
+                    update();
                     renderer.render(scene, camera);
                 }
 
