@@ -511,8 +511,8 @@
                 function onChangeYears() {
                     // console.log('onChangeYears', scope.from, scope.to);
 
-                    var yearFrom = element.find('.tunnel-year__from'),
-                        yearTo = element.find('.tunnel-year__to'),
+                    var yearFrom = element.find('.from'),
+                        yearTo = element.find('.to'),
                         time = 2,
                         easing = Power3.easeOut,
                         years = {
@@ -1085,10 +1085,11 @@
                 deferred.resolve(steps);
             } else {
                 $http.get('json/rossini.js').then(function(response) {
-                    // var items = response.data;
-                    var items = getItems();
+                    var items = response.data;
+                    // var items = getItems();
                     angular.forEach(items, function(item, i) {
-                        item.years.key = String(i + 1); // String(item.years.to ? item.years.from + '-' + item.years.to : item.years.from); // da riattivare !!!
+                        console.log(item);
+                        item.years.key = String(item.years.to ? item.years.from + '-' + item.years.to : item.years.from); // da riattivare !!!
                         item.url = '/years/' + item.years.key;
                         item.detailUrl = item.url + '/detail';
                         // console.log('stepper.init', item.years.key, yearsKey);
@@ -1596,6 +1597,17 @@
                     };
                 }
 
+                var shadow = new THREE.TextureLoader().load('img/shadow.png');
+                shadow.wrapS = THREE.RepeatWrapping;
+                shadow.wrapT = THREE.RepeatWrapping;
+                shadow.repeat.set(1, 1);
+
+                var shadowMaterial = new THREE.MeshBasicMaterial({
+                    color: 0xffffff,
+                    map: shadow,
+                    transparent: true,
+                });
+
                 function getObjectCircles(index) {
 
                     var noiseMap1 = getPerlinNoise(options.circle.points, options.circle.lines);
@@ -1665,6 +1677,15 @@
 
                     var dummy = new THREE.Object3D();
                     object.add(dummy);
+
+                    // shadow
+                    geometry = new THREE.PlaneGeometry(options.circle.radius * 2 - 20, options.circle.radius * 2 - 20, 8, 8);
+                    var shadowPlane = new THREE.Mesh(geometry, shadowMaterial);
+                    shadowPlane.position.y = -400;
+                    shadowPlane.rotation.x = -Math.PI / 2;
+                    shadowPlane.scale.z = 0.5;
+                    dummy.add(shadowPlane);
+                    // shadow
 
                     // circle
                     geometry = new THREE.PlaneGeometry(options.circle.radius * 2 - 20, options.circle.radius * 2 - 20, 8, 8);
@@ -1812,13 +1833,15 @@
                             noiseStrength = options.noiseStrength,
                             circularStrength = options.circularStrength,
                             noiseMap = g === 1 ? noiseMap1 : noiseMap2,
-                            data = audio.getData();
+                            data = audio.getData(),
+                            totalPow = 0;
 
                         angular.forEach(vertices, function(v, i) {
                             var bands = options.audio.bands;
                             var aia = i % bands;
                             var aib = (pn - 1 - i) % bands;
                             var audioPow = data ? ((data[aia] + data[aib]) / 2) / bands : 0;
+                            totalPow += audioPow;
                             // var audioPow = data[aia] / bands;
 
                             var ni = 0; // iterator;
@@ -1846,6 +1869,10 @@
                             v.z = 10 * g + l * 0.01; // -l;
                             // console.log(v.sincos.radius);
                         });
+
+                        if (g === 1) {
+                            shadowPlane.scale.x = 1.0 + (totalPow / vertices.length);
+                        }
 
                         geometry.verticesNeedUpdate = true;
 

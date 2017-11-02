@@ -39,10 +39,11 @@
                 deferred.resolve(steps);
             } else {
                 $http.get('json/rossini.js').then(function(response) {
-                    // var items = response.data;
-                    var items = getItems();
+                    var items = response.data;
+                    // var items = getItems();
                     angular.forEach(items, function(item, i) {
-                        item.years.key = String(i + 1); // String(item.years.to ? item.years.from + '-' + item.years.to : item.years.from); // da riattivare !!!
+                        console.log(item);
+                        item.years.key = String(item.years.to ? item.years.from + '-' + item.years.to : item.years.from); // da riattivare !!!
                         item.url = '/years/' + item.years.key;
                         item.detailUrl = item.url + '/detail';
                         // console.log('stepper.init', item.years.key, yearsKey);

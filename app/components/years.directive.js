@@ -17,8 +17,8 @@
                 function onChangeYears() {
                     // console.log('onChangeYears', scope.from, scope.to);
 
-                    var yearFrom = element.find('.tunnel-year__from'),
-                        yearTo = element.find('.tunnel-year__to'),
+                    var yearFrom = element.find('.from'),
+                        yearTo = element.find('.to'),
                         time = 2,
                         easing = Power3.easeOut,
                         years = {

@@ -257,6 +257,17 @@
                     };
                 }
 
+                var shadow = new THREE.TextureLoader().load('img/shadow.png');
+                shadow.wrapS = THREE.RepeatWrapping;
+                shadow.wrapT = THREE.RepeatWrapping;
+                shadow.repeat.set(1, 1);
+
+                var shadowMaterial = new THREE.MeshBasicMaterial({
+                    color: 0xffffff,
+                    map: shadow,
+                    transparent: true,
+                });
+
                 function getObjectCircles(index) {
 
                     var noiseMap1 = getPerlinNoise(options.circle.points, options.circle.lines);
@@ -326,6 +337,15 @@
 
                     var dummy = new THREE.Object3D();
                     object.add(dummy);
+
+                    // shadow
+                    geometry = new THREE.PlaneGeometry(options.circle.radius * 2 - 20, options.circle.radius * 2 - 20, 8, 8);
+                    var shadowPlane = new THREE.Mesh(geometry, shadowMaterial);
+                    shadowPlane.position.y = -400;
+                    shadowPlane.rotation.x = -Math.PI / 2;
+                    shadowPlane.scale.z = 0.5;
+                    dummy.add(shadowPlane);
+                    // shadow
 
                     // circle
                     geometry = new THREE.PlaneGeometry(options.circle.radius * 2 - 20, options.circle.radius * 2 - 20, 8, 8);
@@ -473,13 +493,15 @@
                             noiseStrength = options.noiseStrength,
                             circularStrength = options.circularStrength,
                             noiseMap = g === 1 ? noiseMap1 : noiseMap2,
-                            data = audio.getData();
+                            data = audio.getData(),
+                            totalPow = 0;
 
                         angular.forEach(vertices, function(v, i) {
                             var bands = options.audio.bands;
                             var aia = i % bands;
                             var aib = (pn - 1 - i) % bands;
                             var audioPow = data ? ((data[aia] + data[aib]) / 2) / bands : 0;
+                            totalPow += audioPow;
                             // var audioPow = data[aia] / bands;
 
                             var ni = 0; // iterator;
@@ -507,6 +529,10 @@
                             v.z = 10 * g + l * 0.01; // -l;
                             // console.log(v.sincos.radius);
                         });
+
+                        if (g === 1) {
+                            shadowPlane.scale.x = 1.0 + (totalPow / vertices.length);
+                        }
 
                         geometry.verticesNeedUpdate = true;
 

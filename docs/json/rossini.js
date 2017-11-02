@@ -1,22 +1,47 @@
 [{
+        "id": 0,
+        "title": "",
+        "chapter": "Passione, Genio e Silenzio",
+        "paragraph": "",
+        "years": {
+            "from": 0
+        },
+        "colors": {
+            "background": "#dadadb",
+            "lines": "#2f3659",
+            "overLines": "#ffffff"
+        },
+        "camera": {
+            "cameraHeight": -10,
+            "targetHeight": 30
+        },
+        "circle": {
+            "position": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "texture": "img/rossini-00.png"
+        },
+        "audio": null
+    },
+    {
         "id": 1,
         "title": "Il periodo francese:<br> la nascita della <em>Grand Opéra</em>",
-        "url": "view.html",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Il giovane Gioacchino",
         "years": {
-            "from": 1831
+            "from": 1792,
+            "to": 1806
         },
-        "background": "img/tunnel-1.jpg",
-        "contrast": "light-bg",
         "colors": {
-            "background": "#eae8e8",
-            "lines": "#b4bfdd",
-            "overLines": "#3353a4"
+            "background": "#dadadb",
+            "lines": "#2f3659",
+            "overLines": "#ffffff"
         },
         "camera": {
-            "cameraHeight": 0,
-            "targetHeight": 5
+            "cameraHeight": -10,
+            "targetHeight": 30
         },
         "circle": {
             "position": {
@@ -26,29 +51,29 @@
             },
             "texture": "img/rossini-01.png"
         },
-        "audio": null,
-        "titleTrusted": {}
+        "audio": {
+            "url": "audio/01-rossini-192.mp3",
+            "title": "L'italiana in Algeri",
+            "orchestra": "Academy of St Martin in the Fields Orchestra"
+        }
     },
     {
         "id": 2,
-        "title": "Il Barbiere di Siviglia<br> al teatro Argentina<br> di Roma",
-        "url": "view.html",
+        "title": "Lo studio e gli esordi",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Il giovane Gioacchino",
         "years": {
-            "from": 1845,
-            "to": 1847
+            "from": 1807,
+            "to": 1812
         },
-        "background": "img/tunnel-2.jpg",
-        "contrast": "light-bg",
         "colors": {
-            "background": "#eae8e8",
-            "lines": "#b4bfdd",
-            "overLines": "#3353a4"
+            "background": "#dadadb",
+            "lines": "#2f3659",
+            "overLines": "#ffffff"
         },
         "camera": {
-            "cameraHeight": 0,
-            "targetHeight": 0
+            "cameraHeight": -10,
+            "targetHeight": 30
         },
         "circle": {
             "position": {
@@ -56,35 +81,30 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-01.png"
+            "texture": "img/rossini-02.png"
         },
         "audio": {
-            "url": "audio/08-rossini-192.mp3",
+            "url": "audio/01-rossini-192.mp3",
             "title": "L'italiana in Algeri",
             "orchestra": "Academy of St Martin in the Fields Orchestra"
-        },
-        "titleTrusted": {}
+        }
     },
     {
         "id": 3,
-        "title": "Il Silenzio",
-        "url": "view.html",
+        "title": "La maturità artistica",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Il giovane Gioacchino",
         "years": {
-            "from": 1850,
-            "to": 1852
+            "from": 1813
         },
-        "background": "img/tunnel-3.jpg",
-        "contrast": "dark-bg",
         "colors": {
-            "background": "#eae8e8",
-            "lines": "#b4bfdd",
-            "overLines": "#3353a4"
+            "background": "#ffb410",
+            "lines": "#2f3659",
+            "overLines": "#e1d4b6"
         },
         "camera": {
-            "cameraHeight": 0,
-            "targetHeight": 0
+            "cameraHeight": -10,
+            "targetHeight": 30
         },
         "circle": {
             "position": {
@@ -92,35 +112,31 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-01.png"
+            "texture": "img/rossini-03.png"
         },
         "audio": {
-            "url": "audio/07-rossini-192.mp3",
+            "url": "audio/01-rossini-192.mp3",
             "title": "Il Barbiere di Siviglia",
             "orchestra": "Academy of St Martin in the Fields Orchestra"
-        },
-        "titleTrusted": {}
+        }
     },
     {
         "id": 4,
-        "title": "Il periodo francese:<br> la nascita della <em>Grand Opéra</em>",
-        "url": "view.html",
+        "title": "Gli esordi napoletani<br>e Il Barbiere di Siviglia",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Il folgorante debutto",
         "years": {
-            "from": 1827,
-            "to": 1828
+            "from": 1815,
+            "to": 1816
         },
-        "background": "img/tunnel-1.jpg",
-        "contrast": "light-bg",
         "colors": {
-            "background": "#eae8e8",
-            "lines": "#b4bfdd",
-            "overLines": "#3353a4"
+            "background": "#ffb410",
+            "lines": "#2f3659",
+            "overLines": "#e1d4b6"
         },
         "camera": {
-            "cameraHeight": 0,
-            "targetHeight": 0
+            "cameraHeight": -10,
+            "targetHeight": 30
         },
         "circle": {
             "position": {
@@ -128,34 +144,30 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-01.png"
+            "texture": "img/rossini-04.png"
         },
         "audio": {
-            "url": "audio/08-rossini-192.mp3",
+            "url": "audio/02-rossini-192.mp3",
             "title": "L'italiana in Algeri",
             "orchestra": "Academy of St Martin in the Fields Orchestra"
-        },
-        "titleTrusted": {}
+        }
     },
     {
         "id": 5,
-        "title": "Il Barbiere di Siviglia<br> al teatro Argentina<br> di Roma",
-        "url": "view.html",
+        "title": "Il congedo dal teatro comico",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Il folgorante debutto",
         "years": {
-            "from": 1845
+            "from": 1817
         },
-        "background": "img/tunnel-2.jpg",
-        "contrast": "light-bg",
         "colors": {
-            "background": "#eae8e8",
-            "lines": "#b4bfdd",
-            "overLines": "#3353a4"
+            "background": "#72d1bb",
+            "lines": "#2f3659",
+            "overLines": "#ffffff"
         },
         "camera": {
-            "cameraHeight": 0,
-            "targetHeight": 0
+            "cameraHeight": -10,
+            "targetHeight": 30
         },
         "circle": {
             "position": {
@@ -163,35 +175,31 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-01.png"
+            "texture": "img/rossini-05.png"
         },
         "audio": {
-            "url": "audio/07-rossini-192.mp3",
+            "url": "audio/02-rossini-192.mp3",
             "title": "Il Barbiere di Siviglia",
             "orchestra": "Academy of St Martin in the Fields Orchestra"
-        },
-        "titleTrusted": {}
+        }
     },
     {
         "id": 6,
-        "title": "Il Silenzio",
-        "url": "view.html",
+        "title": "L’intensa produzione napoletana",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Il folgorante debutto",
         "years": {
-            "from": 1835,
-            "to": 1852
+            "from": 1816,
+            "to": 1822
         },
-        "background": "img/tunnel-3.jpg",
-        "contrast": "dark-bg",
         "colors": {
-            "background": "#eae8e8",
-            "lines": "#b4bfdd",
-            "overLines": "#3353a4"
+            "background": "#72d1bb",
+            "lines": "#2f3659",
+            "overLines": "#ffffff"
         },
         "camera": {
-            "cameraHeight": 0,
-            "targetHeight": 0
+            "cameraHeight": -10,
+            "targetHeight": 30
         },
         "circle": {
             "position": {
@@ -199,35 +207,30 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-01.png"
+            "texture": "img/rossini-06.png"
         },
         "audio": {
-            "url": "audio/08-rossini-192.mp3",
+            "url": "audio/02-rossini-192.mp3",
             "title": "L'italiana in Algeri",
             "orchestra": "Academy of St Martin in the Fields Orchestra"
-        },
-        "titleTrusted": {}
+        }
     },
     {
         "id": 7,
-        "title": "Il periodo francese:<br> la nascita della <em>Grand Opéra</em>",
-        "url": "view.html",
+        "title": "Il trasferimento a Parigi",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "La frenesia della produzione",
         "years": {
-            "from": 1813,
-            "to": 1824
+            "from": 1824
         },
-        "background": "img/tunnel-1.jpg",
-        "contrast": "light-bg",
         "colors": {
-            "background": "#eae8e8",
-            "lines": "#b4bfdd",
+            "background": "#be261c",
+            "lines": "#edeff2",
             "overLines": "#3353a4"
         },
         "camera": {
-            "cameraHeight": 0,
-            "targetHeight": 0
+            "cameraHeight": -10,
+            "targetHeight": 30
         },
         "circle": {
             "position": {
@@ -235,35 +238,30 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-01.png"
+            "texture": "img/rossini-07.png"
         },
         "audio": {
-            "url": "audio/07-rossini-192.mp3",
+            "url": "audio/03-rossini-192.mp3",
             "title": "Il Barbiere di Siviglia",
             "orchestra": "Academy of St Martin in the Fields Orchestra"
-        },
-        "titleTrusted": {}
+        }
     },
     {
         "id": 8,
-        "title": "Il Barbiere di Siviglia<br> al teatro Argentina<br> di Roma",
-        "url": "view.html",
+        "title": "Il Guglielmo Tell",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "La frenesia della produzione",
         "years": {
-            "from": 1812,
-            "to": 1851
+            "from": 1829
         },
-        "background": "img/tunnel-2.jpg",
-        "contrast": "light-bg",
         "colors": {
-            "background": "#eae8e8",
-            "lines": "#b4bfdd",
+            "background": "#be261c",
+            "lines": "#edeff2",
             "overLines": "#3353a4"
         },
         "camera": {
-            "cameraHeight": 0,
-            "targetHeight": 0
+            "cameraHeight": -10,
+            "targetHeight": 30
         },
         "circle": {
             "position": {
@@ -271,34 +269,31 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-01.png"
+            "texture": "img/rossini-08.png"
         },
         "audio": {
-            "url": "audio/08-rossini-192.mp3",
+            "url": "audio/03-rossini-192.mp3",
             "title": "L'italiana in Algeri",
             "orchestra": "Academy of St Martin in the Fields Orchestra"
-        },
-        "titleTrusted": {}
+        }
     },
     {
         "id": 9,
-        "title": "Il Silenzio",
-        "url": "view.html",
+        "title": "La salute precaria e il ritiro in privato",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "La frenesia della produzione",
         "years": {
-            "from": 1855
+            "from": 1831,
+            "to": 1829
         },
-        "background": "img/tunnel-3.jpg",
-        "contrast": "dark-bg",
         "colors": {
-            "background": "#eae8e8",
-            "lines": "#b4bfdd",
-            "overLines": "#3353a4"
+            "background": "#000000",
+            "lines": "#edeff2",
+            "overLines": "#2a3a62"
         },
         "camera": {
-            "cameraHeight": 0,
-            "targetHeight": 0
+            "cameraHeight": -10,
+            "targetHeight": 30
         },
         "circle": {
             "position": {
@@ -306,35 +301,31 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-01.png"
+            "texture": "img/rossini-09.png"
         },
         "audio": {
-            "url": "audio/07-rossini-192.mp3",
+            "url": "audio/03-rossini-192.mp3",
             "title": "Il Barbiere di Siviglia",
             "orchestra": "Academy of St Martin in the Fields Orchestra"
-        },
-        "titleTrusted": {}
+        }
     },
     {
         "id": 10,
-        "title": "Il periodo francese:<br> la nascita della <em>Grand Opéra</em>",
-        "url": "view.html",
+        "title": "La musica sacra e il rientro in Italia",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Sulle strade di Parigi",
         "years": {
-            "from": 1836,
-            "to": 1819
+            "from": 1832,
+            "to": 1848
         },
-        "background": "img/tunnel-1.jpg",
-        "contrast": "light-bg",
         "colors": {
-            "background": "#eae8e8",
-            "lines": "#b4bfdd",
-            "overLines": "#3353a4"
+            "background": "#000000",
+            "lines": "#edeff2",
+            "overLines": "#2a3a62"
         },
         "camera": {
-            "cameraHeight": 0,
-            "targetHeight": 0
+            "cameraHeight": -10,
+            "targetHeight": 30
         },
         "circle": {
             "position": {
@@ -342,35 +333,31 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-01.png"
+            "texture": "img/rossini-10.png"
         },
         "audio": {
-            "url": "audio/08-rossini-192.mp3",
+            "url": "audio/04-rossini-192.mp3",
             "title": "L'italiana in Algeri",
             "orchestra": "Academy of St Martin in the Fields Orchestra"
-        },
-        "titleTrusted": {}
+        }
     },
     {
         "id": 11,
-        "title": "Il Barbiere di Siviglia<br> al teatro Argentina<br> di Roma",
-        "url": "view.html",
+        "title": "La parentesi fiorentina e il rientro in Francia",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Sulle strade di Parigi",
         "years": {
-            "from": 1819,
-            "to": 1830
+            "from": 1848,
+            "to": 1864
         },
-        "background": "img/tunnel-2.jpg",
-        "contrast": "light-bg",
         "colors": {
-            "background": "#eae8e8",
-            "lines": "#b4bfdd",
-            "overLines": "#3353a4"
+            "background": "#006f98",
+            "lines": "#edeff2",
+            "overLines": "#2a3a62"
         },
         "camera": {
-            "cameraHeight": 0,
-            "targetHeight": 0
+            "cameraHeight": -10,
+            "targetHeight": 30
         },
         "circle": {
             "position": {
@@ -378,35 +365,31 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-01.png"
+            "texture": "img/rossini-11.png"
         },
         "audio": {
-            "url": "audio/07-rossini-192.mp3",
+            "url": "audio/04-rossini-192.mp3",
             "title": "Il Barbiere di Siviglia",
             "orchestra": "Academy of St Martin in the Fields Orchestra"
-        },
-        "titleTrusted": {}
+        }
     },
     {
         "id": 12,
-        "title": "Il Silenzio",
-        "url": "view.html",
+        "title": "L’ultimo Rossini e la sua scomparsa",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Sulle strade di Parigi",
         "years": {
-            "from": 1845,
-            "to": 1820
+            "from": 1864,
+            "to": 1868
         },
-        "background": "img/tunnel-3.jpg",
-        "contrast": "dark-bg",
         "colors": {
-            "background": "#eae8e8",
-            "lines": "#b4bfdd",
-            "overLines": "#3353a4"
+            "background": "#006f98",
+            "lines": "#edeff2",
+            "overLines": "#2a3a62"
         },
         "camera": {
-            "cameraHeight": 0,
-            "targetHeight": 0
+            "cameraHeight": -10,
+            "targetHeight": 30
         },
         "circle": {
             "position": {
@@ -414,13 +397,12 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-01.png"
+            "texture": "img/rossini-12.png"
         },
         "audio": {
-            "url": "audio/08-rossini-192.mp3",
+            "url": "audio/04-rossini-192.mp3",
             "title": "L'italiana in Algeri",
             "orchestra": "Academy of St Martin in the Fields Orchestra"
-        },
-        "titleTrusted": {}
+        }
     }
 ]
