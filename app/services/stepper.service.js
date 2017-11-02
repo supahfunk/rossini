@@ -273,7 +273,7 @@
             var g = parseInt(color.g * 255);
             var b = parseInt(color.b * 255);
             var pow = r * 0.299 + g * 0.587 + b * 0.114;
-            var contrast = (pow > 186) ? 'light-bg' : 'dark-bg';
+            var contrast = (pow > 125) ? 'light-bg' : 'dark-bg';
             // console.log('StepperService.getContrast', color.getHexString(), pow, contrast);
             return contrast;
         }

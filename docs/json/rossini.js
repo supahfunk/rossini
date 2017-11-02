@@ -27,7 +27,7 @@
     },
     {
         "id": 1,
-        "title": "Il periodo francese:<br> la nascita della <em>Grand Opéra</em>",
+        "title": "Le origini",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Il giovane Gioacchino",
         "years": {
@@ -154,7 +154,7 @@
     },
     {
         "id": 5,
-        "title": "Il congedo dal teatro comico",
+        "title": "Il congedo<br>dal teatro comico",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Il folgorante debutto",
         "years": {
@@ -185,7 +185,7 @@
     },
     {
         "id": 6,
-        "title": "L’intensa produzione napoletana",
+        "title": "L’intensa produzione<br>napoletana",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Il folgorante debutto",
         "years": {
@@ -279,7 +279,7 @@
     },
     {
         "id": 9,
-        "title": "La salute precaria e il ritiro in privato",
+        "title": "La salute precaria<br>e il ritiro in privato",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "La frenesia della produzione",
         "years": {
@@ -311,7 +311,7 @@
     },
     {
         "id": 10,
-        "title": "La musica sacra e il rientro in Italia",
+        "title": "La musica sacra<br>e il rientro in Italia",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Sulle strade di Parigi",
         "years": {
@@ -343,7 +343,7 @@
     },
     {
         "id": 11,
-        "title": "La parentesi fiorentina e il rientro in Francia",
+        "title": "La parentesi fiorentina<br>e il rientro in Francia",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Sulle strade di Parigi",
         "years": {
@@ -375,7 +375,7 @@
     },
     {
         "id": 12,
-        "title": "L’ultimo Rossini e la sua scomparsa",
+        "title": "L’ultimo Rossini<br>e la sua scomparsa",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Sulle strade di Parigi",
         "years": {
