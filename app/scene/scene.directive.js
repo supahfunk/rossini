@@ -5,7 +5,7 @@
 
     var app = angular.module('app');
 
-    app.directive('scene', ['SceneOptions', 'StepperService', 'AnalyserService', 'MotionService', function(SceneOptions, StepperService, AnalyserService, MotionService) {
+    app.directive('scene', ['SceneOptions', 'StepperService', 'AudioSound', 'AnalyserService', 'MotionService', function(SceneOptions, StepperService, AudioSound, AnalyserService, MotionService) {
         return {
             restrict: 'A',
             scope: {
@@ -21,6 +21,12 @@
                 var options = SceneOptions;
                 var stepper = StepperService;
                 var analyser = AnalyserService;
+
+                var sound = new AudioSound('audio/07-rossini-192-short.mp3', {
+                    loop: false,
+                    analyze: true,
+                });
+                sound.play();
 
                 var stats, scene, camera, shadow, back, light, renderer, width, height, w2, h2;
                 var controls = null;
@@ -606,9 +612,12 @@
                 function render() {
                     updateParallax();
                     analyser.update();
+                    sound.update();
+                    /*
                     if (controls) {
                         controls.update();
                     }
+                    */
                     if (objects.ribbon) {
                         objects.ribbon.update();
                     }
