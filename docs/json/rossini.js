@@ -2,7 +2,7 @@
         "id": 0,
         "title": "",
         "chapter": "Passione, Genio e Silenzio",
-        "paragraph": "",
+        "paragraph": "Il giovane Gioacchino",
         "years": {
             "from": 0
         },
