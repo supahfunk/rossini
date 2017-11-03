@@ -55,7 +55,6 @@
         }
 
         function navTo(item, lvl) {
-            itemToggle(item);
             if (item.url) {
                 if (item.url.indexOf('/years') !== -1 && $route.current.$$route.originalPath.indexOf('/years') !== -1) {
                     closeNav();

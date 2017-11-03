@@ -20,8 +20,7 @@
                 "x": 0,
                 "y": 0,
                 "z": 0
-            },
-            "texture": "img/rossini-00.jpg"
+            }
         },
         "audio": null
     },
