@@ -78,11 +78,12 @@
             var x = e.gamma;
             var z = 0;
 
-            y = Math.min(y, 30); // - 10;
+            y = Math.min(y, 30);
+            y = Math.max(y, -30);
 
-            x /= 15;
-            y /= 15;
-            z /= 15;
+            x /= 20;
+            y /= 20;
+            z /= 20;
 
             set(x, y, z);
         }

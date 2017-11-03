@@ -1563,11 +1563,12 @@
             var x = e.gamma;
             var z = 0;
 
-            y = Math.min(y, 30); // - 10;
+            y = Math.min(y, 30);
+            y = Math.max(y, -30);
 
-            x /= 15;
-            y /= 15;
-            z /= 15;
+            x /= 20;
+            y /= 20;
+            z /= 20;
 
             set(x, y, z);
         }
@@ -2129,11 +2130,27 @@
                         target.y += stepper.values.targetHeight;
                         // var tangent = cameraSpline.getTangent(tpow).normalize().multiplyScalar(100);
                         // target.add(tangent);
+
                         camera.position.copy(position);
                         camera.target.copy(target);
                         camera.position.x += (position.x + parallax.x - camera.position.x) * friction;
                         camera.position.y += (position.y + parallax.y - camera.position.y) * friction;
                         camera.lookAt(camera.target);
+
+                        /*
+                        // camera.position.copy(position);
+                        camera.target.copy(target);
+                        if (width < 768) {
+                            camera.position.x += (position.x - camera.position.x) * friction;
+                            camera.position.y += (position.y + 2000 - camera.position.y) * friction;
+                            camera.position.z += (position.z - camera.position.z) * friction;
+                        } else {
+                            camera.position.x += (position.x + parallax.x - camera.position.x) * friction;
+                            camera.position.y += (position.y + parallax.y - camera.position.y) * friction;
+                            camera.position.z += (position.z - camera.position.z) * friction;
+                        }
+                        camera.lookAt(camera.target);
+                        */
                     }
 
                     return {
