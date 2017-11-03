@@ -55,7 +55,7 @@
             mobile: isMobileAndTabled,
             ios: isIOS,
         },
-        preload: false,
+        preload: true,
     });
 
 }());

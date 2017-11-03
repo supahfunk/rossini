@@ -41,10 +41,10 @@
                     <div class="main-nav__scroll" scrollbar>
                         <img src="img/200Rossini150.svg" class="logo" />
                         <ul>
-                            <li class="opened" ng-active="{ active: item.active }" ng-repeat="item in menu track by $index">
+                            <li class="opened" ng-repeat="item in menu track by $index">
                                 <a href="#" ng-href="#{{item.url}}" nav-to="navTo(item, 1)" ng-bind="item.title">>-l1-</a>
                                 <ul ng-if="item.items">
-                                    <li ng-active="{ active: sub.active }" ng-repeat="sub in item.items track by $index">
+                                    <li ng-repeat="sub in item.items track by $index">
                                         <a href="#" ng-href="#{{sub.url}}" nav-to="navTo(sub, 2)" ng-bind="sub.title">>-l2-</a>
                                         <div class="main-nav__sub-nav" ng-if="sub.items">
                                             <a href="#" ng-href="#{{year.url}}" nav-to="navTo(year, 3)" ng-repeat="year in sub.items track by $index">
@@ -136,19 +136,13 @@
             <!-- /Tunnel Year -->
 
             <!-- Three JS -->
-            <section id="scene" ng-if="scene">
+            <section id="scene" ng-if="state.isReady">
                 <div scene="scene"></div>
             </section>
             <!-- /Three JS -->
 
             <!-- Tunnel Nav -->
-            <div class="tunnel-nav" ng-if="scene">
-                <!--
-            <button type="button" id="tunnel-prev" ng-click="stepper.previous()">prev</button>
-            <button type="button" id="tunnel-next" ng-click="stepper.next()">next</button>
-            <span ng-bind="stepper.current">-</span>
-            <span ng-bind="stepper.steps.length">-</span>
-            -->
+            <div class="tunnel-nav" ng-if="state.isReady">
                 <div class="tunnel-nav__follower"></div>
                 <div ng-repeat="item in stepper.steps track by $index" ng-click="stepper.navStep($index)" ng-bind="item.years.from + (item.years.to ? ' - ' + item.years.to : '')" ng-class="{active : stepper.current == $index}" class="tunnel-nav__step" ng-if="$index"></div>
             </div>
@@ -211,6 +205,12 @@
                 </button>
             </div>
             <!-- /Detail -->
+
+            <!-- Preload -->
+            <div class="preload" ng-class="{ active: options.preload && state.isBusy }">
+                <div><span>progress</span> <span ng-bind="progress.progress * 100 | number : 0"></span>%</div>
+            </div>
+            <!-- /Preload -->
 
             <!-- Footer -->
             <footer class="footer">

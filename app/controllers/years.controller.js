@@ -82,6 +82,9 @@
                     openDetail();
                 });
             }
+            $timeout(function() {
+                stepper.navStep(stepper.current);
+            }, 1000);
             // preloadAudio();
             var gui = new DatGui();
             state.ready();

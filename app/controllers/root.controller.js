@@ -79,48 +79,7 @@
             }
         }
 
-        function isNavActive(item) {
-            return false;
-        }
-
-        function itemOpen(item) {
-            item.active = true;
-            item.closed = item.closing = false;
-            item.opening = true;
-            $timeout(function() {
-                item.opening = false;
-                item.opened = true;
-            });
-        }
-
-        function itemClose(item) {
-            item.active = false;
-            item.opened = item.opening = false;
-            item.closing = true;
-            $timeout(function() {
-                item.closing = false;
-                item.closed = true;
-            });
-        }
-
-        function itemToggle(item) {
-            item.active = !item.active;
-            if (item.active) {
-                if (item.parent) {
-                    item.parent.items.filter(function(o) {
-                        if (o !== item) {
-                            itemClose(o);
-                        }
-                    });
-                }
-                itemOpen(item);
-            } else {
-                itemClose(item);
-            }
-        }
-
         $scope.navTo = navTo;
-        $scope.isNavActive = isNavActive;
 
     }]);
 

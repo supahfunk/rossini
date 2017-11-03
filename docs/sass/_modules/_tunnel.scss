@@ -3,6 +3,7 @@
 /*--------------------------------------------------
 Tunnel
 --------------------------------------------------*/
+
 .tunnel {
     position: fixed;
     z-index: 50;
@@ -17,11 +18,11 @@ Tunnel
 /*--------------------------------------------------
 Slick
 --------------------------------------------------*/
+
 .slick-list {
     .slick-loading & {
         background: #fff;
     }
-
     /* Arrows */
     .slick-prev,
     .slick-next {
@@ -41,14 +42,12 @@ Slick
         padding: 0;
         border: none;
         outline: none;
-
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
             outline: none;
             background: transparent;
             color: transparent;
         }
-
-
         &:before {
             font-size: 20px;
             line-height: 1;
@@ -56,39 +55,30 @@ Slick
             -moz-osx-font-smoothing: grayscale;
         }
     }
-
     .slick-prev {
         left: -25px;
-
         [dir="rtl"] & {
             left: auto;
             right: -25px;
         }
-
         &:before {
             content: 'prev';
         }
     }
-
     .slick-next {
         right: -25px;
-
         [dir="rtl"] & {
             left: -25px;
             right: auto;
         }
-
         &:before {
             content: 'next';
         }
     }
-
     /* Dots */
-
     .slick-dotted.slick-slider {
         margin-bottom: 30px;
     }
-
     .slick-dots {
         position: absolute;
         bottom: -25px;
@@ -98,7 +88,6 @@ Slick
         padding: 0;
         margin: 0;
         width: 100%;
-
         li {
             position: relative;
             display: inline-block;
@@ -107,7 +96,6 @@ Slick
             margin: 0 5px;
             padding: 0;
             cursor: pointer;
-
             button {
                 border: 0;
                 background: transparent;
@@ -120,11 +108,10 @@ Slick
                 color: transparent;
                 padding: 5px;
                 cursor: pointer;
-
-                &:hover, &:focus {
+                &:hover,
+                &:focus {
                     outline: none;
                 }
-
                 &:before {
                     position: absolute;
                     top: 0;
@@ -138,7 +125,6 @@ Slick
                     -moz-osx-font-smoothing: grayscale;
                 }
             }
-
         }
     }
 }
@@ -147,6 +133,7 @@ Slick
 /*--------------------------------------------------
 Tunnel Background
 --------------------------------------------------*/
+
 .tunnel-bg {
     background: #e4e4e4;
     position: fixed;
@@ -156,12 +143,10 @@ Tunnel Background
     width: 100%;
     height: 100vh;
     overflow: hidden;
-
     .item {
         position: relative;
         z-index: 1;
         height: 100vh;
-
         img {
             position: absolute;
             z-index: 1;
@@ -182,6 +167,7 @@ Tunnel Background
 /*--------------------------------------------------
 Tunnel Gradient
 --------------------------------------------------*/
+
 .tunnel-gradient {
     position: fixed;
     z-index: 1;
@@ -190,7 +176,6 @@ Tunnel Gradient
     width: 100%;
     height: 100vh;
     transition: all .7s $bezier;
-
     &:before {
         content: '';
         position: absolute;
@@ -201,7 +186,6 @@ Tunnel Gradient
         height: 100%;
         background: url(../img/gradient.png) repeat-x center bottom;
     }
-
     .detail-active & {
         opacity: 0;
     }
@@ -211,6 +195,7 @@ Tunnel Gradient
 /*--------------------------------------------------
 Tunnel Year
 --------------------------------------------------*/
+
 .tunnel-year {
     position: fixed;
     z-index: 10;
@@ -227,37 +212,27 @@ Tunnel Year
     line-height: 1;
     transition: all 1.4s $bezier;
     opacity: 1;
-
     [data-step="0"] & {
         transform: translate(0, -100%);
         opacity: 0;
         pointer-events: none;
     }
-
-    @include lg {
-    }
-
-    @include md {
-    }
-
+    @include lg {}
+    @include md {}
     @include sm {
         font-size: 15vw;
     }
-
     @include xs {
         font-size: 18vw;
         top: 78px;
     }
-
     @include xxs {
         top: 48px;
     }
-
-    &__wrap > div {
+    &__wrap>div {
         display: inline-block;
         transition: all 1.4s $bezier;
     }
-
     .to {
         &:before {
             content: '-';
@@ -267,7 +242,6 @@ Tunnel Year
             transition: all 1.4s $bezier .1s;
             text-indent: 28px;
             font-size: 80%;
-
             @include xs {
                 margin: 0 0 0 -40px;
             }
@@ -277,31 +251,23 @@ Tunnel Year
 
 .one-year {
     top: 90px;
-
-    @include sm {
-    }
-
+    @include sm {}
     @include xs {
         top: 78px;
     }
-
     @include xxs {
         top: 48px;
     }
-
     .from {
         transform: translate(50%) scale(1.2);
         text-indent: 50px;
-
         @include xs {
             text-indent: 0;
         }
     }
-
     .to {
         opacity: 0;
         transform: scale(0);
-
         &:before {
             font-size: 80%;
             text-indent: 0;
@@ -313,6 +279,7 @@ Tunnel Year
 /*--------------------------------------------------
 Tunnel Nav
 --------------------------------------------------*/
+
 .tunnel-nav {
     position: fixed;
     z-index: 100;
@@ -321,21 +288,17 @@ Tunnel Nav
     transform: translate(0, -50%);
     transition: all .8s $bezier;
     opacity: 1;
-
     [data-step="0"] & {
         transform: translate(100%, -50%);
         opacity: 0;
         pointer-events: none;
     }
-
     @include md {
         right: 30px;
     }
-
     @include xs {
         display: none;
     }
-
     &__step {
         text-align: right;
         color: $violet;
@@ -346,20 +309,16 @@ Tunnel Nav
         padding: 1px 0;
         float: right;
         clear: right;
-
         &:hover {
             opacity: .9;
         }
-
         &.active {
             opacity: 1;
         }
-
         .dark-bg & {
             color: #fff;
         }
     }
-
     &__follower {
         position: absolute;
         z-index: 1;
@@ -370,7 +329,6 @@ Tunnel Nav
         border: 1px solid $violet;
         opacity: .7;
         transition: color .5s $bezier, transform 1.1s $bezier, width 1.1s $bezier;
-
         &:before {
             content: '';
             position: absolute;
@@ -382,10 +340,8 @@ Tunnel Nav
             border-top: 1px solid $violet;
             opacity: .7;
         }
-
         .dark-bg & {
             border-color: #fff;
-
             &:before {
                 border-top-color: #fff;
             }
@@ -397,6 +353,7 @@ Tunnel Nav
 /*--------------------------------------------------
 Tunnel Slick
 --------------------------------------------------*/
+
 .tunnel-slick {
     height: 100vh;
     position: absolute;
@@ -405,40 +362,33 @@ Tunnel Slick
     left: 0;
     width: 100%;
     height: 100vh;
-
     .tunnel-slick__item {
         position: relative;
         z-index: 1;
         height: 100vh;
-
         .cta {
             margin-top: 20px;
             transform: translateY(50%);
             opacity: 0;
             transition: all 1.2s $bezier;
-
             @include xxs {
                 margin-top: 10px;
             }
-
             &.active {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
     }
-
     .tunnel-slick__header {
         position: absolute;
         left: 5%;
         top: 45%;
         color: $black-tit;
         transition: all .5s $bezier .8s;
-
         .dark-bg & {
             color: #fff;
         }
-
         @include xs {
             top: 65%!important;
             left: 0!important;
@@ -451,15 +401,14 @@ Tunnel Slick
 
 
 /* Tunnel 0 */
-#tunnel-0 {
 
+#tunnel-0 {
     .intro {
         position: absolute;
         z-index: 1;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-
         img {
             width: 400px;
             height: auto;
@@ -468,7 +417,9 @@ Tunnel Slick
     }
 }
 
+
 /* Tunnel 0 */
+
 .tunnel-slick__intro {
     position: relative;
     z-index: 1;
@@ -477,8 +428,6 @@ Tunnel Slick
     width: 100%;
     height: 100vh;
     overflow: hidden;
-
-
     .intro-box {
         position: absolute;
         z-index: 10;
@@ -488,13 +437,11 @@ Tunnel Slick
         width: 900px;
         display: flex;
         align-items: center;
-
         @include xs {
             transform: translate(-50%, -40%);
             width: 100vw;
             padding: 0 30px;
         }
-
         @include xxs {
             position: relative;
             z-index: 1;
@@ -504,8 +451,6 @@ Tunnel Slick
             transform: none;
             padding-top: 70px;
         }
-
-
         .big-title {
             position: absolute;
             z-index: -1;
@@ -520,88 +465,71 @@ Tunnel Slick
             text-align: center;
             font-size: 10vw;
             width: 100vw;
-
             @include lg {
                 transform: translate(-50%, -100%);
             }
-
             @include md {
                 transform: translate(-50%, -110%);
             }
-
             @include sm {
                 transform: translate(-50%, -120%);
             }
-
             @include xs {
                 transform: translate(-50%, -170%);
             }
-
             @include xxs {
                 position: static;
                 transform: none;
                 width: 100%;
             }
         }
-
         .img {
             position: relative;
             z-index: 1;
             flex: 0 0 auto;
             margin-right: 60px;
-
             @include md {
                 width: 300px;
             }
-
             @include sm {
                 margin-right: 30px;
             }
-
             @include xxs {
                 width: 50%;
                 margin: 10px auto 30px;
                 text-align: center;
             }
-
             img {
                 max-width: 100%;
                 height: auto;
             }
         }
-
         .text {
             position: relative;
             z-index: 1;
             max-width: 600px;
             font-size: 14px;
-
             @include sm {
                 max-width: 500px;
             }
-
             @include xxs {
                 margin-top: -20px;
                 text-align: center;
             }
-
             img {
                 width: 300px;
                 height: auto;
                 margin-bottom: 20px;
-
                 @include xxs {
                     width: 250px;
                     display: block;
                     margin: 0 auto 10px;
                 }
             }
-
             p {
                 margin-bottom: 20px;
             }
         }
-
         .cta {
             opacity: 1;
             margin-top: 0;
@@ -610,29 +538,51 @@ Tunnel Slick
     }
 }
 
-/* Tunnel 1 */
-#tunnel-1 {
 
+/* Tunnel 1 */
+
+#tunnel-1 {
     .tunnel-slick__header {
         left: 45%;
         top: 45%;
     }
 }
 
-/* Tunnel 2 */
-#tunnel-2 {
 
+/* Tunnel 2 */
+
+#tunnel-2 {
     .tunnel-slick__header {
         left: 5%;
         top: 45%;
     }
 }
 
-/* Tunnel 3 */
-#tunnel-3 {
 
+/* Tunnel 3 */
+
+#tunnel-3 {
     .tunnel-slick__header {
         left: 60%;
         top: 40%;
+    }
+}
+
+.preload {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0;
+    background: white;
+    transition: opacity ease-in-out 500ms;
+    &.active {
+        opacity: 1;
     }
 }

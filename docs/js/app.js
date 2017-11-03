@@ -718,6 +718,9 @@
                     openDetail();
                 });
             }
+            $timeout(function() {
+                stepper.navStep(stepper.current);
+            }, 1000);
             // preloadAudio();
             var gui = new DatGui();
             state.ready();
@@ -832,48 +835,7 @@
             }
         }
 
-        function isNavActive(item) {
-            return false;
-        }
-
-        function itemOpen(item) {
-            item.active = true;
-            item.closed = item.closing = false;
-            item.opening = true;
-            $timeout(function() {
-                item.opening = false;
-                item.opened = true;
-            });
-        }
-
-        function itemClose(item) {
-            item.active = false;
-            item.opened = item.opening = false;
-            item.closing = true;
-            $timeout(function() {
-                item.closing = false;
-                item.closed = true;
-            });
-        }
-
-        function itemToggle(item) {
-            item.active = !item.active;
-            if (item.active) {
-                if (item.parent) {
-                    item.parent.items.filter(function(o) {
-                        if (o !== item) {
-                            itemClose(o);
-                        }
-                    });
-                }
-                itemOpen(item);
-            } else {
-                itemClose(item);
-            }
-        }
-
         $scope.navTo = navTo;
-        $scope.isNavActive = isNavActive;
 
     }]);
 
@@ -1406,6 +1368,7 @@
         var stepper = StepperService;
         var sound = new AudioSound({
             analyser: true,
+            loop: true,
         });
 
         function getData() {
@@ -1660,7 +1623,6 @@
                 });
                 values.pow = index / steps.length;
                 stepper.current = current = index;
-                navStep(index);
                 deferred.resolve(steps);
             } else {
                 $http.get('json/rossini.js').then(function(response) {
@@ -1682,7 +1644,6 @@
                     });
                     values.pow = index / steps.length;
                     stepper.current = current = index;
-                    navStep(index);
                     // console.log('StepperService.load', steps);
                     deferred.resolve(steps);
 
@@ -2841,7 +2802,7 @@
             mobile: isMobileAndTabled,
             ios: isIOS,
         },
-        preload: false,
+        preload: true,
     });
 
 }());

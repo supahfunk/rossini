@@ -1275,6 +1275,23 @@ Tunnel Slick
   left: 60%;
   top: 40%; }
 
+.preload {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  background: white;
+  transition: opacity ease-in-out 500ms; }
+  .preload.active {
+    opacity: 1; }
+
 /*--------------------------------------------------
 Detail
 --------------------------------------------------*/

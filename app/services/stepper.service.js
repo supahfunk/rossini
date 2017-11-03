@@ -35,7 +35,6 @@
                 });
                 values.pow = index / steps.length;
                 stepper.current = current = index;
-                navStep(index);
                 deferred.resolve(steps);
             } else {
                 $http.get('json/rossini.js').then(function(response) {
@@ -57,7 +56,6 @@
                     });
                     values.pow = index / steps.length;
                     stepper.current = current = index;
-                    navStep(index);
                     // console.log('StepperService.load', steps);
                     deferred.resolve(steps);
 

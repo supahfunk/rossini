@@ -268,6 +268,7 @@
         var stepper = StepperService;
         var sound = new AudioSound({
             analyser: true,
+            loop: true,
         });
 
         function getData() {
