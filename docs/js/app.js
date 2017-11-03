@@ -205,6 +205,65 @@
 
     var app = angular.module('app');
 
+    app.directive('navTo', ['$parse', '$timeout', function($parse, $timeout) {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attributes) {
+
+                function onTap(e) {
+                    console.log('navTo.onTap', attributes.navTo);
+                    $timeout(function() {
+                        var callback = $parse(attributes.navTo);
+                        callback(scope);
+                    });
+                }
+
+                function onTouchStart(e) {
+                    onTap();
+                    element
+                        .off('mousedown', onMouseDown);
+                    // e.preventDefault();
+                    // return false;
+                }
+
+                function onMouseDown(e) {
+                    onTap();
+                    element
+                        .off('touchstart', onTouchStart);
+                    // e.preventDefault();
+                    // return false;
+                }
+
+                function addListeners() {
+                    element
+                        .on('touchstart', onTouchStart)
+                        .on('mousedown', onMouseDown);
+                }
+
+                function removeListeners() {
+                    element
+                        .off('touchstart', onTouchStart)
+                        .off('mousedown', onMouseDown);
+                }
+
+                addListeners();
+
+                scope.$on('$destroy', function() {
+                    removeListeners();
+                });
+
+            }
+        };
+    }]);
+
+}());
+/* global angular */
+
+(function() {
+    "use strict";
+
+    var app = angular.module('app');
+
     app.directive('scrollbar', [function() {
         return {
             restrict: 'A',
@@ -582,48 +641,86 @@
 
     var app = angular.module('app');
 
-    app.controller('YearsCtrl', ['$scope', '$route', '$routeParams', '$ngSilentLocation', 'SceneOptions', 'StepperService', 'AudioService', 'DatGui', '$timeout', function($scope, $route, $routeParams, $ngSilentLocation, SceneOptions, StepperService, AudioService, DatGui, $timeout) {
+    app.controller('YearsCtrl', ['$scope', '$timeout', '$route', '$routeParams', '$ngSilentLocation', '$q', 'State', 'SceneOptions', 'StepperService', 'AudioService', 'AssetService', 'DatGui', function($scope, $timeout, $route, $routeParams, $ngSilentLocation, $q, State, SceneOptions, StepperService, AudioService, AssetService, DatGui) {
+
+        var state = new State();
 
         var scene = {
             objects: {},
             options: SceneOptions,
             stepper: StepperService,
+            assets: AssetService,
         };
 
         var objects = scene.objects;
         var options = scene.options;
         var stepper = scene.stepper;
+        var assets = scene.assets;
 
+        state.busy();
         stepper.init($routeParams.yearsKey).then(function() {
-            $scope.scene = scene;
-            $scope.stepper = stepper;
-            $scope.audio = AudioService;
-            if ($route.current.$$route.originalPath.indexOf('/detail') !== -1) {
-                $timeout(function() {
-                    openDetail();
-                });
+            if (options.preload) {
+                doPreload();
+            } else {
+                onReady();
             }
-
-            preloadAudio();
-
-            var gui = new DatGui();
         });
 
-        function preloadAudio() {
+        function doPreload() {
+            function onprogress(item) {
+                $timeout(function() {
+                    $scope.progress = item;
+                    // console.log('onprogress', item);
+                });
+            }
+            $q.all([
+                getAudioPromise(onprogress),
+                getAssetPromise(onprogress),
+
+            ]).then(function() {
+                onReady();
+
+            }, function(error) {
+                console.log('YearsCtrl.error', error);
+                state.error(error);
+
+            });
+        }
+
+        function getAudioPromise(onprogress) {
             var paths = [];
             stepper.steps.filter(function(item) {
                 if (item.audio && paths.indexOf(item.audio.url) == -1) {
                     paths.push(item.audio.url);
                 }
             });
-            console.log('preload', paths);
+            // console.log('YearsCtrl.getAudioPromise', paths);
+            return AudioService.preload(paths, onprogress);
+        }
 
-            function onprogress(item) {
-                // console.log('onprogress', item);
-            }
-            AudioService.preload(paths, onprogress).then(function() {
-                console.log('preloadAudio.complete');
+        function getAssetPromise(onprogress) {
+            var paths = [];
+            stepper.steps.filter(function(item) {
+                if (item.circle && paths.indexOf(item.circle.texture) == -1) {
+                    paths.push(item.circle.texture);
+                }
             });
+            // console.log('YearsCtrl.getAssetPromise', paths);
+            return AssetService.preload(paths, onprogress);
+        }
+
+        function onReady() {
+            $scope.stepper = stepper;
+            $scope.scene = scene;
+            $scope.audio = AudioService;
+            if ($route.current.$$route.originalPath.indexOf('/detail') !== -1) {
+                $timeout(function() {
+                    openDetail();
+                });
+            }
+            // preloadAudio();
+            var gui = new DatGui();
+            state.ready();
         }
 
         var detail = {};
@@ -640,6 +737,7 @@
             return false;
         }
 
+        $scope.state = state;
         $scope.detail = detail;
         $scope.openDetail = openDetail;
         $scope.closeDetail = closeDetail;
@@ -649,6 +747,383 @@
         });
 
         // console.log('YearsCtrl', $route, $routeParams);
+
+    }]);
+
+}());
+/* global angular */
+
+(function() {
+    "use strict";
+
+    var app = angular.module('app');
+
+    app.controller('RootCtrl', ['$scope', '$route', '$location', '$http', '$timeout', '$ngSilentLocation', 'StepperService', function($scope, $route, $location, $http, $timeout, $ngSilentLocation, StepperService) {
+
+        $http.get('json/menu-rossini.js').then(function(response) {
+            addMenu(response.data);
+
+        }, function(error) {
+            console.log('RootCtrl.error', error);
+
+        });
+
+        function addMenu(menu) {
+
+            function parse(items, parent) {
+                if (items) {
+                    angular.forEach(items, function(item) {
+                        item.parent = parent;
+                        if (item.years) {
+                            item.years.key = String(item.years.to ? item.years.from + '-' + item.years.to : item.years.from); // da riattivare !!!
+                            item.url = '/years/' + item.years.key;
+                            // item.detailUrl = item.url + '/detail';
+                        }
+                        parse(item.items, item);
+                    });
+                }
+            }
+            parse(menu);
+
+            $scope.menu = menu;
+
+            $timeout(function() {
+                nav();
+            }, 100);
+        }
+
+        function updateStepper(item) {
+            var stepper = StepperService;
+            var steps = stepper.steps;
+            var index = -1;
+            angular.forEach(steps, function(step, i) {
+                if (step.url === item.url) {
+                    index = i;
+                }
+            });
+            if (index !== -1) {
+                stepper.navStep(index);
+                $ngSilentLocation.silent(item.url);
+            }
+        }
+
+        function navTo(item, lvl) {
+            itemToggle(item);
+            $scope.submenu = null;
+            if (item.url) {
+                if (item.url.indexOf('/years') !== -1 && $route.current.$$route.originalPath.indexOf('/years') !== -1) {
+                    updateStepper(item);
+                    closeNav();
+
+                } else {
+                    // $location.path(item.url);
+                }
+                console.log('RootCtrl.navTo', item.url);
+            } else if (lvl === 2 && item.items) {
+                $scope.submenu = item;
+            }
+        }
+
+        function isNavActive(item) {
+            return false;
+        }
+
+        function itemOpen(item) {
+            item.active = true;
+            item.closed = item.closing = false;
+            item.opening = true;
+            $timeout(function() {
+                item.opening = false;
+                item.opened = true;
+            });
+        }
+
+        function itemClose(item) {
+            item.active = false;
+            item.opened = item.opening = false;
+            item.closing = true;
+            $timeout(function() {
+                item.closing = false;
+                item.closed = true;
+            });
+        }
+
+        function itemToggle(item) {
+            item.active = !item.active;
+            if (item.active) {
+                if (item.parent) {
+                    item.parent.items.filter(function(o) {
+                        if (o !== item) {
+                            itemClose(o);
+                        }
+                    });
+                }
+                itemOpen(item);
+            } else {
+                itemClose(item);
+            }
+        }
+
+        $scope.navTo = navTo;
+        $scope.isNavActive = isNavActive;
+
+    }]);
+
+}());
+/* global angular */
+
+(function() {
+  "use strict";
+
+  var app = angular.module('app');
+
+  app.factory('State', ['$timeout', function($timeout) {
+    var DELAY = 2000;
+
+    function State() {
+        this.errors = [];
+      this.isReady = false;
+      this.idle();
+    }
+    State.prototype = {
+      idle: idle,
+      busy: busy,
+      enabled: enabled,
+      error: error,
+      ready: ready,
+      success: success,
+      errorMessage: errorMessage,
+      submitClass: submitClass,
+      labels: labels,
+      classes: classes
+    };
+    return State;
+
+    function idle() {
+      this.isBusy = false;
+      this.isError = false;
+      this.isErroring = false;
+      this.isSuccess = false;
+      this.isSuccessing = false;
+      this.button = null;
+      //this.errors = [];
+    }
+
+    function enabled() {
+      return !this.isBusy && !this.isErroring && !this.isSuccessing;
+    }
+
+    function busy() {
+      if (!this.isBusy) {
+        this.isBusy = true;
+        this.isError = false;
+        this.isErroring = false;
+        this.isSuccess = false;
+        this.isSuccessing = false;
+        this.errors = [];
+        // console.log('State.busy', this);
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    function success() {
+      this.isBusy = false;
+      this.isError = false;
+      this.isErroring = false;
+      this.isSuccess = true;
+      this.isSuccessing = true;
+      this.errors = [];        
+      $timeout(function () {
+      	this.isSuccessing = false;
+      }.bind(this), DELAY);      
+    }
+
+    function error(error) {
+      this.isBusy = false;
+      this.isError = true;
+      this.isErroring = true;
+      this.isSuccess = false;
+      this.isSuccessing = false;
+      this.errors.push(error);
+      $timeout(function () {
+          this.isErroring = false;          
+      }.bind(this), DELAY);
+    }
+
+    function ready() {
+    	this.idle();
+        this.isReady = true;
+    }
+
+    function errorMessage() {
+        //return this.isError ? this.errors[this.errors.length - 1] : null;
+        return this.errors.length > 0 ? this.errors[this.errors.length - 1] : null;
+    }
+
+    function submitClass() {
+      return {
+        busy: this.isBusy,
+        ready: this.isReady,
+        successing: this.isSuccessing,
+        success: this.isSuccess,
+        errorring: this.isErroring,
+        error: this.isError,
+      };
+    }
+
+    function labels(addons, showCompletionState) {
+        var scope = this;
+        var defaults = {
+            ready: 'submit',
+            busy: 'sending',
+            error: 'error',
+            erroring: 'erroring',
+            success: 'success',
+            successing: 'successing',
+        };
+        if (addons) {
+            angular.extend(defaults, addons);
+        }
+        var label = defaults.ready;
+        if (this.isBusy) {
+            label = defaults.busy;
+        } else if (this.isSuccessing) {
+            label = defaults.successing;
+        } else if (this.isErroring) {
+            label = defaults.erroring;
+        }
+        if (showCompletionState) {
+            if (this.isSuccess) {
+                label = defaults.success;
+            } else if (this.isError) {
+                label = defaults.error;
+            }
+        }
+        return label;
+    }
+
+    function classes(addons) {
+        var scope = this,
+            classes = null;
+        classes = {
+            ready: scope.isReady,
+            busy: scope.isBusy,
+            successing: scope.isSuccessing,
+            success: scope.isSuccess,
+            errorring: scope.isErroring,
+            error: scope.isError,
+            pulse: scope.isBusy,
+            flash: scope.isErroring || scope.isSuccessing,
+        };
+        if (addons) {
+            angular.forEach(addons, function (value, key) {
+                classes[value] = classes[key];
+            });
+        }
+        // console.log('stateClass', classes);
+        return classes;
+    }
+
+  }]);
+
+}());
+/* global angular */
+
+(function() {
+    "use strict";
+
+    var app = angular.module('app');
+
+    app.service('AssetService', ['$q', function($q) {
+
+        var service = this;
+        var images = {};
+
+        function preload(items, onprogress) {
+            var deferred = $q.defer();
+            var paths = {};
+            var progress = {
+                loaded: 0,
+                total: 0,
+            };
+
+            function _onprogress(progress) {
+                paths[progress.path] = progress;
+                var p = 0;
+                angular.forEach(paths, function(item) {
+                    progress.loaded += item.loaded;
+                    progress.total += item.total;
+                });
+                progress.progress = progress.loaded / progress.total;
+                onprogress(progress);
+            }
+            $q.all(
+                items.map(function(path) {
+                    return load(path, _onprogress);
+                })
+            ).then(function() {
+                progress.loaded = progress.total;
+                progress.progress = 1;
+                onprogress(progress);
+                deferred.resolve();
+            }, function(error) {
+                console.log('AssetService.preload.error', error);
+                deferred.reject(error);
+            });
+            return deferred.promise;
+        }
+
+        function load(path, onprogress) {
+            var deferred = $q.defer();
+            var progress = {
+                path: path,
+                loaded: 0,
+                total: 1,
+            };
+            var xhr = new XMLHttpRequest();
+            xhr.responseType = "arraybuffer";
+            xhr.open("GET", path, true);
+            xhr.onload = function() {
+                var blob = new Blob([xhr.response]);
+                var image = new Image();
+                image.src = window.URL.createObjectURL(blob);
+                images[path] = image;
+                deferred.resolve(image);
+            };
+            xhr.onerror = function(error) {
+                console.log('AssetService.xhr.onerror', error);
+                deferred.reject(error);
+            };
+            if (onprogress) {
+                xhr.onprogress = function(e) {
+                    progress.loaded = e.loaded;
+                    progress.total = e.total;
+                    progress.progress = e.loaded / e.total;
+                    onprogress(progress);
+                };
+                /*
+                xhr.onloadstart = function(e) {
+                    progress.loaded = 0;
+                    progress.total = 1;
+                    progress.progress = 0;
+                    onprogress(progress);
+                };
+                xhr.onloadend = function(e) {
+                    progress.loaded = progress.total;
+                    progress.progress = 1;
+                    onprogress(progress);
+                };
+                */
+            }
+            xhr.send();
+            return deferred.promise;
+        }
+
+        this.load = load;
+        this.preload = preload;
+        this.images = images;
 
     }]);
 
@@ -710,7 +1185,7 @@
                         node.connect(ctx.destination);
                     }
                 }
-                console.log('connectNodes', sound.nodes);
+                // console.log('connectNodes', sound.nodes);
             },
             disconnect: function() {
                 var sound = this;
@@ -722,7 +1197,7 @@
                             node.disconnect(ctx.destination);
                         }
                         source.disconnect(sound.nodes[p]);
-                        console.log('AudioSound.disconnect', p);
+                        // console.log('AudioSound.disconnect', p);
                     }
                     // source.diconnect();
                     sound.source = null;
@@ -748,15 +1223,18 @@
                 return deferred.promise;
             },
             getBuffer: function() {
-                console.log('AudioSound.getBuffer');
+                // console.log('AudioSound.getBuffer');
                 var deferred = $q.defer();
-                var path = this.path;
+                var sound = this;
+                var path = sound.path;
                 var buffer = buffers[path];
                 if (buffer) {
                     deferred.resolve(buffer);
                 } else {
                     AudioSound.load(path).then(function(buffer) {
-                        deferred.resolve(buffer);
+                        if (sound.path === path) {
+                            deferred.resolve(buffer);
+                        }
                     }, function(error) {
                         deferred.reject(error);
                     });
@@ -767,12 +1245,24 @@
                 var deferred = $q.defer();
                 var sound = this;
                 var source = sound.source;
-                console.log('AudioSound.getSource', source);
+                // console.log('AudioSound.getSource', source);
                 if (source) {
                     deferred.resolve(source);
                 } else {
                     sound.getBuffer().then(function(buffer) {
-                        var source = ctx.createBufferSource();
+                        var source = null;
+                        if (sound.playing) {
+                            source = sound.source;
+                            if (source) {
+                                if (typeof source.stop === 'function') {
+                                    source.stop(0); // when
+                                } else {
+                                    source.noteOff(0); // when
+                                }
+                                sound.disconnect();
+                            }
+                        }
+                        source = ctx.createBufferSource();
                         source.buffer = buffer;
                         sound.source = source;
                         sound.connectNodes();
@@ -788,6 +1278,7 @@
                 if (!sound.playing) {
                     var options = sound.options;
                     sound.getSource().then(function(source) {
+                        // sound.stop();
                         sound.startTime = ctx.currentTime;
                         source.loop = options.loop;
                         if (typeof source.start === 'function') {
@@ -799,7 +1290,7 @@
                     });
                 }
                 // ctx.resume(); ???
-                console.log('AudioSound.play');
+                // console.log('AudioSound.play');
             },
             stop: function() {
                 var sound = this;
@@ -807,7 +1298,7 @@
                     var source = sound.source;
                     if (source) {
                         sound.offset += sound.startTime ? (ctx.currentTime - sound.startTime) : 0;
-                        console.log(sound.offset);
+                        // console.log(sound.offset);
                         if (typeof source.stop === 'function') {
                             source.stop(0); // when
                         } else {
@@ -815,7 +1306,7 @@
                         }
                         sound.disconnect();
                         sound.playing = false;
-                        console.log('AudioSound.stop');
+                        // console.log('AudioSound.stop');
                         // ctx.suspend(); ???
                     }
                 }
@@ -1425,7 +1916,7 @@
 
     var app = angular.module('app');
 
-    app.directive('scene', ['SceneOptions', 'StepperService', 'AudioService', 'MotionService', function(SceneOptions, StepperService, AudioService, MotionService) {
+    app.directive('scene', ['SceneOptions', 'StepperService', 'AudioService', 'AssetService', 'MotionService', function(SceneOptions, StepperService, AudioService, AssetService, MotionService) {
         return {
             restrict: 'A',
             scope: {
@@ -1441,9 +1932,12 @@
                 var options = SceneOptions;
                 var stepper = StepperService;
                 var audio = AudioService;
+                var assets = AssetService;
 
                 var stats, scene, camera, shadow, back, light, renderer, width, height, w2, h2;
                 var controls = null;
+
+                console.log('scene.options', options);
 
                 scope.$on('onStepChanged', function($scope, step) {
                     // console.log('onStepChanged', step.current);
@@ -1499,7 +1993,7 @@
                     translate.x += (x - translate.x) * friction;
                     translate.y += (y - translate.y) * friction;
 
-                    if ($('.detail-active').length == 0) {
+                    if ($('.detail-active').length === 0) {
                         var translateYear = 'translate(' + (translate.x * -4) + 'px, ' + (translate.y * -2) + 'px)';
                         $('.tunnel-year__wrap').css({
                             '-webit-transform': translateYear,
@@ -1695,16 +2189,43 @@
                         transparent: true,
                     });
                     var step = stepper.getStepAtIndex(index);
-                    var img = new Image();
-                    img.onload = function() {
+                    var path = step.circle.texture,
+                        img = null;
+                    if (options.preload) {
+                        img = assets.images[path];
                         context.drawImage(img, 0, 0, size, size);
                         material.map.needsUpdate = true;
-                    };
-                    img.src = step.circle.texture;
+                    } else {
+                        img = new Image();
+                        img.onload = function() {
+                            context.drawImage(img, 0, 0, size, size);
+                            material.map.needsUpdate = true;
+                        };
+                        img.src = path;
+                    }
                     return material;
                 }
 
-                function getShadowMaterial() {
+                function getShadowMaterial(size) {
+                    size = size || 512;
+                    var half = size / 2;
+                    var canvas = document.createElement('canvas');
+                    canvas.width = size;
+                    canvas.height = size;
+                    var context = canvas.getContext('2d');
+                    var gradient = context.createRadialGradient(half, half, 30, half, half, half);
+                    gradient.addColorStop(0, 'rgba(0,0,0,0.35)');
+                    gradient.addColorStop(0.1, 'rgba(0,0,0,0.33)');
+                    gradient.addColorStop(1, 'rgba(0,0,0,0.0)');
+                    context.fillStyle = gradient;
+                    context.fillRect(0, 0, size, size);
+                    var material = new THREE.MeshBasicMaterial({
+                        color: 0xffffff,
+                        map: new THREE.Texture(canvas),
+                        transparent: true,
+                    });
+                    material.map.needsUpdate = true;
+                    /*
                     var texture = new THREE.TextureLoader().load('img/shadow.png');
                     texture.wrapS = THREE.RepeatWrapping;
                     texture.wrapT = THREE.RepeatWrapping;
@@ -1714,6 +2235,7 @@
                         map: texture,
                         transparent: true,
                     });
+                    */
                     return material;
                 }
 
@@ -2295,7 +2817,7 @@
         circle: {
             position: new THREE.Vector3(),
             radius: 200,
-            lines: 24,
+            lines: isMobileAndTabled ? 12 : 24,
             points: isMobileAndTabled ? 64 : 128,
         },
         audio: {
@@ -2309,7 +2831,8 @@
         device: {
             mobile: isMobileAndTabled,
             ios: isIOS,
-        }
+        },
+        preload: false,
     });
 
 }());

@@ -5,7 +5,7 @@
 
     var app = angular.module('app');
 
-    app.directive('scene', ['SceneOptions', 'StepperService', 'AudioService', 'MotionService', function(SceneOptions, StepperService, AudioService, MotionService) {
+    app.directive('scene', ['SceneOptions', 'StepperService', 'AudioService', 'AssetService', 'MotionService', function(SceneOptions, StepperService, AudioService, AssetService, MotionService) {
         return {
             restrict: 'A',
             scope: {
@@ -21,9 +21,12 @@
                 var options = SceneOptions;
                 var stepper = StepperService;
                 var audio = AudioService;
+                var assets = AssetService;
 
                 var stats, scene, camera, shadow, back, light, renderer, width, height, w2, h2;
                 var controls = null;
+
+                console.log('scene.options', options);
 
                 scope.$on('onStepChanged', function($scope, step) {
                     // console.log('onStepChanged', step.current);
@@ -79,7 +82,7 @@
                     translate.x += (x - translate.x) * friction;
                     translate.y += (y - translate.y) * friction;
 
-                    if ($('.detail-active').length == 0) {
+                    if ($('.detail-active').length === 0) {
                         var translateYear = 'translate(' + (translate.x * -4) + 'px, ' + (translate.y * -2) + 'px)';
                         $('.tunnel-year__wrap').css({
                             '-webit-transform': translateYear,
@@ -275,16 +278,43 @@
                         transparent: true,
                     });
                     var step = stepper.getStepAtIndex(index);
-                    var img = new Image();
-                    img.onload = function() {
+                    var path = step.circle.texture,
+                        img = null;
+                    if (options.preload) {
+                        img = assets.images[path];
                         context.drawImage(img, 0, 0, size, size);
                         material.map.needsUpdate = true;
-                    };
-                    img.src = step.circle.texture;
+                    } else {
+                        img = new Image();
+                        img.onload = function() {
+                            context.drawImage(img, 0, 0, size, size);
+                            material.map.needsUpdate = true;
+                        };
+                        img.src = path;
+                    }
                     return material;
                 }
 
-                function getShadowMaterial() {
+                function getShadowMaterial(size) {
+                    size = size || 512;
+                    var half = size / 2;
+                    var canvas = document.createElement('canvas');
+                    canvas.width = size;
+                    canvas.height = size;
+                    var context = canvas.getContext('2d');
+                    var gradient = context.createRadialGradient(half, half, 30, half, half, half);
+                    gradient.addColorStop(0, 'rgba(0,0,0,0.35)');
+                    gradient.addColorStop(0.1, 'rgba(0,0,0,0.33)');
+                    gradient.addColorStop(1, 'rgba(0,0,0,0.0)');
+                    context.fillStyle = gradient;
+                    context.fillRect(0, 0, size, size);
+                    var material = new THREE.MeshBasicMaterial({
+                        color: 0xffffff,
+                        map: new THREE.Texture(canvas),
+                        transparent: true,
+                    });
+                    material.map.needsUpdate = true;
+                    /*
                     var texture = new THREE.TextureLoader().load('img/shadow.png');
                     texture.wrapS = THREE.RepeatWrapping;
                     texture.wrapT = THREE.RepeatWrapping;
@@ -294,6 +324,7 @@
                         map: texture,
                         transparent: true,
                     });
+                    */
                     return material;
                 }
 

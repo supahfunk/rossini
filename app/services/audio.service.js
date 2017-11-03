@@ -55,7 +55,7 @@
                         node.connect(ctx.destination);
                     }
                 }
-                console.log('connectNodes', sound.nodes);
+                // console.log('connectNodes', sound.nodes);
             },
             disconnect: function() {
                 var sound = this;
@@ -67,7 +67,7 @@
                             node.disconnect(ctx.destination);
                         }
                         source.disconnect(sound.nodes[p]);
-                        console.log('AudioSound.disconnect', p);
+                        // console.log('AudioSound.disconnect', p);
                     }
                     // source.diconnect();
                     sound.source = null;
@@ -93,15 +93,18 @@
                 return deferred.promise;
             },
             getBuffer: function() {
-                console.log('AudioSound.getBuffer');
+                // console.log('AudioSound.getBuffer');
                 var deferred = $q.defer();
-                var path = this.path;
+                var sound = this;
+                var path = sound.path;
                 var buffer = buffers[path];
                 if (buffer) {
                     deferred.resolve(buffer);
                 } else {
                     AudioSound.load(path).then(function(buffer) {
-                        deferred.resolve(buffer);
+                        if (sound.path === path) {
+                            deferred.resolve(buffer);
+                        }
                     }, function(error) {
                         deferred.reject(error);
                     });
@@ -112,12 +115,24 @@
                 var deferred = $q.defer();
                 var sound = this;
                 var source = sound.source;
-                console.log('AudioSound.getSource', source);
+                // console.log('AudioSound.getSource', source);
                 if (source) {
                     deferred.resolve(source);
                 } else {
                     sound.getBuffer().then(function(buffer) {
-                        var source = ctx.createBufferSource();
+                        var source = null;
+                        if (sound.playing) {
+                            source = sound.source;
+                            if (source) {
+                                if (typeof source.stop === 'function') {
+                                    source.stop(0); // when
+                                } else {
+                                    source.noteOff(0); // when
+                                }
+                                sound.disconnect();
+                            }
+                        }
+                        source = ctx.createBufferSource();
                         source.buffer = buffer;
                         sound.source = source;
                         sound.connectNodes();
@@ -133,6 +148,7 @@
                 if (!sound.playing) {
                     var options = sound.options;
                     sound.getSource().then(function(source) {
+                        // sound.stop();
                         sound.startTime = ctx.currentTime;
                         source.loop = options.loop;
                         if (typeof source.start === 'function') {
@@ -144,7 +160,7 @@
                     });
                 }
                 // ctx.resume(); ???
-                console.log('AudioSound.play');
+                // console.log('AudioSound.play');
             },
             stop: function() {
                 var sound = this;
@@ -152,7 +168,7 @@
                     var source = sound.source;
                     if (source) {
                         sound.offset += sound.startTime ? (ctx.currentTime - sound.startTime) : 0;
-                        console.log(sound.offset);
+                        // console.log(sound.offset);
                         if (typeof source.stop === 'function') {
                             source.stop(0); // when
                         } else {
@@ -160,7 +176,7 @@
                         }
                         sound.disconnect();
                         sound.playing = false;
-                        console.log('AudioSound.stop');
+                        // console.log('AudioSound.stop');
                         // ctx.suspend(); ???
                     }
                 }

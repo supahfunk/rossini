@@ -40,7 +40,7 @@
         circle: {
             position: new THREE.Vector3(),
             radius: 200,
-            lines: 24,
+            lines: isMobileAndTabled ? 12 : 24,
             points: isMobileAndTabled ? 64 : 128,
         },
         audio: {
@@ -54,7 +54,8 @@
         device: {
             mobile: isMobileAndTabled,
             ios: isIOS,
-        }
+        },
+        preload: false,
     });
 
 }());

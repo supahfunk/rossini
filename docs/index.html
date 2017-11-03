@@ -28,7 +28,7 @@
     <link href="css/app.min.css" rel="stylesheet" />
 </head>
 
-<body>
+<body ng-controller="RootCtrl">
 
     <ng-view ng-cloak></ng-view>
 
@@ -41,105 +41,19 @@
                     <div class="main-nav__scroll" scrollbar>
                         <img src="img/200Rossini150.svg" class="logo" />
                         <ul>
-                            <li>
-                                <a href="#">Passione, Genio e Silenzio</a>
-                                <ul>
-                                    <li>
-                                        <a href="#">Il giovane Gioacchino</a>
-                                        <div class="main-nav__sub-nav">
-                                            <a href="index.html#/years/1">
-                                                <img src="img/rossini-1.jpg" />
-                                                <div class="paragraph-name"><span>L'inganno felice</span></div>
-                                            </a>
-                                            <a href="index.html#/years/2">
-                                                <img src="img/rossini-2.jpg" />
-                                                <div class="paragraph-name"><span>Venezia</span></div>
-                                            </a>
-                                            <a href="index.html#/years/3">
-                                                <img src="img/rossini-3.jpg" />
-                                                <div class="paragraph-name"><span>Licenze romane</span></div>
-                                            </a>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <a href="#">Il folgorante debutto</a>
-                                        <div class="main-nav__sub-nav">
-                                            <a href="index.html#/years/4">
-                                                <img src="img/rossini-2.jpg" />
-                                                <div class="paragraph-name"><span>Venezia</span></div>
-                                            </a>
-                                            <a href="index.html#/years/5">
-                                                <img src="img/rossini-3.jpg" />
-                                                <div class="paragraph-name"><span>Licenze romane</span></div>
-                                            </a>
-                                            <a href="index.html#/years/6">
-                                                <img src="img/rossini-1.jpg" />
-                                                <div class="paragraph-name"><span>L'inganno felice</span></div>
-                                            </a>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <a href="#">La frenesia della produzione</a>
-                                        <div class="main-nav__sub-nav">
-                                            <a href="index.html#/years/7">
-                                                <img src="img/rossini-3.jpg" />
-                                                <div class="paragraph-name"><span>Licenze romane</span></div>
-                                            </a>
-                                            <a href="index.html#/years/8">
-                                                <img src="img/rossini-2.jpg" />
-                                                <div class="paragraph-name"><span>Venezia</span></div>
-                                            </a>
-
-                                            <a href="index.html#/years/9">
-                                                <img src="img/rossini-1.jpg" />
-                                                <div class="paragraph-name"><span>L'inganno felice</span></div>
-                                            </a>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <a href="#">Sulle strade di Parigi</a>
-                                        <div class="main-nav__sub-nav">
-                                            <a href="index.html#/years/10">
-                                                <img src="img/rossini-2.jpg" />
-                                                <div class="paragraph-name"><span>Venezia</span></div>
-                                            </a>
-                                            <a href="index.html#/years/11">
-                                                <img src="img/rossini-1.jpg" />
-                                                <div class="paragraph-name"><span>L'inganno felice</span></div>
-                                            </a>
-                                            <a href="index.html#/years/12">
-                                                <img src="img/rossini-3.jpg" />
-                                                <div class="paragraph-name"><span>Licenze romane</span></div>
+                            <li ng-active="{ active: item.active }" ng-repeat="item in menu track by $index">
+                                <a href="#" ng-href="#{{item.url}}" nav-to="navTo(item, 1)" ng-bind="item.title">>-l1-</a>
+                                <ul ng-if="item.items">
+                                    <li ng-active="{ active: sub.active }" ng-repeat="sub in item.items track by $index">
+                                        <a href="#" ng-href="#{{sub.url}}" nav-to="navTo(sub, 2)" ng-bind="sub.title">>-l2-</a>
+                                        <div class="main-nav__sub-nav" ng-if="sub.items">
+                                            <a href="#" ng-href="#{{year.url}}" ng-active="{ active: year.active }" nav-to="navTo(year, 3)" ng-repeat="year in sub.items track by $index">
+                                                <img ng-src="{{year.image}}" />
+                                                <div class="paragraph-name"><span ng-bind="year.title">-l3-</span></div>
                                             </a>
                                         </div>
                                     </li>
                                 </ul>
-                            </li>
-                            <li>
-                                <a href="#">Celebrazioni</a>
-                            </li>
-                            <li>
-                                <a href="#">Progetti Speciali</a>
-                                <ul>
-                                    <li>
-                                        <a href="#">Progetto 1</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Progetto 2</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">Progetto 3</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Comitato e Partner</a>
-                            </li>
-                            <li>
-                                <a href="#">Cultura ed Istruzione</a>
-                            </li>
-                            <li>
-                                <a href="#">Contatti</a>
                             </li>
                         </ul>
                         <div class="extra-mobile">
@@ -149,13 +63,13 @@
                         <div class="socials">
                             <a href="#">
                                 <svg class="ico-facebook">
-                                        <use xlink:href="#ico-facebook"></use>
-                                    </svg>
+                                    <use xlink:href="#ico-facebook"></use>
+                                </svg>
                             </a>
                             <a href="#">
                                 <svg class="ico-instagram">
-                                        <use xlink:href="#ico-instagram"></use>
-                                    </svg>
+                                    <use xlink:href="#ico-instagram"></use>
+                                </svg>
                             </a>
                             <a href="#">
                                 <svg class="ico-twitter">
@@ -166,18 +80,10 @@
 
                     </div>
                 </div>
-                <div class="sub-nav">
-                    <a href="#">
-                        <img src="img/rossini-1.jpg" />
-                        <div class="paragraph-name"><span>L'inganno felice</span></div>
-                    </a>
-                    <a href="#">
-                        <img src="img/rossini-2.jpg" />
-                        <div class="paragraph-name"><span>Venezia</span></div>
-                    </a>
-                    <a href="#">
-                        <img src="img/rossini-3.jpg" />
-                        <div class="paragraph-name"><span>Licenze romane</span></div>
+                <div class="sub-nav" ng-if="submenu">
+                    <a href="#" ng-href="#{{year.url}}" ng-active="{ active: year.active }" nav-to="navTo(year, 3)" ng-repeat="year in submenu.items track by $index">
+                        <img ng-src="{{year.image}}" />
+                        <div class="paragraph-name"><span ng-bind="year.title">-l3-</span></div>
                     </a>
                 </div>
             </nav>

@@ -8,23 +8,22 @@ website by Websolute
 Nav
 --------------------------------------------------*/
 function nav() {
+
     $('.nav-toggle').on('click', function() {
         if ($('body').is('.open-nav')) {
             closeNav();
         } else {
             $('body').addClass('open-nav');
         }
-
     });
 
-    $('.main-nav__scroll > ul > li:has("ul") > a').on('click', function() {
+    $('.main-nav__scroll > .scroll-content > ul > li:has("ul") > a').on('click', function() {
         if ($(this).next().is('.active')) {
             $('.nav').removeClass('sub-nav-active');
             $(this).next().slideUp(800, 'easeInOutQuart').removeClass('active');
         } else {
             $(this).next().slideDown(800, 'easeInOutQuart').addClass('active');
         }
-
         return false;
     });
 
@@ -33,16 +32,17 @@ function nav() {
             $(this).next().slideToggle(800, 'easeInOutQuart').toggleClass('active');
             return false;
         });
+
     } else {
         $('.main-nav__scroll').on('click', 'ul ul > li:has(".main-nav__sub-nav") > a', function() {
             $('li:has(".main-nav__sub-nav") > a.active').not($(this)).removeClass('active');
             $(this).addClass('active');
+            // var subnavContent;
             if ($('.nav').is('.sub-nav-active')) {
                 $('.sub-nav').removeClass('switch ');
-                var subnavContent = $(this).next().html();
-
+                // subnavContent = $(this).next().html();
                 setTimeout(function() {
-                    $('.sub-nav').html(subnavContent);
+                    // $('.sub-nav').html(subnavContent);
                     setTimeout(function() {
                         $('.sub-nav').addClass('switch');
                     }, 100);
@@ -53,8 +53,8 @@ function nav() {
             } else {
                 $('.sub-nav').removeClass('switch switched');
                 $('.nav').addClass('sub-nav-active');
-                var subnavContent = $(this).next().html();
-                $('.sub-nav').html(subnavContent);
+                // subnavContent = $(this).next().html();
+                // $('.sub-nav').html(subnavContent);
                 $('.sub-nav').addClass('switch');
                 setTimeout(function() {
                     $('.sub-nav').addClass('switched');
@@ -62,6 +62,7 @@ function nav() {
             }
             return false;
         });
+
     }
 }
 
@@ -75,6 +76,7 @@ function closeNav() {
     $('.nav ul.active').slideUp(800, 'easeInOutQuart').removeClass('active');
     $('.sub-nav').removeClass('switch switched');
     $('.main-nav__sub-nav.active').slideUp(800, 'easeInOutQuart').removeClass('active');
+    console.log('main.closeNav');
 }
 
 
@@ -345,7 +347,7 @@ function mouseMove() {
 Doc Ready
 --------------------------------------------------*/
 $(function() {
-    nav();
+    // nav();
     // soundToggle();
     // tunnel();
     // mouseMove();

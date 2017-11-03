@@ -88,13 +88,13 @@ gulp.task('bundle', ['bundle:css', 'bundle:js', 'bundle:partials']);
 
 // WEBSERVER
 gulp.task('webserver', function() {
-    return gulp.src('./')
+    return gulp.src('./docs/')
         .pipe(webserver({
             livereload: false,
-            directoryListing: true,
+            directoryListing: false,
             port: 40010,
-            open: 'http://localhost:40010/docs/index.html',
-            fallback: 'docs/index.html'
+            open: true,
+            fallback: 'index.html',
         }));
 });
 

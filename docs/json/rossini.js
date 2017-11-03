@@ -21,12 +21,12 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-00.png"
+            "texture": "img/rossini-00.jpg"
         },
         "audio": null
     },
     {
-        "id": 1,
+        "id": 111,
         "title": "Le origini",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Il giovane Gioacchino",
@@ -49,7 +49,7 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-01.png"
+            "texture": "img/rossini-01.jpg"
         },
         "audio": {
             "url": "audio/01-rossini-192.mp3",
@@ -58,7 +58,7 @@
         }
     },
     {
-        "id": 2,
+        "id": 112,
         "title": "Lo studio e gli esordi",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Il giovane Gioacchino",
@@ -81,7 +81,7 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-02.png"
+            "texture": "img/rossini-02.jpg"
         },
         "audio": {
             "url": "audio/01-rossini-192.mp3",
@@ -90,7 +90,7 @@
         }
     },
     {
-        "id": 3,
+        "id": 113,
         "title": "La maturità artistica",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Il giovane Gioacchino",
@@ -112,7 +112,7 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-03.png"
+            "texture": "img/rossini-03.jpg"
         },
         "audio": {
             "url": "audio/01-rossini-192.mp3",
@@ -121,7 +121,7 @@
         }
     },
     {
-        "id": 4,
+        "id": 121,
         "title": "Gli esordi napoletani<br>e Il Barbiere di Siviglia",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Il folgorante debutto",
@@ -144,7 +144,7 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-04.png"
+            "texture": "img/rossini-04.jpg"
         },
         "audio": {
             "url": "audio/02-rossini-192.mp3",
@@ -153,7 +153,7 @@
         }
     },
     {
-        "id": 5,
+        "id": 122,
         "title": "Il congedo<br>dal teatro comico",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Il folgorante debutto",
@@ -175,7 +175,7 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-05.png"
+            "texture": "img/rossini-05.jpg"
         },
         "audio": {
             "url": "audio/02-rossini-192.mp3",
@@ -184,7 +184,7 @@
         }
     },
     {
-        "id": 6,
+        "id": 123,
         "title": "L’intensa produzione<br>napoletana",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Il folgorante debutto",
@@ -207,7 +207,7 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-06.png"
+            "texture": "img/rossini-06.jpg"
         },
         "audio": {
             "url": "audio/02-rossini-192.mp3",
@@ -216,7 +216,7 @@
         }
     },
     {
-        "id": 7,
+        "id": 131,
         "title": "Il trasferimento a Parigi",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "La frenesia della produzione",
@@ -238,7 +238,7 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-07.png"
+            "texture": "img/rossini-07.jpg"
         },
         "audio": {
             "url": "audio/03-rossini-192.mp3",
@@ -247,7 +247,7 @@
         }
     },
     {
-        "id": 8,
+        "id": 132,
         "title": "Il Guglielmo Tell",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "La frenesia della produzione",
@@ -269,7 +269,7 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-08.png"
+            "texture": "img/rossini-08.jpg"
         },
         "audio": {
             "url": "audio/03-rossini-192.mp3",
@@ -278,7 +278,7 @@
         }
     },
     {
-        "id": 9,
+        "id": 133,
         "title": "La salute precaria<br>e il ritiro in privato",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "La frenesia della produzione",
@@ -301,7 +301,7 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-09.png"
+            "texture": "img/rossini-09.jpg"
         },
         "audio": {
             "url": "audio/03-rossini-192.mp3",
@@ -310,7 +310,7 @@
         }
     },
     {
-        "id": 10,
+        "id": 141,
         "title": "La musica sacra<br>e il rientro in Italia",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Sulle strade di Parigi",
@@ -333,7 +333,7 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-10.png"
+            "texture": "img/rossini-10.jpg"
         },
         "audio": {
             "url": "audio/04-rossini-192.mp3",
@@ -342,7 +342,7 @@
         }
     },
     {
-        "id": 11,
+        "id": 142,
         "title": "La parentesi fiorentina<br>e il rientro in Francia",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Sulle strade di Parigi",
@@ -365,7 +365,7 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-11.png"
+            "texture": "img/rossini-11.jpg"
         },
         "audio": {
             "url": "audio/04-rossini-192.mp3",
@@ -374,7 +374,7 @@
         }
     },
     {
-        "id": 12,
+        "id": 143,
         "title": "L’ultimo Rossini<br>e la sua scomparsa",
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "Sulle strade di Parigi",
@@ -397,7 +397,7 @@
                 "y": 0,
                 "z": 0
             },
-            "texture": "img/rossini-12.png"
+            "texture": "img/rossini-12.jpg"
         },
         "audio": {
             "url": "audio/04-rossini-192.mp3",
