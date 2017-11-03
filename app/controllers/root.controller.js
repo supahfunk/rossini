@@ -56,18 +56,26 @@
 
         function navTo(item, lvl) {
             itemToggle(item);
-            $scope.submenu = null;
             if (item.url) {
                 if (item.url.indexOf('/years') !== -1 && $route.current.$$route.originalPath.indexOf('/years') !== -1) {
-                    updateStepper(item);
                     closeNav();
+                    $timeout(function() {
+                        updateStepper(item);
+                    }, 1000);
 
                 } else {
                     // $location.path(item.url);
                 }
+                $scope.submenu = null;
                 console.log('RootCtrl.navTo', item.url);
             } else if (lvl === 2 && item.items) {
-                $scope.submenu = item;
+                if ($scope.submenu) {
+                    $timeout(function() {
+                        $scope.submenu = item;
+                    }, 1000);
+                } else {
+                    $scope.submenu = item;
+                }
             }
         }
 

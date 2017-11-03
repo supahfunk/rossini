@@ -41,13 +41,13 @@
                     <div class="main-nav__scroll" scrollbar>
                         <img src="img/200Rossini150.svg" class="logo" />
                         <ul>
-                            <li ng-active="{ active: item.active }" ng-repeat="item in menu track by $index">
+                            <li class="opened" ng-active="{ active: item.active }" ng-repeat="item in menu track by $index">
                                 <a href="#" ng-href="#{{item.url}}" nav-to="navTo(item, 1)" ng-bind="item.title">>-l1-</a>
                                 <ul ng-if="item.items">
                                     <li ng-active="{ active: sub.active }" ng-repeat="sub in item.items track by $index">
                                         <a href="#" ng-href="#{{sub.url}}" nav-to="navTo(sub, 2)" ng-bind="sub.title">>-l2-</a>
                                         <div class="main-nav__sub-nav" ng-if="sub.items">
-                                            <a href="#" ng-href="#{{year.url}}" ng-active="{ active: year.active }" nav-to="navTo(year, 3)" ng-repeat="year in sub.items track by $index">
+                                            <a href="#" ng-href="#{{year.url}}" nav-to="navTo(year, 3)" ng-repeat="year in sub.items track by $index">
                                                 <img ng-src="{{year.image}}" />
                                                 <div class="paragraph-name"><span ng-bind="year.title">-l3-</span></div>
                                             </a>
@@ -81,7 +81,7 @@
                     </div>
                 </div>
                 <div class="sub-nav" ng-if="submenu">
-                    <a href="#" ng-href="#{{year.url}}" ng-active="{ active: year.active }" nav-to="navTo(year, 3)" ng-repeat="year in submenu.items track by $index">
+                    <a href="#" ng-href="#{{year.url}}" nav-to="navTo(year, 3)" ng-repeat="year in submenu.items track by $index">
                         <img ng-src="{{year.image}}" />
                         <div class="paragraph-name"><span ng-bind="year.title">-l3-</span></div>
                     </a>

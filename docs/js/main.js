@@ -37,12 +37,9 @@ function nav() {
         $('.main-nav__scroll').on('click', 'ul ul > li:has(".main-nav__sub-nav") > a', function() {
             $('li:has(".main-nav__sub-nav") > a.active').not($(this)).removeClass('active');
             $(this).addClass('active');
-            // var subnavContent;
             if ($('.nav').is('.sub-nav-active')) {
                 $('.sub-nav').removeClass('switch ');
-                // subnavContent = $(this).next().html();
                 setTimeout(function() {
-                    // $('.sub-nav').html(subnavContent);
                     setTimeout(function() {
                         $('.sub-nav').addClass('switch');
                     }, 100);
@@ -53,8 +50,6 @@ function nav() {
             } else {
                 $('.sub-nav').removeClass('switch switched');
                 $('.nav').addClass('sub-nav-active');
-                // subnavContent = $(this).next().html();
-                // $('.sub-nav').html(subnavContent);
                 $('.sub-nav').addClass('switch');
                 setTimeout(function() {
                     $('.sub-nav').addClass('switched');

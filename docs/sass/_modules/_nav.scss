@@ -3,6 +3,7 @@
 /*--------------------------------------------------
 Nav
 --------------------------------------------------*/
+
 .nav {
     position: fixed;
     top: 0;
@@ -16,7 +17,6 @@ Nav
     z-index: 0;
     transform: scale(0.8);
     transition: opacity .8s $bezier, z-index 1s linear .9s, transform .8s $bezier;
-
     .open-nav & {
         z-index: 150;
         opacity: 1;
@@ -24,7 +24,6 @@ Nav
         transform: scale(1);
         transition: opacity .8s $bezier, z-index 0s linear 0s, transform .8s $bezier;
     }
-
     .main-nav {
         position: absolute;
         z-index: 1;
@@ -41,24 +40,19 @@ Nav
         padding: 60px 0 0;
         width: 30%;
         line-height: 1.2;
-
         @include lg {
             width: 40%;
         }
-
         @include sm {
             width: 100%;
         }
-
         &__scroll {
             max-height: calc(100vh - 70px);
             overflow-y: auto;
             padding: 0 70px 70px;
-
             @include xs {
                 padding: 0 20px 70px;
             }
-
             &:before,
             &:after {
                 content: '';
@@ -70,17 +64,14 @@ Nav
                 height: 30px;
                 background: linear-gradient(to bottom, #fff, rgba(255, 255, 255, .0));
             }
-
             &:after {
                 top: auto;
                 bottom: 0;
                 background: linear-gradient(to top, #fff, rgba(255, 255, 255, .0));
             }
-
             .scroll-content {
                 padding: 50px 0;
             }
-
             .logo {
                 width: 220px;
                 height: auto;
@@ -88,48 +79,39 @@ Nav
                 opacity: 0;
                 transform: translate3d(0, -20px, 0);
                 transition: all .5s $bezier .3s;
-
                 .open-nav & {
                     opacity: 1;
                     transform: translate(0);
                 }
-
                 @include lg {
                     width: 180px;
                 }
             }
-
             ul {
                 transform: translateZ(0);
-
-                > li {
+                >li {
                     padding-bottom: 20px;
                     transition: all .5s $bezier;
                     transform: translateY(-20px);
                     opacity: 0;
-
                     @for $i from 0 to 10 {
                         &:nth-child(#{$i}) {
                             transition-delay: .3s + 0.05s * $i;
                         }
                     }
-
                     .open-nav & {
                         transform: translate(0);
                         opacity: 1;
                     }
-
-                    > a {
+                    >a {
                         font-family: Didot, serif;
                         color: $gold;
                         font-size: 27px;
-
                         @include lg {
                             font-size: 20px;
                         }
                     }
-
-                    > ul {
+                    >ul {
                         position: relative;
                         z-index: 1;
                         padding-top: 38px;
@@ -137,7 +119,6 @@ Nav
                         display: none;
                         transform: translateZ(0);
                         margin-bottom: -10px;
-
                         &:before,
                         &:after {
                             content: '';
@@ -150,27 +131,22 @@ Nav
                             transform: translateX(-50%);
                             background: $gold;
                         }
-
                         &:after {
                             top: auto;
                             bottom: 15px;
                         }
-
-                        > li {
+                        >li {
                             padding-bottom: 15px;
                             transform: translateZ(0);
-
-                            > a {
+                            >a {
                                 font-family: Avenir, sans-serif;
                                 color: $black-tit;
                                 opacity: .5;
                                 font-size: 20px;
                                 transition: opacity .2s ease-in-out;
-
                                 @include lg {
                                     font-size: 18px;
                                 }
-
                                 &:hover,
                                 &.active {
                                     opacity: 1;
@@ -180,17 +156,14 @@ Nav
                     }
                 }
             }
-
             .main-nav__sub-nav {
                 display: none;
                 position: relative;
                 z-index: 1;
                 padding: 36px 0 25px;
-
                 @media (min-width: 1025px) {
                     display: none !important;
                 }
-
                 &:before,
                 &:after {
                     content: '';
@@ -203,51 +176,42 @@ Nav
                     transform: translateX(-50%);
                     background: $gold;
                 }
-
                 &:after {
                     top: auto;
                     bottom: 15px;
                 }
-
                 a {
                     color: $black-tit;
                     display: block;
                     padding: 0 0 10px;
                     font-size: 15px;
                     transition: opacity .3s ease-in-out;
-
                     img {
                         display: none;
                     }
                 }
             }
-
             .socials {
                 margin-top: 20px;
                 transform: translate3d(0, -20px, 0);
                 opacity: 0;
                 transition: all .5s $bezier .7s;
-
                 @include xs {
                     transition-delay: .8s;
                 }
-
                 .open-nav & {
                     opacity: 1;
                     transform: translateZ(0);
                 }
-
                 a {
                     display: inline-block;
                     margin: 0 10px;
-
                     svg {
                         width: 20px;
                         height: 20px;
                         fill: rgba($black-tit, .5);
                         transition: fill .2s ease-in-out;
                     }
-
                     &:hover {
                         svg {
                             fill: $violet;
@@ -255,10 +219,8 @@ Nav
                     }
                 }
             }
-
             .extra-mobile {
                 display: none;
-
                 @include xs {
                     display: block;
                     padding: 30px;
@@ -268,12 +230,10 @@ Nav
                     transform: translate3d(0, -20px, 0);
                     opacity: 0;
                     transition: all .5s $bezier .7s;
-
                     .open-nav & {
                         opacity: 1;
                         transform: translateZ(0);
                     }
-
                     a {
                         margin-top: 5px;
                         color: $gold;
@@ -283,8 +243,6 @@ Nav
             }
         }
     }
-
-
     .sub-nav {
         position: absolute;
         z-index: 1;
@@ -295,9 +253,9 @@ Nav
         overflow: hidden;
         width: 0;
         transition: width .8s $bezier;
-
         a {
-            flex: 1 1 auto;
+            flex: 10 0 33.333%;
+            max-width: 33.333%;
             display: flex;
             position: relative;
             z-index: 1;
@@ -305,7 +263,6 @@ Nav
             justify-content: center;
             align-items: center;
             color: $black-tit;
-
             img {
                 position: absolute;
                 z-index: 1;
@@ -319,7 +276,6 @@ Nav
                 opacity: 0;
                 transition: all .6s $bezier;
             }
-
             .paragraph-name {
                 flex: 1 1 100%;
                 position: relative;
@@ -330,12 +286,10 @@ Nav
                 opacity: 0;
                 transform: translateY(20px);
                 transition: all .5s $bezier 0s;
-
                 span {
                     display: inline-block;
                     position: relative;
                     z-index: 1;
-
                     &:before {
                         content: '';
                         position: absolute;
@@ -350,11 +304,8 @@ Nav
                     }
                 }
             }
-
             &:hover {
-                img {
-                }
-
+                img {}
                 span {
                     &:before {
                         transform: scaleX(1) !important;
@@ -363,26 +314,19 @@ Nav
             }
         }
     }
-
     &.sub-nav-active {
-
         @media (min-width: 1025px) {
-
             .main-nav {
                 left: 15%;
-
                 @include lg {
                     left: 20%;
                 }
             }
-
             .sub-nav {
                 width: 70%;
-
                 @include lg {
                     width: 60%;
                 }
-
                 &.switch {
                     a {
                         img {
@@ -390,19 +334,16 @@ Nav
                             transition-duration: 1.2s;
                             transform: translate(-50%, -50%);
                         }
-
                         .paragraph-name {
                             opacity: 1;
                             transition-duration: 1.4s;
                             transform: translateY(0);
                         }
-
                         @for $i from 0 to 5 {
                             &:nth-child(#{$i}) {
                                 img {
                                     transition-delay: .1s + 0.1s * $i;
                                 }
-
                                 .paragraph-name {
                                     transition-delay: .2s + 0.1s * $i;
                                 }
@@ -410,14 +351,12 @@ Nav
                         }
                     }
                 }
-
                 &.switched {
                     a {
                         img {
                             transform: translate3d(-50%, -50%, 0);
                             transition: all .4s ease-in-out !important;
                         }
-
                         &:hover {
                             img {
                                 transform: translate3d(-50%, -50%, 0);

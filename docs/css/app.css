@@ -448,7 +448,8 @@ Nav
     width: 0;
     transition: width 0.8s cubic-bezier(0.19, 1, 0.22, 1); }
     .nav .sub-nav a {
-      flex: 1 1 auto;
+      flex: 10 0 33.333%;
+      max-width: 33.333%;
       display: flex;
       position: relative;
       z-index: 1;

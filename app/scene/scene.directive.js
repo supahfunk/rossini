@@ -425,10 +425,11 @@
                         if (state.tween) {
                             state.tween.kill();
                         }
-                        state.tween = TweenLite.to(state, 2.000, {
+                        // 2.000
+                        state.tween = TweenLite.to(state, 0.350, {
                             pow: 1,
                             delay: 0,
-                            ease: Elastic.easeOut.config(1, 0.3),
+                            ease: Power2.easeOut, // Elastic.easeOut.config(1, 0.3),
                             onComplete: function() {
                                 state.adding = false;
                             },

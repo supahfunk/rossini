@@ -809,18 +809,26 @@
 
         function navTo(item, lvl) {
             itemToggle(item);
-            $scope.submenu = null;
             if (item.url) {
                 if (item.url.indexOf('/years') !== -1 && $route.current.$$route.originalPath.indexOf('/years') !== -1) {
-                    updateStepper(item);
                     closeNav();
+                    $timeout(function() {
+                        updateStepper(item);
+                    }, 1000);
 
                 } else {
                     // $location.path(item.url);
                 }
+                $scope.submenu = null;
                 console.log('RootCtrl.navTo', item.url);
             } else if (lvl === 2 && item.items) {
-                $scope.submenu = item;
+                if ($scope.submenu) {
+                    $timeout(function() {
+                        $scope.submenu = item;
+                    }, 1000);
+                } else {
+                    $scope.submenu = item;
+                }
             }
         }
 
@@ -2336,10 +2344,11 @@
                         if (state.tween) {
                             state.tween.kill();
                         }
-                        state.tween = TweenLite.to(state, 2.000, {
+                        // 2.000
+                        state.tween = TweenLite.to(state, 0.350, {
                             pow: 1,
                             delay: 0,
-                            ease: Elastic.easeOut.config(1, 0.3),
+                            ease: Power2.easeOut, // Elastic.easeOut.config(1, 0.3),
                             onComplete: function() {
                                 state.adding = false;
                             },
