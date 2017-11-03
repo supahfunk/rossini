@@ -105,6 +105,7 @@
         }
 
         $scope.state = state;
+        $scope.options = options;
         $scope.detail = detail;
         $scope.openDetail = openDetail;
         $scope.closeDetail = closeDetail;

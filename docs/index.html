@@ -90,7 +90,7 @@
             <!-- /Nav -->
 
             <!-- Tunnel Background -->
-            <div class="tunnel-bg" slick-backgrounds="stepper.steps" ng-if="scene.options.useBackground">
+            <div class="tunnel-bg" slick-backgrounds="stepper.steps" ng-if="options.useBackground">
                 <div class="item" ng-repeat="item in stepper.steps track by $index">
                     <img data-lazy="{{item.background}}" />
                 </div>
@@ -207,7 +207,7 @@
             <!-- /Detail -->
 
             <!-- Preload -->
-            <div class="preload" ng-class="{ active: scene.options.preload && state.isBusy }">
+            <div class="preload" ng-class="{ active: options.preload && state.isBusy }">
                 <div><span>progress</span> <span ng-bind="progress.progress * 100 | number : 0"></span>%</div>
             </div>
             <!-- /Preload -->
