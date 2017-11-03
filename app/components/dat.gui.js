@@ -83,7 +83,9 @@
                 step.colors.overLines = options.colors.overLines;
                 step.camera.cameraHeight = options.camera.cameraHeight;
                 step.camera.targetHeight = options.camera.targetHeight;
-                step.circle.position.copy(options.circle.position);
+                if (step.circle) {
+                    step.circle.position.copy(options.circle.position);
+                }
                 $rootScope.$broadcast('onOptionsChanged');
             }
 

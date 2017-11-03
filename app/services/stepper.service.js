@@ -51,7 +51,9 @@
                         }
                         item.titleTrusted = $sce.trustAsHtml(item.title);
                         item.contrast = getContrast(item.colors.background);
-                        item.circle.position = new THREE.Vector3().copy(item.circle.position);
+                        if (item.circle) {
+                            item.circle.position = new THREE.Vector3().copy(item.circle.position);
+                        }
                         steps.push(item);
                     });
                     values.pow = index / steps.length;
@@ -145,7 +147,9 @@
                 options.colors.overLines = step.colors.overLines;
                 options.camera.cameraHeight = step.camera.cameraHeight;
                 options.camera.targetHeight = step.camera.targetHeight;
-                options.circle.position.copy(step.circle.position);
+                if (step.circle) {
+                    options.circle.position.copy(step.circle.position);
+                }
                 setBackground(index);
                 $rootScope.$broadcast('onStepChanged', { current: index, previous: previous });
                 // console.log('onStepChanged', index, step);

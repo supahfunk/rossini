@@ -159,7 +159,9 @@
                 step.colors.overLines = options.colors.overLines;
                 step.camera.cameraHeight = options.camera.cameraHeight;
                 step.camera.targetHeight = options.camera.targetHeight;
-                step.circle.position.copy(options.circle.position);
+                if (step.circle) {
+                    step.circle.position.copy(options.circle.position);
+                }
                 $rootScope.$broadcast('onOptionsChanged');
             }
 
@@ -701,7 +703,7 @@
         function getAssetPromise(onprogress) {
             var paths = [];
             stepper.steps.filter(function(item) {
-                if (item.circle && paths.indexOf(item.circle.texture) == -1) {
+                if (item.circle && item.circle.texture && paths.indexOf(item.circle.texture) == -1) {
                     paths.push(item.circle.texture);
                 }
             });
@@ -1638,7 +1640,9 @@
                         }
                         item.titleTrusted = $sce.trustAsHtml(item.title);
                         item.contrast = getContrast(item.colors.background);
-                        item.circle.position = new THREE.Vector3().copy(item.circle.position);
+                        if (item.circle) {
+                            item.circle.position = new THREE.Vector3().copy(item.circle.position);
+                        }
                         steps.push(item);
                     });
                     values.pow = index / steps.length;
@@ -1732,7 +1736,9 @@
                 options.colors.overLines = step.colors.overLines;
                 options.camera.cameraHeight = step.camera.cameraHeight;
                 options.camera.targetHeight = step.camera.targetHeight;
-                options.circle.position.copy(step.circle.position);
+                if (step.circle) {
+                    options.circle.position.copy(step.circle.position);
+                }
                 setBackground(index);
                 $rootScope.$broadcast('onStepChanged', { current: index, previous: previous });
                 // console.log('onStepChanged', index, step);

@@ -15,13 +15,6 @@
             "cameraHeight": -10,
             "targetHeight": 30
         },
-        "circle": {
-            "position": {
-                "x": 0,
-                "y": 0,
-                "z": 0
-            }
-        },
         "audio": null
     },
     {

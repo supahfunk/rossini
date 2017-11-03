@@ -65,7 +65,7 @@
         function getAssetPromise(onprogress) {
             var paths = [];
             stepper.steps.filter(function(item) {
-                if (item.circle && paths.indexOf(item.circle.texture) == -1) {
+                if (item.circle && item.circle.texture && paths.indexOf(item.circle.texture) == -1) {
                     paths.push(item.circle.texture);
                 }
             });
