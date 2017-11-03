@@ -1563,11 +1563,11 @@
             var x = e.gamma;
             var z = 0;
 
-            y = Math.min(y, 30) - 10;
+            y = Math.min(y, 30); // - 10;
 
-            x /= 30;
-            y /= 30;
-            z /= 30;
+            x /= 15;
+            y /= 15;
+            z /= 15;
 
             set(x, y, z);
         }
