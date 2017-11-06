@@ -1260,6 +1260,20 @@ Tunnel Slick
       margin-top: 0;
       transform: none; }
 
+.hint-scroll {
+  display: inline-block;
+  position: absolute;
+  bottom: 20px;
+  width: 64px;
+  left: 50%;
+  margin-left: -32px;
+  font-size: 13px;
+  text-align: center;
+  color: #2B2E34; }
+  .hint-scroll .hint-scroll-ico {
+    width: 40px;
+    height: 40px; }
+
 /* Tunnel 1 */
 #tunnel-1 .tunnel-slick__header {
   left: 45%;
@@ -1428,6 +1442,8 @@ Detail
         margin-bottom: 13px; }
       .detail__sidebar figure figcaption {
         font-size: 12px; }
+  .detail__operas {
+    margin-top: 40px; }
   .detail__box {
     transform: translateY(30px);
     opacity: 0;
@@ -1514,6 +1530,39 @@ Detail
       opacity: 1; }
       .detail__close:hover .ico {
         transform: scale(0.8); }
+
+.operas__title {
+  font-size: 18px; }
+
+.operas__items {
+  list-style: none; }
+  .operas__items .opera__item {
+    display: block;
+    position: relative;
+    padding: 10px 0; }
+    .operas__items .opera__item.audio {
+      cursor: pointer; }
+      .operas__items .opera__item.audio .opera__title {
+        color: white; }
+  .operas__items .opera__player {
+    display: block;
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    margin-top: -12px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    width: 24px;
+    height: 24px;
+    border-radius: 12px; }
+    .operas__items .opera__player .ico-play {
+      width: 20px;
+      height: 20px; }
+  .operas__items .opera__title {
+    display: block;
+    padding-left: 50px;
+    font-size: 14px;
+    font-weight: 100;
+    color: rgba(255, 255, 255, 0.5); }
 
 .detail-active .detail {
   opacity: 1;

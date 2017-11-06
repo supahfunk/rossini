@@ -661,6 +661,9 @@
 
         state.busy();
         stepper.init($routeParams.yearsKey).then(function() {
+            $scope.stepper = stepper;
+            $scope.scene = scene;
+            $scope.audio = AudioService;
             if (options.preload) {
                 doPreload();
             } else {
@@ -712,39 +715,48 @@
         }
 
         function onReady() {
-            $scope.stepper = stepper;
-            $scope.scene = scene;
-            $scope.audio = AudioService;
-            if ($route.current.$$route.originalPath.indexOf('/detail') !== -1) {
-                $timeout(function() {
-                    openDetail();
-                });
-            }
             $timeout(function() {
                 stepper.navStep(stepper.current);
+                if ($route.current.$$route.originalPath.indexOf('/detail') !== -1) {
+                    $timeout(function() {
+                        openDetail();
+                    });
+                }
             }, 1000);
             // preloadAudio();
             var gui = new DatGui();
             state.ready();
         }
 
-        var detail = {};
-
         function openDetail() {
             $ngSilentLocation.silent(stepper.step.detailUrl);
-            detail.active = true;
+            stepper.detail.active = true;
+            stepper.detail.operas = [{
+                "title": "La cambiale di matrimonio",
+                "url": "audio/04-rossini-192.mp3",
+                "orchestra": "Academy of St Martin in the Fields Orchestra"
+            }, {
+                "title": "L’occasione fa il ladro, ossia Il cambio della valigia",
+                "url": "audio/04-rossini-192.mp3",
+                "orchestra": "Academy of St Martin in the Fields Orchestra"
+            }, {
+                "title": "Otello"
+            }, {
+                "title": "Mosè in Egitto"
+            }, {
+                "title": "Ivanhoé"
+            }];
             return false;
         }
 
         function closeDetail() {
             $ngSilentLocation.silent(stepper.step.url);
-            detail.active = false;
+            stepper.detail.active = false;
             return false;
         }
 
         $scope.state = state;
         $scope.options = options;
-        $scope.detail = detail;
         $scope.openDetail = openDetail;
         $scope.closeDetail = closeDetail;
 
@@ -816,6 +828,8 @@
         function navTo(item, lvl) {
             if (item.url) {
                 if (item.url.indexOf('/years') !== -1 && $route.current.$$route.originalPath.indexOf('/years') !== -1) {
+                    var stepper = StepperService;
+                    stepper.detail.active = false;
                     closeNav();
                     $timeout(function() {
                         updateStepper(item);
@@ -845,160 +859,160 @@
 /* global angular */
 
 (function() {
-  "use strict";
+    // "use strict";
 
-  var app = angular.module('app');
+    var app = angular.module('app');
 
-  app.factory('State', ['$timeout', function($timeout) {
-    var DELAY = 2000;
+    app.factory('State', ['$timeout', function($timeout) {
+        var DELAY = 2000;
 
-    function State() {
-        this.errors = [];
-      this.isReady = false;
-      this.idle();
-    }
-    State.prototype = {
-      idle: idle,
-      busy: busy,
-      enabled: enabled,
-      error: error,
-      ready: ready,
-      success: success,
-      errorMessage: errorMessage,
-      submitClass: submitClass,
-      labels: labels,
-      classes: classes
-    };
-    return State;
-
-    function idle() {
-      this.isBusy = false;
-      this.isError = false;
-      this.isErroring = false;
-      this.isSuccess = false;
-      this.isSuccessing = false;
-      this.button = null;
-      //this.errors = [];
-    }
-
-    function enabled() {
-      return !this.isBusy && !this.isErroring && !this.isSuccessing;
-    }
-
-    function busy() {
-      if (!this.isBusy) {
-        this.isBusy = true;
-        this.isError = false;
-        this.isErroring = false;
-        this.isSuccess = false;
-        this.isSuccessing = false;
-        this.errors = [];
-        // console.log('State.busy', this);
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    function success() {
-      this.isBusy = false;
-      this.isError = false;
-      this.isErroring = false;
-      this.isSuccess = true;
-      this.isSuccessing = true;
-      this.errors = [];        
-      $timeout(function () {
-      	this.isSuccessing = false;
-      }.bind(this), DELAY);      
-    }
-
-    function error(error) {
-      this.isBusy = false;
-      this.isError = true;
-      this.isErroring = true;
-      this.isSuccess = false;
-      this.isSuccessing = false;
-      this.errors.push(error);
-      $timeout(function () {
-          this.isErroring = false;          
-      }.bind(this), DELAY);
-    }
-
-    function ready() {
-    	this.idle();
-        this.isReady = true;
-    }
-
-    function errorMessage() {
-        //return this.isError ? this.errors[this.errors.length - 1] : null;
-        return this.errors.length > 0 ? this.errors[this.errors.length - 1] : null;
-    }
-
-    function submitClass() {
-      return {
-        busy: this.isBusy,
-        ready: this.isReady,
-        successing: this.isSuccessing,
-        success: this.isSuccess,
-        errorring: this.isErroring,
-        error: this.isError,
-      };
-    }
-
-    function labels(addons, showCompletionState) {
-        var scope = this;
-        var defaults = {
-            ready: 'submit',
-            busy: 'sending',
-            error: 'error',
-            erroring: 'erroring',
-            success: 'success',
-            successing: 'successing',
+        function State() {
+            this.errors = [];
+            this.isReady = false;
+            this.idle();
+        }
+        State.prototype = {
+            idle: idle,
+            busy: busy,
+            enabled: enabled,
+            error: error,
+            ready: ready,
+            success: success,
+            errorMessage: errorMessage,
+            submitClass: submitClass,
+            labels: labels,
+            classes: classes
         };
-        if (addons) {
-            angular.extend(defaults, addons);
+        return State;
+
+        function idle() {
+            this.isBusy = false;
+            this.isError = false;
+            this.isErroring = false;
+            this.isSuccess = false;
+            this.isSuccessing = false;
+            this.button = null;
+            //this.errors = [];
         }
-        var label = defaults.ready;
-        if (this.isBusy) {
-            label = defaults.busy;
-        } else if (this.isSuccessing) {
-            label = defaults.successing;
-        } else if (this.isErroring) {
-            label = defaults.erroring;
+
+        function enabled() {
+            return !this.isBusy && !this.isErroring && !this.isSuccessing;
         }
-        if (showCompletionState) {
-            if (this.isSuccess) {
-                label = defaults.success;
-            } else if (this.isError) {
-                label = defaults.error;
+
+        function busy() {
+            if (!this.isBusy) {
+                this.isBusy = true;
+                this.isError = false;
+                this.isErroring = false;
+                this.isSuccess = false;
+                this.isSuccessing = false;
+                this.errors = [];
+                // console.log('State.busy', this);
+                return true;
+            } else {
+                return false;
             }
         }
-        return label;
-    }
 
-    function classes(addons) {
-        var scope = this,
-            classes = null;
-        classes = {
-            ready: scope.isReady,
-            busy: scope.isBusy,
-            successing: scope.isSuccessing,
-            success: scope.isSuccess,
-            errorring: scope.isErroring,
-            error: scope.isError,
-            pulse: scope.isBusy,
-            flash: scope.isErroring || scope.isSuccessing,
-        };
-        if (addons) {
-            angular.forEach(addons, function (value, key) {
-                classes[value] = classes[key];
-            });
+        function success() {
+            this.isBusy = false;
+            this.isError = false;
+            this.isErroring = false;
+            this.isSuccess = true;
+            this.isSuccessing = true;
+            this.errors = [];
+            $timeout(function() {
+                this.isSuccessing = false;
+            }.bind(this), DELAY);
         }
-        // console.log('stateClass', classes);
-        return classes;
-    }
 
-  }]);
+        function error(error) {
+            this.isBusy = false;
+            this.isError = true;
+            this.isErroring = true;
+            this.isSuccess = false;
+            this.isSuccessing = false;
+            this.errors.push(error);
+            $timeout(function() {
+                this.isErroring = false;
+            }.bind(this), DELAY);
+        }
+
+        function ready() {
+            this.idle();
+            this.isReady = true;
+        }
+
+        function errorMessage() {
+            //return this.isError ? this.errors[this.errors.length - 1] : null;
+            return this.errors.length > 0 ? this.errors[this.errors.length - 1] : null;
+        }
+
+        function submitClass() {
+            return {
+                busy: this.isBusy,
+                ready: this.isReady,
+                successing: this.isSuccessing,
+                success: this.isSuccess,
+                errorring: this.isErroring,
+                error: this.isError,
+            };
+        }
+
+        function labels(addons, showCompletionState) {
+            var scope = this;
+            var defaults = {
+                ready: 'submit',
+                busy: 'sending',
+                error: 'error',
+                erroring: 'erroring',
+                success: 'success',
+                successing: 'successing',
+            };
+            if (addons) {
+                angular.extend(defaults, addons);
+            }
+            var label = defaults.ready;
+            if (this.isBusy) {
+                label = defaults.busy;
+            } else if (this.isSuccessing) {
+                label = defaults.successing;
+            } else if (this.isErroring) {
+                label = defaults.erroring;
+            }
+            if (showCompletionState) {
+                if (this.isSuccess) {
+                    label = defaults.success;
+                } else if (this.isError) {
+                    label = defaults.error;
+                }
+            }
+            return label;
+        }
+
+        function classes(addons) {
+            var scope = this,
+                classes = null;
+            classes = {
+                ready: scope.isReady,
+                busy: scope.isBusy,
+                successing: scope.isSuccessing,
+                success: scope.isSuccess,
+                errorring: scope.isErroring,
+                error: scope.isError,
+                pulse: scope.isBusy,
+                flash: scope.isErroring || scope.isSuccessing,
+            };
+            if (addons) {
+                angular.forEach(addons, function(value, key) {
+                    classes[value] = classes[key];
+                });
+            }
+            // console.log('stateClass', classes);
+            return classes;
+        }
+
+    }]);
 
 }());
 /* global angular */
@@ -1304,7 +1318,7 @@
                     sound.options.volume = volume;
                     sound.nodes.gain.gain.value = volume;
                 }
-            }
+            },
         };
 
         function load(path, onprogress) {
@@ -1385,6 +1399,13 @@
         function setPath(path) {
             sound.setPath(path);
             play();
+        }
+
+        function setAudio(item) {
+            if (item.url) {
+                service.active = true;
+                setPath(item.url);
+            }
         }
 
         function setVolume(volume) {
@@ -1472,6 +1493,7 @@
         this.active = true;
         this.getData = getData;
         this.setVolume = setVolume;
+        this.setAudio = setAudio;
         this.update = update;
         this.play = play;
         this.pause = pause;
@@ -1605,6 +1627,7 @@
         var duration = 2.500; // sec
         var steps = [];
         var tweens = [];
+        var detail = {};
 
         var values = {
             pow: 0,
@@ -1879,6 +1902,7 @@
         this.getCurrentStep = getCurrentStep;
         this.getStepAtIndex = getStepAtIndex;
         this.current = current;
+        this.detail = detail;
         this.previous = previous;
         this.next = next;
 

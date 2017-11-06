@@ -14,6 +14,7 @@
         var duration = 2.500; // sec
         var steps = [];
         var tweens = [];
+        var detail = {};
 
         var values = {
             pow: 0,
@@ -288,6 +289,7 @@
         this.getCurrentStep = getCurrentStep;
         this.getStepAtIndex = getStepAtIndex;
         this.current = current;
+        this.detail = detail;
         this.previous = previous;
         this.next = next;
 

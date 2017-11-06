@@ -8,8 +8,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="robots" content="noindex,nofollow" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <title>notes</title>
-    <meta name="apple-mobile-web-app-title" content="notes">
+    <title>Bicentenario Rossini 150</title>
+    <meta name="apple-mobile-web-app-title" content="Bicentenario Rossini 150">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
@@ -33,7 +33,7 @@
     <ng-view ng-cloak></ng-view>
 
     <script type="text/ng-template" id="partials/years.html">
-        <div class="wrapper" ng-class="{ 'light-bg' : stepper.step.contrast == 'light-bg', 'dark-bg': stepper.step.contrast == 'dark-bg', 'detail-active dark-bg': detail.active }" data-step="{{stepper.current}}">
+        <div class="wrapper" ng-class="{ 'light-bg' : stepper.step.contrast == 'light-bg', 'dark-bg': stepper.step.contrast == 'dark-bg', 'detail-active dark-bg': stepper.detail.active }" data-step="{{stepper.current}}">
 
             <!-- Nav -->
             <nav class="nav">
@@ -153,7 +153,6 @@
                 <div class="tunnel-slick" slick-tunnel="stepper.steps">
                     <div id="tunnel-{{item.id}}" class="tunnel-slick__item" data-from="1832" data-to="false" data-bg="light" ng-repeat="item in stepper.steps track by $index">
                         <div class="tunnel-slick__intro" ng-if="$first">
-
                             <div class="intro-box">
                                 <div class="big-title">
                                     Please turn<br /> your volume up
@@ -173,7 +172,12 @@
                                         <button ng-click="stepper.navStep(1)" type="button" class="inline-btn">Start experience</button>
                                     </div>
                                 </div>
-
+                            </div>
+                            <div class="hint-scroll">
+                                <span>Scroll</span>
+                                <svg class="hint-scroll-ico">
+                                    <use xlink:href="#hint-scroll-ico"></use>
+                                </svg>
                             </div>
                         </div>
                         <div class="tunnel-slick__header" ng-if="!$first">
@@ -189,10 +193,10 @@
             <!-- /Tunnel -->
 
             <!-- Detail -->
-            <div class="detail" ng-class="{ active: detail.active }">
+            <div class="detail" ng-class="{ active: stepper.detail.active }">
                 <div class="detail__container">
                     <div class="detail__wrap">
-                        <div class="detail__scroll" scrollbar ng-if="detail.active">
+                        <div class="detail__scroll" scrollbar ng-if="stepper.detail.active">
                             <div class="detail__content" ng-include="'partials/it/step-1.html'"></div>
                         </div>
                     </div>
@@ -246,6 +250,16 @@
         <symbol id="close" viewBox="0 0 26 26">
             <polygon style="fill: #fff" points="24.9,1 24.2,0.4 12.9,11.7 1.6,0.4 0.9,1 12.2,12.4 0.9,23.7 1.6,24.4 12.9,13 24.2,24.4 24.9,23.7
 	13.6,12.4 " />
+        </symbol>
+        <symbol id="hint-scroll-ico" viewBox="0 0 64 64">
+            <style type="text/css">
+                line{fill:none;stroke:#2B2E34;stroke-width:4;stroke-linecap:round;stroke-miterlimit:10;}
+            </style>
+            <line class="st0" x1="5" y1="18.2" x2="32" y2="45.8"/>
+            <line class="st0" x1="59" y1="18.2" x2="32" y2="45.8"/>
+        </symbol>
+        <symbol id="ico-play" viewBox="0 0 64 64">
+            <polygon style="fill: #fff" points="49.8,31 19.2,48 19.2,14 "/>
         </symbol>
     </svg>
     <!-- /SVG Sprite -->

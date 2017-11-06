@@ -23,6 +23,9 @@
 
         state.busy();
         stepper.init($routeParams.yearsKey).then(function() {
+            $scope.stepper = stepper;
+            $scope.scene = scene;
+            $scope.audio = AudioService;
             if (options.preload) {
                 doPreload();
             } else {
@@ -74,39 +77,48 @@
         }
 
         function onReady() {
-            $scope.stepper = stepper;
-            $scope.scene = scene;
-            $scope.audio = AudioService;
-            if ($route.current.$$route.originalPath.indexOf('/detail') !== -1) {
-                $timeout(function() {
-                    openDetail();
-                });
-            }
             $timeout(function() {
                 stepper.navStep(stepper.current);
+                if ($route.current.$$route.originalPath.indexOf('/detail') !== -1) {
+                    $timeout(function() {
+                        openDetail();
+                    });
+                }
             }, 1000);
             // preloadAudio();
             var gui = new DatGui();
             state.ready();
         }
 
-        var detail = {};
-
         function openDetail() {
             $ngSilentLocation.silent(stepper.step.detailUrl);
-            detail.active = true;
+            stepper.detail.active = true;
+            stepper.detail.operas = [{
+                "title": "La cambiale di matrimonio",
+                "url": "audio/04-rossini-192.mp3",
+                "orchestra": "Academy of St Martin in the Fields Orchestra"
+            }, {
+                "title": "L’occasione fa il ladro, ossia Il cambio della valigia",
+                "url": "audio/04-rossini-192.mp3",
+                "orchestra": "Academy of St Martin in the Fields Orchestra"
+            }, {
+                "title": "Otello"
+            }, {
+                "title": "Mosè in Egitto"
+            }, {
+                "title": "Ivanhoé"
+            }];
             return false;
         }
 
         function closeDetail() {
             $ngSilentLocation.silent(stepper.step.url);
-            detail.active = false;
+            stepper.detail.active = false;
             return false;
         }
 
         $scope.state = state;
         $scope.options = options;
-        $scope.detail = detail;
         $scope.openDetail = openDetail;
         $scope.closeDetail = closeDetail;
 

@@ -27,9 +27,9 @@
             "to": 1806
         },
         "colors": {
-            "background": "#dadadb",
-            "lines": "#2f3659",
-            "overLines": "#ffffff"
+            "background": "#DADADB",
+            "lines": "#3353A4",
+            "overLines": "#FEFEF9"
         },
         "camera": {
             "cameraHeight": -10,
@@ -44,9 +44,9 @@
             "texture": "img/rossini-01.jpg"
         },
         "audio": {
-            "url": "audio/01-rossini-192.mp3",
-            "title": "L'italiana in Algeri",
-            "orchestra": "Academy of St Martin in the Fields Orchestra"
+            "url": "audio/01-la-pietra-del-paragone-128.mp3",
+            "title": "La pietra del paragone",
+            "orchestra": "Ouverture - Non v'è del conte Asdrubale"
         }
     },
     {
@@ -59,9 +59,9 @@
             "to": 1812
         },
         "colors": {
-            "background": "#dadadb",
-            "lines": "#2f3659",
-            "overLines": "#ffffff"
+            "background": "#DADADB",
+            "lines": "#3353A4",
+            "overLines": "#FEFEF9"
         },
         "camera": {
             "cameraHeight": -10,
@@ -76,9 +76,9 @@
             "texture": "img/rossini-02.jpg"
         },
         "audio": {
-            "url": "audio/01-rossini-192.mp3",
-            "title": "L'italiana in Algeri",
-            "orchestra": "Academy of St Martin in the Fields Orchestra"
+            "url": "audio/01-la-pietra-del-paragone-128.mp3",
+            "title": "La pietra del paragone",
+            "orchestra": "Ouverture - Non v'è del conte Asdrubale"
         }
     },
     {
@@ -90,9 +90,9 @@
             "from": 1813
         },
         "colors": {
-            "background": "#ffb410",
-            "lines": "#2f3659",
-            "overLines": "#e1d4b6"
+            "background": "#F2C2B7",
+            "lines": "#BE261C",
+            "overLines": "#FAFAFB"
         },
         "camera": {
             "cameraHeight": -10,
@@ -107,9 +107,9 @@
             "texture": "img/rossini-03.jpg"
         },
         "audio": {
-            "url": "audio/01-rossini-192.mp3",
-            "title": "Il Barbiere di Siviglia",
-            "orchestra": "Academy of St Martin in the Fields Orchestra"
+            "url": "audio/01-la-pietra-del-paragone-128.mp3",
+            "title": "La pietra del paragone",
+            "orchestra": "Ouverture - Non v'è del conte Asdrubale"
         }
     },
     {
@@ -122,9 +122,9 @@
             "to": 1816
         },
         "colors": {
-            "background": "#ffb410",
-            "lines": "#2f3659",
-            "overLines": "#e1d4b6"
+            "background": "#F2C2B7",
+            "lines": "#BE261C",
+            "overLines": "#FAFAFB"
         },
         "camera": {
             "cameraHeight": -10,
@@ -139,9 +139,9 @@
             "texture": "img/rossini-04.jpg"
         },
         "audio": {
-            "url": "audio/02-rossini-192.mp3",
-            "title": "L'italiana in Algeri",
-            "orchestra": "Academy of St Martin in the Fields Orchestra"
+            "url": "audio/02-tancredi-128.mp3",
+            "title": "Tancredi",
+            "orchestra": "Ouverture - Pace, onore, fede, amore"
         }
     },
     {
@@ -153,9 +153,9 @@
             "from": 1817
         },
         "colors": {
-            "background": "#72d1bb",
-            "lines": "#2f3659",
-            "overLines": "#ffffff"
+            "background": "#FFC78E",
+            "lines": "#534537",
+            "overLines": "#FEFEF9"
         },
         "camera": {
             "cameraHeight": -10,
@@ -170,9 +170,9 @@
             "texture": "img/rossini-05.jpg"
         },
         "audio": {
-            "url": "audio/02-rossini-192.mp3",
-            "title": "Il Barbiere di Siviglia",
-            "orchestra": "Academy of St Martin in the Fields Orchestra"
+            "url": "audio/02-tancredi-128.mp3",
+            "title": "Tancredi",
+            "orchestra": "Ouverture - Pace, onore, fede, amore"
         }
     },
     {
@@ -185,9 +185,9 @@
             "to": 1822
         },
         "colors": {
-            "background": "#72d1bb",
-            "lines": "#2f3659",
-            "overLines": "#ffffff"
+            "background": "#FFC78E",
+            "lines": "#534537",
+            "overLines": "#FEFEF9"
         },
         "camera": {
             "cameraHeight": -10,
@@ -202,9 +202,9 @@
             "texture": "img/rossini-06.jpg"
         },
         "audio": {
-            "url": "audio/02-rossini-192.mp3",
-            "title": "L'italiana in Algeri",
-            "orchestra": "Academy of St Martin in the Fields Orchestra"
+            "url": "audio/02-tancredi-128.mp3",
+            "title": "Tancredi",
+            "orchestra": "Ouverture - Pace, onore, fede, amore"
         }
     },
     {
@@ -216,9 +216,9 @@
             "from": 1824
         },
         "colors": {
-            "background": "#be261c",
-            "lines": "#edeff2",
-            "overLines": "#3353a4"
+            "background": "#350241",
+            "lines": "#FEFDF6",
+            "overLines": "#65626A"
         },
         "camera": {
             "cameraHeight": -10,
@@ -233,9 +233,9 @@
             "texture": "img/rossini-07.jpg"
         },
         "audio": {
-            "url": "audio/03-rossini-192.mp3",
-            "title": "Il Barbiere di Siviglia",
-            "orchestra": "Academy of St Martin in the Fields Orchestra"
+            "url": "audio/03-La-cenerentola-128.mp3",
+            "title": "La Cenerentola",
+            "orchestra": "Ouverture - No, no, no, no: non c'è"
         }
     },
     {
@@ -247,9 +247,9 @@
             "from": 1829
         },
         "colors": {
-            "background": "#be261c",
-            "lines": "#edeff2",
-            "overLines": "#3353a4"
+            "background": "#350241",
+            "lines": "#FEFDF6",
+            "overLines": "#65626A"
         },
         "camera": {
             "cameraHeight": -10,
@@ -264,9 +264,9 @@
             "texture": "img/rossini-08.jpg"
         },
         "audio": {
-            "url": "audio/03-rossini-192.mp3",
-            "title": "L'italiana in Algeri",
-            "orchestra": "Academy of St Martin in the Fields Orchestra"
+            "url": "audio/03-La-cenerentola-128.mp3",
+            "title": "La Cenerentola",
+            "orchestra": "Ouverture - No, no, no, no: non c'è"
         }
     },
     {
@@ -275,13 +275,12 @@
         "chapter": "Passione, Genio e Silenzio",
         "paragraph": "La frenesia della produzione",
         "years": {
-            "from": 1831,
-            "to": 1829
+            "from": 1831
         },
         "colors": {
             "background": "#000000",
-            "lines": "#edeff2",
-            "overLines": "#2a3a62"
+            "lines": "#FEFDF6",
+            "overLines": "#3353A4"
         },
         "camera": {
             "cameraHeight": -10,
@@ -296,9 +295,9 @@
             "texture": "img/rossini-09.jpg"
         },
         "audio": {
-            "url": "audio/03-rossini-192.mp3",
-            "title": "Il Barbiere di Siviglia",
-            "orchestra": "Academy of St Martin in the Fields Orchestra"
+            "url": "audio/04-petite-messe-solenne-128.mp3",
+            "title": "Petite Messe Solenne",
+            "orchestra": "Gloria"
         }
     },
     {
@@ -311,9 +310,9 @@
             "to": 1848
         },
         "colors": {
-            "background": "#000000",
-            "lines": "#edeff2",
-            "overLines": "#2a3a62"
+            "background": "#036284",
+            "lines": "#FEFDF6",
+            "overLines": "#09475D"
         },
         "camera": {
             "cameraHeight": -10,
@@ -328,9 +327,9 @@
             "texture": "img/rossini-10.jpg"
         },
         "audio": {
-            "url": "audio/04-rossini-192.mp3",
-            "title": "L'italiana in Algeri",
-            "orchestra": "Academy of St Martin in the Fields Orchestra"
+            "url": "audio/04-petite-messe-solenne-128.mp3",
+            "title": "Petite Messe Solenne",
+            "orchestra": "Gloria"
         }
     },
     {
@@ -343,9 +342,9 @@
             "to": 1864
         },
         "colors": {
-            "background": "#006f98",
-            "lines": "#edeff2",
-            "overLines": "#2a3a62"
+            "background": "#036284",
+            "lines": "#FEFDF6",
+            "overLines": "#09475D"
         },
         "camera": {
             "cameraHeight": -10,
@@ -360,9 +359,9 @@
             "texture": "img/rossini-11.jpg"
         },
         "audio": {
-            "url": "audio/04-rossini-192.mp3",
-            "title": "Il Barbiere di Siviglia",
-            "orchestra": "Academy of St Martin in the Fields Orchestra"
+            "url": "audio/04-petite-messe-solenne-128.mp3",
+            "title": "Petite Messe Solenne",
+            "orchestra": "Gloria"
         }
     },
     {
@@ -375,9 +374,9 @@
             "to": 1868
         },
         "colors": {
-            "background": "#006f98",
-            "lines": "#edeff2",
-            "overLines": "#2a3a62"
+            "background": "#DADADB",
+            "lines": "#3353A4",
+            "overLines": "#FEFEF9"
         },
         "camera": {
             "cameraHeight": -10,
@@ -392,9 +391,9 @@
             "texture": "img/rossini-12.jpg"
         },
         "audio": {
-            "url": "audio/04-rossini-192.mp3",
-            "title": "L'italiana in Algeri",
-            "orchestra": "Academy of St Martin in the Fields Orchestra"
+            "url": "audio/04-petite-messe-solenne-128.mp3",
+            "title": "Petite Messe Solenne",
+            "orchestra": "Gloria"
         }
     }
 ]

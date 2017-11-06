@@ -7,6 +7,21 @@
         <img src="img/detail-0.jpg" />
         <figcaption>Copertina del libretto dell’opera - 1829</figcaption>
     </figure>
+    <div class="detail__operas">
+        <div class="operas__title">
+            Le Opere
+        </div>
+        <ul class="operas__items">
+            <li class="opera__item" ng-class="{ audio: item.url }" ng-click="audio.setAudio(item)" ng-repeat="item in stepper.detail.operas track by $index">
+                <div class="opera__player" ng-if="item.url">
+                    <svg class="ico-play">
+                        <use xlink:href="#ico-play"></use>
+                    </svg>
+                </div>
+                <span class="opera__title" ng-bind="item.title">La cambiale di matrimonio</span>
+            </li>
+        </ul>
+    </div>
 </div>
 <div class="detail__box">
     <div class="detail__title h1">

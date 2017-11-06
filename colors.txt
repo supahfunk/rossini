@@ -1,0 +1,69 @@
+
+
+1792 – 1806
+"background": "#DADADB",
+"lines": "#3353A4",
+"overLines": "#FEFEF9"
+
+1807 – 1812
+"background": "#DADADB",
+"lines": "#3353A4",
+"overLines": "#FEFEF9"
+
+1813
+"background": "#F2C2B7",
+"lines": "#BE261C", // #2A3154",
+"overLines": "#FAFAFB"
+
+1815 – 1816
+"background": "#F2C2B7",
+"lines": "#BE261C // #2A3154",
+"overLines": "#FAFAFB"
+
+1817
+"background": "#FFC78E",
+"lines": "#534537",
+"overLines": "#FEFEF9"
+
+1816 – 1822
+"background": "#FFC78E",
+"lines": "#534537",
+"overLines": "#FEFEF9"
+
+1824
+"background": "#350241",
+"lines": "#FEFDF6",
+"overLines": "#65626A"
+
+1829
+"background": "#350241",
+"lines": "#FEFDF6",
+"overLines": "#65626A"
+
+1831
+"background": "#000000",
+"lines": "#FEFDF6",
+"overLines": "#3353A4"
+
+1832– 1848
+"background": "#036284",
+"lines": "#FEFDF6",
+"overLines": "#09475D"
+
+1848 – 1864
+"background": "#036284",
+"lines": "#FEFDF6",
+"overLines": "#09475D"
+
+1864 – 1868
+"background": "#DADADB",
+"lines": "#3353A4",
+"overLines": "#FEFEF9"
+
+
+
+
+
+
+
+

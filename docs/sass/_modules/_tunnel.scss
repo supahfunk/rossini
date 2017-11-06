@@ -538,6 +538,22 @@ Tunnel Slick
     }
 }
 
+.hint-scroll {
+    display: inline-block;
+    position: absolute;
+    bottom: 20px;
+    width: 64px;
+    left: 50%;
+    margin-left: -32px;
+    font-size: 13px;
+    text-align: center;
+    color: #2B2E34;
+    .hint-scroll-ico {
+        width: 40px;
+        height: 40px;
+    }
+}
+
 
 /* Tunnel 1 */
 

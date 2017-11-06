@@ -57,6 +57,8 @@
         function navTo(item, lvl) {
             if (item.url) {
                 if (item.url.indexOf('/years') !== -1 && $route.current.$$route.originalPath.indexOf('/years') !== -1) {
+                    var stepper = StepperService;
+                    stepper.detail.active = false;
                     closeNav();
                     $timeout(function() {
                         updateStepper(item);

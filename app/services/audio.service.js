@@ -202,7 +202,7 @@
                     sound.options.volume = volume;
                     sound.nodes.gain.gain.value = volume;
                 }
-            }
+            },
         };
 
         function load(path, onprogress) {
@@ -283,6 +283,13 @@
         function setPath(path) {
             sound.setPath(path);
             play();
+        }
+
+        function setAudio(item) {
+            if (item.url) {
+                service.active = true;
+                setPath(item.url);
+            }
         }
 
         function setVolume(volume) {
@@ -370,6 +377,7 @@
         this.active = true;
         this.getData = getData;
         this.setVolume = setVolume;
+        this.setAudio = setAudio;
         this.update = update;
         this.play = play;
         this.pause = pause;
