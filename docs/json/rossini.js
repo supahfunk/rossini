@@ -90,9 +90,9 @@
             "from": 1813
         },
         "colors": {
-            "background": "#F2C2B7",
-            "lines": "#BE261C",
-            "overLines": "#FAFAFB"
+            "background": "#DADADB",
+            "lines": "#3353A4",
+            "overLines": "#FEFEF9"
         },
         "camera": {
             "cameraHeight": -10,
