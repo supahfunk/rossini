@@ -40,6 +40,7 @@
             "app/app.run.js",
             "app/components/dat.gui.js",
             "app/components/navTo.directive.js",
+            "app/components/operas.directive.js",
             "app/components/scrollbar.directive.js",
             "app/components/slick.directive.js",
             "app/components/split.directive.js",

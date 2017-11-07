@@ -1,10 +1,4 @@
-﻿[
-  {
-    "outputFile": "docs/css/app.css",
-    "inputFile": "docs/sass/app.scss"
-  },
-  {
-    "outputFile": "docs/js/app.es5.js",
-    "inputFile": "app/controllers/root.controller.js"
-  }
-]
+﻿[{
+  "outputFile": "docs/css/app.css",
+  "inputFile": "docs/sass/app.scss"
+}]

@@ -266,6 +266,22 @@
 
     var app = angular.module('app');
 
+    app.directive('operas', [function() {
+        return {
+            restrict: 'A',
+            templateUrl: 'partials/operas',
+            link: function(scope, element, attributes) {}
+        };
+    }]);
+
+}());
+/* global angular */
+
+(function() {
+    "use strict";
+
+    var app = angular.module('app');
+
     app.directive('scrollbar', [function() {
         return {
             restrict: 'A',
@@ -732,13 +748,13 @@
             $ngSilentLocation.silent(stepper.step.detailUrl);
             stepper.detail.active = true;
             stepper.detail.operas = [{
+                "url": "audio/01-la-cambiale-di-matrimonio-sinfonia-128.mp3",
                 "title": "La cambiale di matrimonio",
-                "url": "audio/04-rossini-192.mp3",
-                "orchestra": "Academy of St Martin in the Fields Orchestra"
+                "orchestra": "Orchestra Haydn di Bolzano e Trento"
             }, {
-                "title": "L’occasione fa il ladro, ossia Il cambio della valigia",
-                "url": "audio/04-rossini-192.mp3",
-                "orchestra": "Academy of St Martin in the Fields Orchestra"
+                "url": "audio/01-la-pietra-del-paragone-128.mp3",
+                "title": "La pietra del paragone",
+                "orchestra": "Orchestra Haydn di Bolzano e Trento"
             }, {
                 "title": "Otello"
             }, {
@@ -1382,6 +1398,7 @@
         var service = this;
         var options = SceneOptions;
         var stepper = StepperService;
+
         var sound = new AudioSound({
             analyser: true,
             loop: true,
@@ -1393,18 +1410,34 @@
 
         function setStep() {
             var step = stepper.getCurrentStep();
-            setPath(step.audio ? step.audio.url : null);
+            setItem(step.audio);
+            // setPath(step.audio ? step.audio.url : null);
         }
 
         function setPath(path) {
-            sound.setPath(path);
-            play();
+            if (path) {
+                sound.setPath(path);
+                play();
+            }
         }
 
-        function setAudio(item) {
-            if (item.url) {
+        function setItem(item) {
+            if (item && item.url) {
+                service.item = item;
                 service.active = true;
                 setPath(item.url);
+            }
+        }
+
+        function toggleItem(item) {
+            if (item && item.url) {
+                if (service.item && service.item.url === item.url) {
+                    toggle();
+                } else {
+                    service.item = item;
+                    service.active = true;
+                    setPath(item.url);
+                }
             }
         }
 
@@ -1440,8 +1473,13 @@
             }
         }
 
-        function isActive() {
-            return service.active && sound.playing;
+        function isItem(item) {
+            return service.item && service.item.url == item.url;
+        }
+
+        function isActive(item) {
+            var active = service.active && sound.playing && isItem(item);
+            return active;
         }
 
         function isPlaying() {
@@ -1493,12 +1531,14 @@
         this.active = true;
         this.getData = getData;
         this.setVolume = setVolume;
-        this.setAudio = setAudio;
+        this.setItem = setItem;
+        this.toggleItem = toggleItem;
         this.update = update;
         this.play = play;
         this.pause = pause;
         this.toggle = toggle;
         this.isPlaying = isPlaying;
+        this.isItem = isItem;
         this.isActive = isActive;
         this.preload = preload;
 

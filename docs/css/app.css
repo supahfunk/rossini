@@ -676,73 +676,6 @@ Sound Info
   @media (max-width: 575px) {
     .sound-info {
       top: 7px; } }
-  .sound-info .sound-toggle {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 30px;
-    height: 40px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    outline: none; }
-    @media (max-width: 1024px) {
-      .sound-info .sound-toggle {
-        transform: scale(0.8);
-        transform-origin: left center; } }
-    .sound-info .sound-toggle .bar {
-      position: absolute;
-      z-index: 1;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%; }
-      .sound-info .sound-toggle .bar:before, .sound-info .sound-toggle .bar:after {
-        content: '';
-        position: absolute;
-        z-index: 1;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 1px;
-        background: #b2954d;
-        transition: all 1.2s ease-in-out;
-        transform: scaleY(0.1);
-        animation: none; }
-      .sound-info .sound-toggle .bar:nth-child(1):after {
-        left: 6px; }
-      .sound-info .sound-toggle .bar:nth-child(2):before {
-        left: 12px; }
-      .sound-info .sound-toggle .bar:nth-child(2):after {
-        left: 18px; }
-      .sound-info .sound-toggle .bar:nth-child(3):before {
-        left: 24px; }
-      .sound-info .sound-toggle .bar:nth-child(3):after {
-        left: 30px; }
-    .sound-info .sound-toggle.active .bar:before, .sound-info .sound-toggle.active .bar:after {
-      animation: beat1 1s infinite; }
-    .sound-info .sound-toggle.active .bar:nth-child(1):before {
-      animation-delay: 0.4s;
-      animation-duration: 1.2s; }
-    .sound-info .sound-toggle.active .bar:nth-child(1):after {
-      animation-delay: 0.3s;
-      animation-duration: 0.9s;
-      animation-name: beat2; }
-    .sound-info .sound-toggle.active .bar:nth-child(2):before {
-      animation-delay: 0.5s;
-      animation-duration: 1s;
-      animation-name: beat3; }
-    .sound-info .sound-toggle.active .bar:nth-child(2):after {
-      animation-delay: 0.4s;
-      animation-duration: 0.9s;
-      animation-name: beat3; }
-    .sound-info .sound-toggle.active .bar:nth-child(3):before {
-      animation-delay: 0.3s;
-      animation-duration: 0.9s;
-      animation-name: beat2; }
-    .sound-info .sound-toggle.active .bar:nth-child(3):after {
-      animation-delay: 0.2s;
-      animation-duration: 0.8s; }
   @media (max-width: 575px) {
     .sound-info .sound-name {
       display: none; } }
@@ -753,6 +686,74 @@ Sound Info
       color: #fff; }
   .sound-info .sound-name .sound-author {
     color: #646464; }
+
+.sound-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none; }
+  @media (max-width: 1024px) {
+    .sound-toggle {
+      transform: scale(0.8);
+      transform-origin: left center; } }
+  .sound-toggle .bar {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; }
+    .sound-toggle .bar:before, .sound-toggle .bar:after {
+      content: '';
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 1px;
+      background: #b2954d;
+      transition: all 1.2s ease-in-out;
+      transform: scaleY(0.1);
+      animation: none; }
+    .sound-toggle .bar:nth-child(1):after {
+      left: 6px; }
+    .sound-toggle .bar:nth-child(2):before {
+      left: 12px; }
+    .sound-toggle .bar:nth-child(2):after {
+      left: 18px; }
+    .sound-toggle .bar:nth-child(3):before {
+      left: 24px; }
+    .sound-toggle .bar:nth-child(3):after {
+      left: 30px; }
+  .sound-toggle.active .bar:before, .sound-toggle.active .bar:after {
+    animation: beat1 1s infinite; }
+  .sound-toggle.active .bar:nth-child(1):before {
+    animation-delay: 0.4s;
+    animation-duration: 1.2s; }
+  .sound-toggle.active .bar:nth-child(1):after {
+    animation-delay: 0.3s;
+    animation-duration: 0.9s;
+    animation-name: beat2; }
+  .sound-toggle.active .bar:nth-child(2):before {
+    animation-delay: 0.5s;
+    animation-duration: 1s;
+    animation-name: beat3; }
+  .sound-toggle.active .bar:nth-child(2):after {
+    animation-delay: 0.4s;
+    animation-duration: 0.9s;
+    animation-name: beat3; }
+  .sound-toggle.active .bar:nth-child(3):before {
+    animation-delay: 0.3s;
+    animation-duration: 0.9s;
+    animation-name: beat2; }
+  .sound-toggle.active .bar:nth-child(3):after {
+    animation-delay: 0.2s;
+    animation-duration: 0.8s; }
 
 @keyframes beat1 {
   0% {
@@ -1544,6 +1545,28 @@ Detail
       cursor: pointer; }
       .operas__items .opera__item.audio .opera__title {
         color: white; }
+    .operas__items .opera__item:hover .ico-play {
+      opacity: 1; }
+    .operas__items .opera__item.active .opera__player {
+      border-color: transparent; }
+    .operas__items .opera__item.active .ico-play {
+      opacity: 0; }
+    .operas__items .opera__item.active .ico-pause {
+      opacity: 0; }
+    .operas__items .opera__item.active .sound-toggle {
+      opacity: 1; }
+    .operas__items .opera__item.active:not(.playing):hover .opera__player {
+      border-color: rgba(255, 255, 255, 0.8); }
+    .operas__items .opera__item.active:not(.playing):hover .sound-toggle {
+      opacity: 0; }
+    .operas__items .opera__item.active:not(.playing):hover .ico-play {
+      opacity: 1; }
+    .operas__items .opera__item.playing:hover .opera__player {
+      border-color: rgba(255, 255, 255, 0.8); }
+    .operas__items .opera__item.playing:hover .sound-toggle {
+      opacity: 0; }
+    .operas__items .opera__item.playing:hover .ico-pause {
+      opacity: 1; }
   .operas__items .opera__player {
     display: block;
     position: absolute;
@@ -1553,10 +1576,28 @@ Detail
     border: 2px solid rgba(255, 255, 255, 0.5);
     width: 24px;
     height: 24px;
-    border-radius: 12px; }
-    .operas__items .opera__player .ico-play {
+    border-radius: 12px;
+    transition: border ease-in-out 250ms; }
+    .operas__items .opera__player .ico-play,
+    .operas__items .opera__player .ico-pause {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      height: 50%;
       width: 20px;
-      height: 20px; }
+      height: 20px;
+      margin-top: -10px;
+      margin-left: -10px;
+      opacity: 0.5;
+      transition: opacity ease-in-out 250ms; }
+    .operas__items .opera__player .sound-toggle {
+      top: 50%;
+      left: -5px;
+      margin-top: -20px;
+      opacity: 0;
+      transition: opacity ease-in-out 250ms; }
+    .operas__items .opera__player .ico-pause {
+      opacity: 0; }
   .operas__items .opera__title {
     display: block;
     padding-left: 50px;

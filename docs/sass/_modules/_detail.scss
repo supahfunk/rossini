@@ -272,6 +272,51 @@ Detail
                         color: white;
                     }
                 }
+                &:hover {
+                    .ico-play {
+                        opacity: 1;
+                    }
+                }
+                &.active {
+                    .opera__player {
+                        border-color: transparent;
+                    }
+                    .ico-play {
+                        opacity: 0;
+                    }
+                    .ico-pause {
+                        opacity: 0;
+                    }
+                    .sound-toggle {
+                        opacity: 1;
+                    }
+                    &:not(.playing) {
+                        &:hover {
+                            .opera__player {
+                                border-color: rgba(255, 255, 255, .8);
+                            }
+                            .sound-toggle {
+                                opacity: 0;
+                            }
+                            .ico-play {
+                                opacity: 1;
+                            }
+                        }
+                    }
+                }
+                &.playing {
+                    &:hover {
+                        .opera__player {
+                            border-color: rgba(255, 255, 255, .8);
+                        }
+                        .sound-toggle {
+                            opacity: 0;
+                        }
+                        .ico-pause {
+                            opacity: 1;
+                        }
+                    }
+                }
             }
             &__player {
                 display: block;
@@ -283,9 +328,29 @@ Detail
                 width: 24px;
                 height: 24px;
                 border-radius: 12px;
-                .ico-play {
+                transition: border ease-in-out 250ms;
+                .ico-play,
+                .ico-pause {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    height: 50%;
                     width: 20px;
                     height: 20px;
+                    margin-top: -10px;
+                    margin-left: -10px;
+                    opacity: 0.5;
+                    transition: opacity ease-in-out 250ms;
+                }
+                .sound-toggle {
+                    top: 50%;
+                    left: -5px;
+                    margin-top: -20px;
+                    opacity: 0;
+                    transition: opacity ease-in-out 250ms;
+                }
+                .ico-pause {
+                    opacity: 0;
                 }
             }
             &__title {

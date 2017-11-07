@@ -94,13 +94,13 @@
             $ngSilentLocation.silent(stepper.step.detailUrl);
             stepper.detail.active = true;
             stepper.detail.operas = [{
+                "url": "audio/01-la-cambiale-di-matrimonio-sinfonia-128.mp3",
                 "title": "La cambiale di matrimonio",
-                "url": "audio/04-rossini-192.mp3",
-                "orchestra": "Academy of St Martin in the Fields Orchestra"
+                "orchestra": "Orchestra Haydn di Bolzano e Trento"
             }, {
-                "title": "L’occasione fa il ladro, ossia Il cambio della valigia",
-                "url": "audio/04-rossini-192.mp3",
-                "orchestra": "Academy of St Martin in the Fields Orchestra"
+                "url": "audio/01-la-pietra-del-paragone-128.mp3",
+                "title": "La pietra del paragone",
+                "orchestra": "Orchestra Haydn di Bolzano e Trento"
             }, {
                 "title": "Otello"
             }, {
